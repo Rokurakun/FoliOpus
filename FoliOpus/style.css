@@ -1,0 +1,245 @@
+:root {
+    --primary-yellow: #f59e0b;
+    --primary-orange: #ea580c;
+    --dark-bg: #0f172a;
+    --dark-surface: #1e293b;
+    --text-light: #f8fafc;
+    --text-muted: #cbd5e1;
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    line-height: 1.6;
+    /* Dewa Optimasi Font: Bikin teks tajem setajam silet */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    background-color: transparent;
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+    z-index: 1000;
+}
+
+.navbar.scrolled {
+    background-color: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--primary-yellow), var(--primary-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-speed);
+}
+
+.nav-links a:hover {
+    color: var(--primary-yellow);
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-yellow), var(--primary-orange));
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-yellow);
+    border: 2px solid var(--primary-yellow);
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    /* Dosa lu udah gue hapus. Sekarang cuma transisi yang butuh aja yang diproses GPU */
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.btn-secondary:hover {
+    background: rgba(245, 158, 11, 0.1);
+    transform: translateY(-2px);
+}
+
+.large {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 5%;
+    background: radial-gradient(circle at center, var(--dark-surface) 0%, var(--dark-bg) 100%);
+}
+
+.hero-content {
+    max-width: 800px;
+    margin-top: 5rem;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Layout Grids */
+.features, .templates {
+    padding: 6rem 5%;
+    text-align: center;
+}
+
+.features h2, .templates h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Cards */
+.card {
+    background-color: var(--dark-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    text-align: left;
+}
+
+.card h3 {
+    color: var(--primary-yellow);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.template-img {
+    height: 180px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.template-card {
+    cursor: pointer;
+    position: relative;
+}
+
+.template-card:hover .template-img {
+    filter: brightness(1.2);
+    transition: filter var(--transition-speed);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark-surface);
+    padding: 3rem 5%;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer p {
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+/* Toast Notification Kustom (Gantiin alert() yang haram) */
+.custom-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-orange);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 9999;
+    font-weight: 600;
+}
+
+.custom-toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .hero-cta {
+        flex-direction: column;
+    }
+}
+

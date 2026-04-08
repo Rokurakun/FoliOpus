@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoliOpus - Portofolio Digital Interaktif</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Elemen observer buat mancing perubahan navbar -->
+    <div id="nav-trigger" style="position: absolute; top: 50px; width: 100%; height: 1px; visibility: hidden;"></div>
+
+    <nav class="navbar">
+        <div class="logo">FoliOpus</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Beranda</a></li>
+            <li><a href="#features">Fitur</a></li>
+            <li><a href="#templates">Eksplor</a></li>
+        </ul>
+        <button class="btn-primary" aria-label="Masuk ke dashboard">Masuk</button>
+    </nav>
+
+    <header id="hero" class="hero">
+        <div class="hero-content">
+            <h1>Bangun kariermu dengan FoliOpus</h1>
+            <p>Bangun personal branding lewat portofolio digital interaktif yang menampilkan identitas dan karya terbaikmu secara elegan dan mudah diakses</p>
+            <div class="hero-cta">
+                <button class="btn-primary large">Coba FoliOpus Sekarang</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <h2>Mengapa FoliOpus?</h2>
+        <div class="grid-container">
+            <div class="card feature-card">
+                <h3>Optimasi dan SEO dasar</h3>
+                <p>Portofolio ringan, cepat diakses dan mudah ditemukan lewat pencarian</p>
+            </div>
+            <div class="card feature-card">
+                <h3>Live Preview</h3>
+                <p>Kustomisasi portofolio tanpa hambatan. Setiap pembaruan data yang Anda lakukan akan langsung dirender secara real-time di layar tanpa waktu tunggu.</p>
+            </div>
+            <div class="card feature-card">
+                <h3>Desain Adaptif</h3>
+                <p>Portofolio otomatis menyesuaikan tampilan di ponsel, tablet, dan desktop</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="templates" class="templates">
+        <h2>Katalog Template</h2>
+        <div class="grid-container">
+            <div class="card template-card" data-url="./template-1/index.html">
+                <div class="template-img" style="background: linear-gradient(45deg, #f59e0b, #ea580c);"></div>
+                <h3>Minimalist Tech</h3>
+                <p>Dirancang khusus dengan clean code architecture untuk menonjolkan logika efisiensi para Software Engineer dan Data Analyst.</p>
+            </div>
+            <div class="card template-card" data-status="coming-soon">
+                <div class="template-img" style="background: linear-gradient(45deg, #1e293b, #f59e0b);"></div>
+                <h3>Creative Studio</h3>
+                <p>Kanvas dinamis dengan struktur semantik tingkat tinggi. Senjata visual utama bagi kreator dan seniman digital.</p>
+            </div>
+            <div class="card template-card" data-status="coming-soon">
+                <div class="template-img" style="background: linear-gradient(45deg, #eaa70c, #0f172a);"></div>
+                <h3>Corporate Hustler</h3>
+                <p>Estetika presisi dengan struktur tata letak berbasis konversi. Senjata negosiasi utama bagi profesional bisnis.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <h2 class="logo">FoliOpus</h2>
+            <p>&copy; 2026 FoliOpus. Dibangun untuk Gen-Z yang haus validasi karir.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
