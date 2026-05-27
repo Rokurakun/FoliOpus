@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnBuySticky.style.transform = '';
                 
                 const toast = document.createElement('div');
-                toast.innerText = '💳 Mengalihkan ke gerbang pembayaran FoliOpus...';
+                toast.innerText = '💳 Mengalihkan ke pembayaran...';
                 Object.assign(toast.style, {
                     position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%) translateY(-50px)',
                     backgroundColor: 'var(--text-main)', color: 'var(--bg-color)', padding: '1rem 2rem',

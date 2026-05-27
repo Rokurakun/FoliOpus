@@ -1,21 +1,21 @@
 // File: data.js
-// PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web lu blank screen.
+// PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web akan error.
 
 const userConfig = {
     meta: {
-        titleTag: "Muhammad Risky Ramadhani | Fullstack Dev",
+        titleTag: "FoliOpus Starter",
         seoDescription: "~~~"
     },
     hero: {
-        namaLengkap: "Muhammad Risky Ramadhani",
+        namaLengkap: "Muhammad Rizky Ramadhani",
         pekerjaan: "Fullstack Dev",
         deskripsiBio: "~~~",
         teksTombolKontak: ""
     },
     sosmed: {
-        github: "https://github.com/contoh-bagas",
-        linkedin: "https://linkedin.com/in/contoh-bagas",
-        email: "hello@bagasserver.dev"
+        github: "",
+        linkedin: "",
+        email: ""
     },
     skillset: [
         "Python", "C", "C++", "HTML"

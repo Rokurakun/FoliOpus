@@ -84,7 +84,7 @@ katalogCards.forEach(card => {
         const status = card.getAttribute('data-status');
         
         if (status === 'coming-soon') {
-            showToast('Template ini lagi digodok di kawah candradimuka. Pantengin terus!');
+            showToast('Template Belum Selesai');
         } else if (targetUrl) {
             window.open(targetUrl, '_blank');
         }
