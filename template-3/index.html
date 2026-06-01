@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FoliOpus Premium — Creative Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       INTRO / LANDING SCREEN
+  ═══════════════════════════════════════ -->
+  <section id="intro" class="intro-screen">
+    <div class="intro-bg-mesh"></div>
+    <div class="intro-content">
+      <p class="intro-eyebrow">FoliOpus Premium</p>
+      <h1 class="intro-name" id="intro-name">Adhiem Nabil Maulana</h1>
+      <p class="intro-tagline" id="intro-tagline">Crafting visual worlds where<br>ideas breathe and brands come alive.</p>
+
+      <div class="intro-buttons">
+        <button class="intro-btn" data-target="about">About</button>
+        <button class="intro-btn" data-target="work">Work</button>
+        <button class="intro-btn" data-target="contact">Contact</button>
+      </div>
+
+      <div class="scroll-hint">
+        <span class="scroll-hint-text">drag up to enter</span>
+        <div class="scroll-arrow">↑</div>
+      </div>
+    </div>
+
+    <!-- Drag overlay -->
+    <div class="drag-overlay" id="dragOverlay"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       MAIN PORTFOLIO (hidden initially)
+  ═══════════════════════════════════════ -->
+  <div id="mainPortfolio" class="main-portfolio hidden">
+
+    <!-- STICKY NAV -->
+    <nav class="main-nav" id="mainNav">
+      <div class="nav-logo" id="nav-logo">Adhiem Nabil Maulana<span>.</span></div>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#project" class="nav-link">Project</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#contact" class="nav-link">Contact</a>
+        <a href="#buy" class="nav-link nav-buy" id="nav-buy">Beli Sekarang</a>
+      </div>
+      <button class="nav-hamburger" id="navHamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <!-- ── SECTION 1: ABOUT / HOW I THINK ── -->
+    <section id="about" class="section about-section">
+      <div class="section-label">01 — How I Think</div>
+      <div class="about-grid">
+        <!-- LEFT: avatar + meta -->
+        <div class="about-left">
+          <div class="about-avatar-wrap">
+            <div class="about-avatar">
+              <div class="avatar-placeholder">AN</div>
+            </div>
+            <div class="avatar-ring"></div>
+          </div>
+          <div class="about-meta">
+            <div class="meta-item">
+              <span class="meta-icon">📍</span>
+              <span id="meta-location">Makassar, Indonesia</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">🕐</span>
+              <span id="local-time">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: bio -->
+        <div class="about-right">
+          <h2 class="about-heading">Design is not<br><em>decoration</em> —<br>it is decision.</h2>
+          <p class="about-bio">
+            I'm a Creative Studio designer obsessed with the space between strategy and aesthetics. 
+            Every pixel I place carries intention. Every layout I build tells a story before a single 
+            word is read.
+          </p>
+          <p class="about-bio">
+            With years of experience across branding, UI/UX, and digital storytelling, I bring the 
+            relentless work ethic of a craftsman and the instinct of a creative director — 
+            turning your vision into something people remember.
+          </p>
+          <button class="btn-outline" id="openAchievements">View Achievements ↗</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 2: PROJECTS / SELECTED WORK ── -->
+    <section id="project" class="section project-section">
+      <div class="section-label">02 — Selected Work</div>
+      <h2 class="section-title">Technical<br><em>Work.</em></h2>
+
+      <div class="project-grid" id="projectGrid">
+        <!-- Project cards injected by JS -->
+      </div>
+    </section>
+
+    <!-- ── SECTION 3: WHAT I BUILD ── -->
+    <section id="experience" class="section build-section">
+      <div class="section-label">03 — What I Build</div>
+      <h2 class="section-title">The craft<br>behind the <em>result.</em></h2>
+
+      <div class="accordion-list" id="buildAccordion">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- ── SECTION 4: THE TOOLS I USE ── -->
+    <section id="tools" class="section tools-section">
+      <div class="section-label">04 — The Tools I Use</div>
+      <h2 class="section-title">Behind<br>the <em>delivery.</em></h2>
+
+      <div class="tools-split" id="toolsSplit">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- ── SECTION 5: CAPABILITIES ── -->
+    <section id="capabilities" class="section cap-section">
+      <div class="section-label">05 — Capabilities</div>
+      <h2 class="section-title">What I can<br>structure, build,<br>and <em>ship.</em></h2>
+
+      <div class="cap-grid" id="capGrid">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- ── SECTION 6: CONTACT / BUY ── -->
+    <section id="contact" class="section contact-section">
+      <div class="contact-hero">
+        <h2 class="contact-big">Let's build<br>something<br><em>beautiful.</em></h2>
+        <p class="contact-sub">
+          You've seen the work. You know the craft.<br>
+          Now let's turn your next idea into something extraordinary.
+        </p>
+        <a href="#buy" class="btn-primary" id="buy">Get This Portfolio — Rp 499.000</a>
+      </div>
+
+      <div class="footer-grid">
+        <!-- Sitemap -->
+        <div class="footer-col">
+          <p class="footer-col-title">Sitemap</p>
+          <a href="#about" class="footer-link">About</a>
+          <a href="#project" class="footer-link">Project</a>
+          <a href="#experience" class="footer-link">Experience</a>
+          <a href="#contact" class="footer-link">Contact</a>
+        </div>
+        <!-- Social -->
+        <div class="footer-col">
+          <p class="footer-col-title">Social</p>
+          <a href="mailto:adhiemkeren999@gmail.com" class="footer-link">Email ↗</a>
+          <a href="https://linkedin.com" target="_blank" class="footer-link">LinkedIn ↗</a>
+          <a href="https://discord.com" target="_blank" class="footer-link">Discord ↗</a>
+          <a href="https://instagram.com" target="_blank" class="footer-link">Instagram ↗</a>
+        </div>
+        <!-- Info -->
+        <div class="footer-col">
+          <p class="footer-col-title">Studio</p>
+          <p class="footer-text">FoliOpus Premium</p>
+          <p class="footer-text">Creative Studio Portfolio</p>
+          <p class="footer-text" id="footer-year">© 2025</p>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /mainPortfolio -->
+
+  <!-- ═══════════════════════════════════════
+       DIALOG BOX (reusable)
+  ═══════════════════════════════════════ -->
+  <div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog-box" id="dialogBox">
+      <button class="dialog-close" id="dialogClose">✕</button>
+      <div class="dialog-content" id="dialogContent"></div>
+    </div>
+  </div>
+
+  <!-- Mobile nav menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#project" class="mobile-link">Project</a>
+    <a href="#experience" class="mobile-link">Experience</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+    <a href="#buy" class="mobile-link mobile-buy">Beli Sekarang</a>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
