@@ -19,13 +19,11 @@ body {
     background-color: var(--dark-bg);
     color: var(--text-light);
     line-height: 1.6;
-    /* Dewa Optimasi Font: Bikin teks tajem setajam silet */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
- 
-/* Navbar */
+
 .navbar {
     position: fixed;
     top: 0;
@@ -69,8 +67,7 @@ body {
 .nav-links a:hover {
     color: var(--primary-yellow);
 }
- 
-/* Buttons */
+
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-yellow), var(--primary-orange));
     color: #fff;
@@ -95,7 +92,6 @@ body {
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    /* Dosa lu udah gue hapus. Sekarang cuma transisi yang butuh aja yang diproses GPU */
     transition: background-color var(--transition-speed), transform var(--transition-speed);
 }
  
@@ -108,8 +104,7 @@ body {
     padding: 1rem 2.5rem;
     font-size: 1.1rem;
 }
- 
-/* Hero Section */
+
 .hero {
     height: 100vh;
     display: flex;
@@ -142,8 +137,7 @@ body {
     gap: 1rem;
     justify-content: center;
 }
- 
-/* Layout Grids */
+
 .features, .templates {
     padding: 6rem 5%;
     text-align: center;
@@ -159,8 +153,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
- 
-/* Cards */
+
 .card {
     background-color: var(--dark-surface);
     padding: 2rem;
@@ -191,8 +184,7 @@ body {
     filter: brightness(1.2);
     transition: filter var(--transition-speed);
 }
- 
-/* Footer */
+
 .footer {
     background-color: var(--dark-surface);
     padding: 3rem 5%;
@@ -204,8 +196,7 @@ body {
     color: var(--text-muted);
     margin-top: 1rem;
 }
- 
-/* Toast Notification Kustom (Gantiin alert() yang haram) */
+
 .custom-toast {
     position: fixed;
     bottom: 20px;
@@ -226,8 +217,7 @@ body {
     transform: translateY(0);
     opacity: 1;
 }
- 
-/* Mobile Responsiveness */
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -242,14 +232,7 @@ body {
         flex-direction: column;
     }
 }
- 
- 
-/* ═══════════════════════════════════════════
-   Auth Pages — Login & Register
-   Aktifkan dengan class="auth-page" di <body>
-   ═══════════════════════════════════════════ */
- 
-/* Layout — flex centering khusus auth pages */
+
 body.auth-page {
     display: flex;
     align-items: center;
@@ -257,8 +240,7 @@ body.auth-page {
     min-height: 100vh;
     overflow: hidden;
 }
- 
-/* Background orbs */
+
 .bg-orb {
     position: fixed;
     border-radius: 50%;
@@ -269,12 +251,10 @@ body.auth-page {
 }
 .bg-orb-1 { width: 550px; height: 550px; background: var(--primary-yellow); top: -180px; right: -120px; }
 .bg-orb-2 { width: 450px; height: 450px; background: var(--primary-orange); bottom: -120px; left: -120px; }
- 
-/* Orb register page dibalik posisinya */
+
 body.register-page .bg-orb-1 { background: var(--primary-orange); top: -180px; left: -120px; right: auto; }
 body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px; right: -120px; left: auto; }
- 
-/* Tombol kembali */
+
 .back-link {
     position: fixed;
     top: 1.75rem;
@@ -291,8 +271,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
 }
 .back-link:hover { color: var(--primary-yellow); gap: 0.65rem; }
 .back-link svg   { width: 16px; height: 16px; flex-shrink: 0; }
- 
-/* Auth card — login & register pakai class yang sama via .card, ini extend-nya */
+
 .login-card,
 .register-card {
     width: 100%;
@@ -308,12 +287,10 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
     to   { opacity: 1; transform: translateY(0); }
 }
  
-/* Teks header card */
 .login-tagline  { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; }
 .login-title    { font-size: 1.55rem; font-weight: 700; line-height: 1.3; }
 .login-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem; margin-bottom: 2rem; }
- 
-/* Feedback boxes */
+
 .alert-box,
 .success-box {
     display: none;
@@ -339,8 +316,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
     from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0); }
 }
- 
-/* Form fields */
+
 .form-group { margin-bottom: 1.4rem; }
 .form-group label {
     display: block;
@@ -407,8 +383,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
     25%       { transform: translateX(-5px); }
     75%       { transform: translateX(5px); }
 }
- 
-/* Tombol show/hide password */
+
 .toggle-pw {
     position: absolute;
     right: 0.9rem;
@@ -425,8 +400,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
 }
 .toggle-pw:hover  { color: var(--primary-yellow); }
 .toggle-pw svg    { width: 17px; height: 17px; }
- 
-/* Password strength bar (register) */
+
 .strength-bar {
     display: flex;
     gap: 4px;
@@ -444,8 +418,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
 .strength-bar.s3 span:nth-child(-n+3) { background: #eab308; }
 .strength-bar.s4 span                 { background: #22c55e; }
 .strength-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
- 
-/* Submit buttons */
+
 .btn-login,
 .btn-register {
     width: 100%;
@@ -457,8 +430,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
 }
 .btn-login:disabled,
 .btn-register:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
- 
-/* Loading spinner */
+
 .spinner {
     display: none;
     width: 15px;
@@ -472,8 +444,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
 .spinner.show { display: block; }
  
 @keyframes spin { to { transform: rotate(360deg); } }
- 
-/* Divider & bottom note */
+
 .divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.05); margin: 2rem 0 1.5rem; }
  
 .register-note,
@@ -484,8 +455,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
  
 .register-note a:hover,
 .login-note a:hover { text-decoration: underline; }
- 
-/* Mobile auth */
+
 @media (max-width: 480px) {
     .login-card,
     .register-card { margin: 1rem; }
