@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoliOpus — Masuk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+ 
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+ 
+    <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Kembali ke Beranda
+    </a>
+ 
+    <div class="card login-card">
+ 
+        <div class="logo" style="font-size: 1.9rem;">FoliOpus</div>
+        <p class="login-tagline">Platform Portofolio Digital Interaktif</p>
+ 
+        <h1 class="login-title">Selamat datang</h1>
+        <p class="login-subtitle">Masuk untuk melanjutkan</p>
+ 
+        <div class="success-box" id="successBox"></div>
+        <div class="alert-box"   id="alertBox"></div>
+ 
+        <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-wrapper">
+                <input type="text" id="username" placeholder="Masukkan username kamu"
+                    autocomplete="username" spellcheck="false" />
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <p class="field-error" id="usernameError"></p>
+        </div>
+ 
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+                <input type="password" id="password" placeholder="Masukkan password kamu"
+                    autocomplete="current-password" />
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <button class="toggle-pw" id="togglePw" type="button" aria-label="Tampilkan/sembunyikan password">
+                    <svg id="eyeShow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg id="eyeHide" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="field-error" id="passwordError"></p>
+        </div>
+ 
+        <button class="btn-primary btn-login" id="btnLogin" type="button">
+            <span id="btnText">Masuk</span>
+            <span class="spinner" id="spinner"></span>
+        </button>
+ 
+        <hr class="divider">
+        <p class="register-note">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+ 
+    </div>
+ 
+    <script src="script.js"></script>
+</body>
+</html>
