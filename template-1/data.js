@@ -1,4 +1,3 @@
-// File: data.js
 // PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web akan error.
 
 const userConfig = {

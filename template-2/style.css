@@ -170,7 +170,6 @@ img { display: block; max-width: 100%; }
   margin-top: 2px;
 }
 
-/*SECTION 1 ABOUT*/
 .section--about {
   background: var(--bg);
 }
@@ -381,7 +380,6 @@ img { display: block; max-width: 100%; }
   animation: scrollSlide 2s 1.5s infinite;
 }
 
-/*SECTION 2 LOGS*/
 .section--logs {
   background: var(--bg-alt);
 }
@@ -468,7 +466,6 @@ img { display: block; max-width: 100%; }
   max-width: 620px;
 }
 
-/*SECTION 3 WORK*/
 .section--work {
   background: var(--bg);
 }
@@ -595,7 +592,6 @@ img { display: block; max-width: 100%; }
   border-radius: 2px;
 }
 
-/*SECTION 4 STATS*/
 .section--stats {
   background: var(--bg-alt);
 }
@@ -768,7 +764,6 @@ img { display: block; max-width: 100%; }
   background: var(--gold-glow);
 }
 
-/*CONTACT*/
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -888,7 +883,6 @@ img { display: block; max-width: 100%; }
   text-transform: uppercase;
 }
 
-/*ANIMASI*/
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }

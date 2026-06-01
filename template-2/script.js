@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function tick(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out expo
       const eased = 1 - Math.pow(1 - progress, 4);
       const current = Math.round(eased * target);
       el.textContent = current + suffix;
