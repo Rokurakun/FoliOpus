@@ -1,0 +1,464 @@
+let introDismissed = false;
+let dragStartY = null;
+let dragCurrentY = null;
+let isDragging = false;
+
+const introScreen   = document.getElementById('intro');
+const dragOverlay   = document.getElementById('dragOverlay');
+const mainPortfolio = document.getElementById('mainPortfolio');
+const mainNav       = document.getElementById('mainNav');
+const dialogOverlay = document.getElementById('dialogOverlay');
+const dialogContent = document.getElementById('dialogContent');
+const dialogClose   = document.getElementById('dialogClose');
+const navHamburger  = document.getElementById('navHamburger');
+const mobileMenu    = document.getElementById('mobileMenu');
+
+function populateIntro() {
+  const nameEl    = document.getElementById('intro-name');
+  const taglineEl = document.getElementById('intro-tagline');
+  if (nameEl) nameEl.textContent = SITE_DATA.owner.name;
+  if (taglineEl) taglineEl.innerHTML = SITE_DATA.owner.tagline.replace('\n', '<br>');
+
+  document.querySelectorAll('.intro-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      dismissIntro(() => {
+        setTimeout(() => {
+          const el = document.getElementById(target);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 400);
+      });
+    });
+  });
+}
+
+function dismissIntro(cb) {
+  if (introDismissed) return;
+  introDismissed = true;
+  introScreen.classList.add('dismissed');
+  mainPortfolio.classList.remove('hidden');
+  mainPortfolio.classList.add('visible');
+  setTimeout(() => {
+    mainNav.classList.add('visible');
+    if (cb) cb();
+  }, 600);
+}
+
+function handleDragStart(e) {
+  dragStartY = e.touches ? e.touches[0].clientY : e.clientY;
+  isDragging = true;
+  introScreen.classList.add('dragging');
+}
+
+function handleDragMove(e) {
+  if (!isDragging) return;
+  dragCurrentY = e.touches ? e.touches[0].clientY : e.clientY;
+  const delta = dragStartY - dragCurrentY;
+  if (delta > 0) {
+    const clamped = Math.min(delta, window.innerHeight);
+    introScreen.style.transform = `translateY(-${clamped}px)`;
+    if (delta > 80) {
+      introScreen.style.opacity = 1 - (delta - 80) / 200;
+    }
+  }
+  e.preventDefault();
+}
+
+function handleDragEnd() {
+  if (!isDragging) return;
+  isDragging = false;
+  introScreen.classList.remove('dragging');
+  const delta = dragStartY - (dragCurrentY || dragStartY);
+  if (delta > window.innerHeight * 0.22) {
+    dismissIntro();
+  } else {
+    introScreen.style.transform = '';
+    introScreen.style.opacity = '';
+  }
+  dragStartY = null;
+  dragCurrentY = null;
+}
+
+dragOverlay.addEventListener('mousedown', handleDragStart);
+dragOverlay.addEventListener('touchstart', handleDragStart, { passive: false });
+window.addEventListener('mousemove', handleDragMove);
+window.addEventListener('touchmove', handleDragMove, { passive: false });
+window.addEventListener('mouseup', handleDragEnd);
+window.addEventListener('touchend', handleDragEnd);
+
+window.addEventListener('wheel', (e) => {
+  if (introDismissed) return;
+  if (e.deltaY > 40) dismissIntro();
+}, { passive: true });
+
+function initCursor() {
+  const dot  = document.createElement('div');
+  const ring = document.createElement('div');
+  dot.className  = 'cursor-dot';
+  ring.className = 'cursor-ring';
+  document.body.append(dot, ring);
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left  = mx + 'px';
+    dot.style.top   = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.14;
+    ry += (my - ry) * 0.14;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+}
+
+function updateTime() {
+  const el = document.getElementById('local-time');
+  if (!el) return;
+  const now = new Date();
+  const opts = { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  el.textContent = new Intl.DateTimeFormat('en-GB', opts).format(now) + ' WIB';
+}
+
+function initClock() {
+  const locEl = document.getElementById('meta-location');
+  if (locEl) locEl.textContent = SITE_DATA.owner.location;
+  updateTime();
+  setInterval(updateTime, 1000);
+}
+
+function setFooterYear() {
+  const el = document.getElementById('footer-year');
+  if (el) el.textContent = `© ${new Date().getFullYear()}`;
+}
+
+function openDialog(html) {
+  dialogContent.innerHTML = html;
+  dialogOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDialog() {
+  dialogOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+dialogClose.addEventListener('click', closeDialog);
+dialogOverlay.addEventListener('click', (e) => {
+  if (e.target === dialogOverlay) closeDialog();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDialog();
+});
+
+function buildDialogHTML(d) {
+  const statsHTML = d.stats
+    ? `<div class="dialog-stat-row">${d.stats.map(s =>
+        `<div class="dialog-stat">
+          <span class="dialog-stat-num">${s.num}</span>
+          <span class="dialog-stat-label">${s.label}</span>
+        </div>`).join('')}
+       </div>` : '';
+
+  const badgesHTML = d.badges
+    ? `<div class="dialog-badge-row">${d.badges.map(b =>
+        `<span class="dialog-badge">${b}</span>`).join('')}
+       </div>` : '';
+
+  const bodyHTML = Array.isArray(d.body)
+    ? d.body.map(line => {
+        if (d === SITE_DATA.achievements) {
+          return `<p>${line}</p>`;
+        }
+        return `<p>${line}</p>`;
+      }).join('')
+    : `<p>${d.body}</p>`;
+
+  return `
+    <h3>${d.title}</h3>
+    <p class="dialog-sub">${d.subtitle || ''}</p>
+    ${statsHTML}
+    ${bodyHTML}
+    ${badgesHTML}
+  `;
+}
+
+function initAbout() {
+  const heading = document.querySelector('.about-heading');
+  const bioEls  = document.querySelectorAll('.about-bio');
+  if (bioEls.length >= 2) {
+    bioEls[0].textContent = SITE_DATA.owner.bio[0];
+    bioEls[1].textContent = SITE_DATA.owner.bio[1];
+  }
+
+  document.getElementById('openAchievements').addEventListener('click', () => {
+    const d = SITE_DATA.achievements;
+    const listHTML = d.body.map(line => `<p>${line}</p>`).join('');
+    const statsHTML = `<div class="dialog-stat-row">${d.stats.map(s =>
+      `<div class="dialog-stat">
+        <span class="dialog-stat-num">${s.num}</span>
+        <span class="dialog-stat-label">${s.label}</span>
+      </div>`).join('')}</div>`;
+    const badgesHTML = `<div class="dialog-badge-row">${d.badges.map(b =>
+      `<span class="dialog-badge">${b}</span>`).join('')}</div>`;
+
+    openDialog(`
+      <h3>${d.title}</h3>
+      <p class="dialog-sub">${d.subtitle}</p>
+      ${statsHTML}
+      ${listHTML}
+      ${badgesHTML}
+    `);
+  });
+}
+
+function initProjects() {
+  const grid = document.getElementById('projectGrid');
+  if (!grid) return;
+
+  SITE_DATA.projects.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'project-card reveal';
+    card.dataset.delay = i * 120;
+    card.innerHTML = `
+      <div class="project-card-inner">
+        <div class="project-thumb">
+          <div class="project-thumb-bg" style="background:${p.gradient}; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:3.5rem;">${p.emoji}</span>
+          </div>
+        </div>
+        <div class="project-info">
+          <div>
+            <p class="project-tag">${p.tag}</p>
+            <h3 class="project-name">${p.name}</h3>
+            <p class="project-desc">${p.desc}</p>
+          </div>
+          <span class="project-cta">View Case Study →</span>
+        </div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => {
+      openDialog(buildDialogHTML(p.dialog));
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function initBuildAccordion() {
+  const list = document.getElementById('buildAccordion');
+  if (!list) return;
+
+  SITE_DATA.buildItems.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'accordion-item reveal';
+    el.dataset.delay = i * 80;
+    el.innerHTML = `
+      <button class="accordion-header">
+        <span>
+          <span class="accordion-num">0${i + 1}</span>
+          <span class="accordion-title">${item.title}</span>
+        </span>
+        <span class="accordion-arrow">+</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">${item.desc}</div>
+      </div>
+    `;
+
+    el.querySelector('.accordion-header').addEventListener('click', () => {
+      const isOpen = el.classList.contains('open');
+      list.querySelectorAll('.accordion-item.open').forEach(x => x.classList.remove('open'));
+      if (!isOpen) el.classList.add('open');
+    });
+
+    list.appendChild(el);
+  });
+}
+
+function initTools() {
+  const container = document.getElementById('toolsSplit');
+  if (!container) return;
+
+  ['left', 'right'].forEach(side => {
+    const box = SITE_DATA.tools[side];
+    const div = document.createElement('div');
+    div.className = 'tools-box reveal';
+
+    const itemsHTML = box.items.map(t => `
+      <div class="tool-item">
+        <div class="tool-icon">${t.icon}</div>
+        <span class="tool-name">${t.name}</span>
+        <span class="tool-type">${t.type}</span>
+      </div>
+    `).join('');
+
+    div.innerHTML = `
+      <p class="tools-box-title">${box.title}</p>
+      ${itemsHTML}
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function initCapabilities() {
+  const grid = document.getElementById('capGrid');
+  if (!grid) return;
+
+  SITE_DATA.capabilities.forEach((cap, i) => {
+    const card = document.createElement('div');
+    card.className = 'cap-card reveal';
+    card.dataset.delay = i * 80;
+    card.innerHTML = `
+      <div class="cap-icon">${cap.icon}</div>
+      <h4 class="cap-title">${cap.title}</h4>
+      <p class="cap-desc">${cap.desc}</p>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay) || 0;
+        setTimeout(() => {
+          entry.target.classList.add('in-view');
+          if (entry.target.classList.contains('project-card')) {
+            entry.target.classList.add('revealed');
+            entry.target.style.opacity = '';
+            entry.target.style.transform = '';
+          }
+        }, delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.project-card').forEach(el => observer.observe(el));
+  }, 200);
+}
+
+function initNav() {
+  let menuOpen = false;
+  navHamburger.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+    const spans = navHamburger.querySelectorAll('span');
+    if (menuOpen) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+      spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    }
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.remove('open');
+      navHamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    });
+  });
+}
+
+function initNavActiveState() {
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.nav-link:not(.nav-buy)');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+      if (sectionTop <= 120) current = section.id;
+    });
+
+    links.forEach(link => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href').replace('#', '');
+      if (href === current) {
+        link.style.color = 'var(--tiffany)';
+      } else {
+        link.style.color = '';
+      }
+    });
+  }, { passive: true });
+}
+
+function updateSocialLinks() {
+  const links = document.querySelectorAll('.footer-link');
+  links.forEach(link => {
+    const text = link.textContent.toLowerCase();
+    if (text.includes('email')) link.href = `mailto:${SITE_DATA.owner.social.email}`;
+    if (text.includes('linkedin')) link.href = SITE_DATA.owner.social.linkedin;
+    if (text.includes('discord')) link.href = SITE_DATA.owner.social.discord;
+    if (text.includes('instagram')) link.href = SITE_DATA.owner.social.instagram;
+  });
+}
+
+function updateNavLogo() {
+  const logo = document.getElementById('nav-logo');
+  if (logo) {
+    const firstName = SITE_DATA.owner.name.split(' ')[0];
+    logo.innerHTML = `${firstName}<span>.</span>`;
+  }
+}
+
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+}
+
+function initBuyPulse() {
+  const buyBtn = document.getElementById('nav-buy');
+  if (!buyBtn) return;
+  setInterval(() => {
+    buyBtn.style.boxShadow = '0 0 0 0 rgba(10,191,188,0.5)';
+    buyBtn.animate([
+      { boxShadow: '0 0 0 0 rgba(10,191,188,0.5)' },
+      { boxShadow: '0 0 0 10px rgba(10,191,188,0)' }
+    ], { duration: 1200, easing: 'ease-out', fill: 'forwards' });
+  }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initCursor();
+  populateIntro();
+  initClock();
+  setFooterYear();
+  updateNavLogo();
+
+  initAbout();
+  initProjects();
+  initBuildAccordion();
+  initTools();
+  initCapabilities();
+  updateSocialLinks();
+
+  initNav();
+  initNavActiveState();
+  initSmoothScroll();
+  initScrollReveal();
+  initBuyPulse();
+
+  console.log('%cFoliOpus Premium — Creative Studio', 'color:#0ABFBC;font-size:14px;font-weight:bold;');
+  console.log('%cTo edit content, open app.js and modify SITE_DATA at the top.', 'color:#43B29D;font-size:11px;');
+});
