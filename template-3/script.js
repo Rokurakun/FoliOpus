@@ -439,6 +439,21 @@ function initBuyPulse() {
   }, 3000);
 }
 
+const btnBuyCta = document.querySelector('.btn-primary');
+  if (btnBuyCta) {
+    btnBuyCta.addEventListener('click', () => {
+      let session = null;
+      try { session = JSON.parse(localStorage.getItem('foliOpusUser')); } catch (_) {}
+ 
+      if (session?.loggedIn) {
+        window.location.href = '../payment.html?template=premium';
+      } else {
+        sessionStorage.setItem('foliOpusRedirect', '../payment.html?template=premium');
+        window.location.href = '../login.html';
+      }
+    });
+  }
+
 document.addEventListener('DOMContentLoaded', () => {
   initCursor();
   populateIntro();
