@@ -105,34 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
         btnBuySticky.addEventListener('click', () => {
             btnBuySticky.style.transform = 'scale(0.95)';
             
-            setTimeout(() => {
-                btnBuySticky.style.transform = '';
-                
-                const toast = document.createElement('div');
-                toast.innerText = '💳 Mengalihkan ke pembayaran...';
-                Object.assign(toast.style, {
-                    position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%) translateY(-50px)',
-                    backgroundColor: 'var(--text-main)', color: 'var(--bg-color)', padding: '1rem 2rem',
-                    borderRadius: '8px', fontFamily: 'var(--font-mono)', fontWeight: '600', zIndex: '10000', opacity: '0',
-                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
-                });
-                
-                document.body.appendChild(toast);
-                
-                requestAnimationFrame(() => {
-                    toast.style.transform = 'translateX(-50%) translateY(0)';
-                    toast.style.opacity = '1';
-                });
-
-                setTimeout(() => {
-                    toast.style.transform = 'translateX(-50%) translateY(-50px)';
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 400);
-                }, 3000);
-                
-            }, 150);
+            let session = null;
+            try { session = JSON.parse(localStorage.getItem('foliOpusUser')); } catch (_) {}
+            
+            if (session?.loggedIn) {
+                window.location.href = '../payment.html?template=starter';
+            } else {
+                sessionStorage.setItem('foliOpusRedirect', '../payment.html?template=starter');
+                window.location.href = '../login.html';
+            }
         });
     }
+    
     const metaDescription = document.getElementById('dynamic-meta-desc');
     if (metaDescription && typeof userConfig !== 'undefined' && userConfig.hero) {
         const namaKlien = userConfig.hero.namaLengkap || 'Profesional';

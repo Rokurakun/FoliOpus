@@ -408,3 +408,92 @@ if (document.getElementById('btnRegister')) {
         el.addEventListener('input',   () => { el.classList.remove('is-error'); alertBox.classList.remove('show'); });
     });
 }
+
+// ═══════════════════════════════════════════
+// PAYMENT PAGE
+// ═══════════════════════════════════════════
+ 
+if (document.getElementById('btnSudahBayar')) {
+ 
+    const TEMPLATES = {
+        starter: {
+            name:     'FoliOpus Starter',
+            price:    149000,
+            badge:    'Starter',
+            badgeCls: '',
+            thumb:    'linear-gradient(45deg, #f59e0b, #ea580c)',
+            zipUrl:   './downloads/foliOpus-starter.zip'
+        },
+        pro: {
+            name:     'FoliOpus Pro',
+            price:    299000,
+            badge:    'Pro',
+            badgeCls: 'badge-pro',
+            thumb:    'linear-gradient(45deg, #1e293b, #f59e0b)',
+            zipUrl:   './downloads/foliOpus-pro.zip'
+        },
+        premium: {
+            name:     'FoliOpus Premium',
+            price:    499000,
+            badge:    'Premium',
+            badgeCls: 'badge-premium',
+            thumb:    'linear-gradient(45deg, #eaa70c, #0f172a)',
+            zipUrl:   './downloads/foliOpus-premium.zip'
+        }
+    };
+ 
+    function formatRupiah(num) {
+        return 'Rp ' + num.toLocaleString('id-ID');
+    }
+ 
+    // Redirect ke login kalau belum login
+    const session = AUTH.getSession();
+    if (!session?.loggedIn) {
+        sessionStorage.setItem('foliOpusRedirect', window.location.href);
+        window.location.replace('login.html');
+    }
+ 
+    // Tampilkan username di navbar
+    const navUser = document.getElementById('navUser');
+    if (navUser && session?.username) {
+        navUser.textContent = '👤 ' + session.username;
+    }
+ 
+    // Baca query param ?template=starter
+    const params      = new URLSearchParams(window.location.search);
+    const templateKey = params.get('template') || 'starter';
+    const tmpl        = TEMPLATES[templateKey] || TEMPLATES.starter;
+ 
+    // Isi ringkasan pesanan
+    document.getElementById('summaryName').textContent       = tmpl.name;
+    document.getElementById('summaryBadge').textContent      = tmpl.badge;
+    document.getElementById('summaryBadge').className        = 'summary-badge ' + tmpl.badgeCls;
+    document.getElementById('summaryThumb').style.background = tmpl.thumb;
+    document.getElementById('summaryPrice').textContent      = formatRupiah(tmpl.price);
+    document.getElementById('summaryTotal').textContent      = formatRupiah(tmpl.price);
+    document.getElementById('displayAmount').textContent     = formatRupiah(tmpl.price);
+    document.getElementById('downloadName').textContent      = 'Source Code — ' + tmpl.name;
+    document.getElementById('downloadLink').href             = tmpl.zipUrl;
+ 
+    // Step navigation
+    function goToStep(step) {
+        document.querySelectorAll('.step-panel').forEach((p, i) => {
+            p.classList.toggle('active', i + 1 === step);
+        });
+ 
+        [1, 2, 3].forEach(n => {
+            const el   = document.getElementById('stepEl' + n);
+            const line = document.getElementById('stepLine' + n);
+            el.classList.remove('active', 'done');
+            if (n < step)        el.classList.add('done');
+            else if (n === step) el.classList.add('active');
+            if (line) line.classList.toggle('done', n < step);
+        });
+    }
+ 
+    // Tombol sudah bayar
+    document.getElementById('btnSudahBayar').addEventListener('click', () => {
+        goToStep(2);
+        setTimeout(() => goToStep(3), 2500);
+    });
+}
