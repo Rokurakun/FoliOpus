@@ -993,12 +993,12 @@ img { display: block; max-width: 100%; }
 
 .btn-buy {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--bg);
   background: var(--gold);
-  padding: 7px 16px;
+  padding: 4px 10px;
   border-radius: var(--radius);
   font-weight: 700;
   animation: buyNavPulse 3.5s ease-in-out 3s infinite;
