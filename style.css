@@ -53,6 +53,7 @@ body {
     font-weight: 800;
     background: linear-gradient(to right, var(--primary-yellow), var(--primary-orange));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
  
@@ -660,6 +661,7 @@ body.payment-page {
     font-weight: 800;
     background: linear-gradient(to right, var(--primary-yellow), var(--primary-orange));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
