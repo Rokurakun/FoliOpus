@@ -1,7 +1,7 @@
 const AUTH = {
     USERS_KEY:   'foliOpusUsers',
     SESSION_KEY: 'foliOpusUser',
-
+ 
     ADMIN: {
         username:   'admin',
         password:   'admin123',
@@ -65,22 +65,19 @@ const AUTH = {
         localStorage.removeItem(this.SESSION_KEY);
     }
 };
- 
+
 const navbar     = document.querySelector('.navbar');
 const navTrigger = document.getElementById('nav-trigger');
  
-const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-}, { threshold: 0 });
- 
-if (navTrigger) navObserver.observe(navTrigger);
- 
+if (navbar && navTrigger) {
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            navbar.classList.toggle('scrolled', !entry.isIntersecting);
+        });
+    }, { threshold: 0 });
+    navObserver.observe(navTrigger);
+}
+
 const cards = document.querySelectorAll('.card');
 cards.forEach(card => {
     card.addEventListener('mouseenter', () => {
@@ -92,21 +89,19 @@ cards.forEach(card => {
         card.style.boxShadow = 'none';
     });
 });
- 
+
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'custom-toast';
     toast.textContent = message;
     document.body.appendChild(toast);
- 
     requestAnimationFrame(() => toast.classList.add('show'));
- 
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
     }, 3000);
 }
- 
+
 const btnBuatCV = document.querySelector('.hero-cta .btn-primary.large');
 const btnDemo   = document.querySelector('.hero-cta .btn-secondary.large');
  
@@ -127,13 +122,12 @@ if (btnDemo) {
         }
     });
 }
- 
+
 const katalogCards = document.querySelectorAll('.template-card');
 katalogCards.forEach(card => {
     card.addEventListener('click', () => {
         const targetUrl = card.getAttribute('data-url');
         const status    = card.getAttribute('data-status');
- 
         if (status === 'coming-soon') {
             showToast('Template Belum Selesai');
         } else if (targetUrl) {
@@ -141,26 +135,73 @@ katalogCards.forEach(card => {
         }
     });
 });
- 
+
 function updateNavbar() {
-    const btnMasuk = document.querySelector('.navbar .btn-primary');
+    const btnMasuk   = document.querySelector('.navbar .btn-primary');
+    const navLinks   = document.querySelector('.navbar .nav-links');
     if (!btnMasuk) return;
  
-    try {
-        const session = AUTH.getSession();
+    const session = AUTH.getSession();
+
+    if (session?.loggedIn) {
+        btnMasuk.textContent = session.username + ' ▾';
+        btnMasuk.removeAttribute('href');
+        btnMasuk.onclick = null;
+
+        let dropdown = document.getElementById('userDropdown');
+        if (!dropdown) {
+            dropdown = document.createElement('div');
+            dropdown.id = 'userDropdown';
+            dropdown.className = 'user-dropdown';
+            dropdown.innerHTML = `<button id="btnLogout">Keluar</button>`;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'nav-user-wrap';
+            btnMasuk.parentNode.replaceChild(wrapper, btnMasuk);
+            wrapper.appendChild(btnMasuk);
+            wrapper.appendChild(dropdown);
  
-        if (session?.loggedIn) {
-            btnMasuk.textContent = session.username;
-            btnMasuk.onclick = () => {
+            document.getElementById('btnLogout').addEventListener('click', () => {
                 AUTH.clearSession();
                 location.reload();
-            };
-        } else {
-            btnMasuk.textContent = 'Masuk';
-            btnMasuk.onclick = () => window.location.href = 'login.html';
+            });
         }
-    } catch (_) {
+ 
+        btnMasuk.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+ 
+        document.addEventListener('click', () => dropdown.classList.remove('show'));
+ 
+    } else {
+        btnMasuk.textContent = 'Masuk';
         btnMasuk.onclick = () => window.location.href = 'login.html';
+    }
+
+    if (navLinks && !document.getElementById('hamburger')) {
+        const hamburger = document.createElement('button');
+        hamburger.id = 'hamburger';
+        hamburger.className = 'hamburger';
+        hamburger.setAttribute('aria-label', 'Buka menu');
+        hamburger.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+        `;
+        navbar.insertBefore(hamburger, navLinks);
+ 
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = navLinks.classList.toggle('nav-open');
+            hamburger.classList.toggle('open', isOpen);
+        });
+ 
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target)) {
+                navLinks.classList.remove('nav-open');
+                hamburger.classList.remove('open');
+            }
+        });
     }
 }
  
@@ -180,7 +221,7 @@ if (document.getElementById('btnLogin')) {
     const togglePw   = document.getElementById('togglePw');
     const eyeShow    = document.getElementById('eyeShow');
     const eyeHide    = document.getElementById('eyeHide');
-
+ 
     const justRegistered = sessionStorage.getItem('registerSuccess');
     if (justRegistered) {
         sessionStorage.removeItem('registerSuccess');
@@ -189,7 +230,7 @@ if (document.getElementById('btnLogin')) {
         successBox.classList.add('show');
         pInput.focus();
     }
-
+ 
     (function checkSession() {
         const s = AUTH.getSession();
         if (!s?.loggedIn) return;
@@ -241,14 +282,10 @@ if (document.getElementById('btnLogin')) {
     function handleLogin() {
         clearLoginErrors();
         if (!validateLogin()) return;
- 
         setLoginLoading(true);
- 
         setTimeout(() => {
             setLoginLoading(false);
- 
             const result = AUTH.login(uInput.value.trim(), pInput.value);
- 
             if (!result.ok) {
                 if (result.field === 'username') {
                     uInput.classList.add('is-error');
@@ -264,9 +301,7 @@ if (document.getElementById('btnLogin')) {
                 }
                 return;
             }
- 
             AUTH.setSession(uInput.value.trim(), result.role);
- 
             if (result.role === 'admin') {
                 window.location.href = AUTH.ADMIN.redirectTo;
             } else {
@@ -298,7 +333,7 @@ if (document.getElementById('btnRegister')) {
     const cError      = document.getElementById('confirmError');
     const strengthBar = document.getElementById('strengthBar');
     const strengthLbl = document.getElementById('strengthLabel');
-
+ 
     (function checkSession() {
         const s = AUTH.getSession();
         if (s?.loggedIn) window.location.replace('index.html');
@@ -316,11 +351,8 @@ if (document.getElementById('btnRegister')) {
     makeToggle('togglePw2', cInput, 'eye2Show', 'eye2Hide');
  
     const STRENGTH_LEVELS = [
-        { label: '' },
-        { label: 'Lemah' },
-        { label: 'Lumayan' },
-        { label: 'Cukup kuat' },
-        { label: 'Kuat 💪' }
+        { label: '' }, { label: 'Lemah' }, { label: 'Lumayan' },
+        { label: 'Cukup kuat' }, { label: 'Kuat 💪' }
     ];
  
     function calcStrength(pw) {
@@ -361,42 +393,25 @@ if (document.getElementById('btnRegister')) {
  
     function validateRegister() {
         let ok = true;
-        if (!uInput.value.trim()) {
-            showFieldError(uInput, uError, 'Username tidak boleh kosong');
-            ok = false;
-        }
-        if (!pInput.value) {
-            showFieldError(pInput, pError, 'Password tidak boleh kosong');
-            ok = false;
-        }
-        if (ok && cInput.value !== pInput.value) {
-            showFieldError(cInput, cError, 'Password tidak cocok');
-            ok = false;
-        }
+        if (!uInput.value.trim()) { showFieldError(uInput, uError, 'Username tidak boleh kosong'); ok = false; }
+        if (!pInput.value)        { showFieldError(pInput, pError, 'Password tidak boleh kosong'); ok = false; }
+        if (ok && cInput.value !== pInput.value) { showFieldError(cInput, cError, 'Password tidak cocok'); ok = false; }
         return ok;
     }
  
     function handleRegister() {
         clearRegisterErrors();
         if (!validateRegister()) return;
- 
         setRegisterLoading(true);
- 
         setTimeout(() => {
             setRegisterLoading(false);
- 
             const result = AUTH.register(uInput.value.trim(), pInput.value);
- 
             if (!result.ok) {
                 if (result.field === 'username') showFieldError(uInput, uError, result.msg);
                 else if (result.field === 'password') showFieldError(pInput, pError, result.msg);
-                else {
-                    alertBox.textContent = result.msg;
-                    alertBox.classList.add('show');
-                }
+                else { alertBox.textContent = result.msg; alertBox.classList.add('show'); }
                 return;
             }
- 
             sessionStorage.setItem('registerSuccess', uInput.value.trim());
             window.location.href = 'login.html';
         }, 700);
@@ -409,36 +424,21 @@ if (document.getElementById('btnRegister')) {
     });
 }
 
-// ═══════════════════════════════════════════
 // PAYMENT PAGE
-// ═══════════════════════════════════════════
- 
 if (document.getElementById('btnSudahBayar')) {
  
     const TEMPLATES = {
         starter: {
-            name:     'FoliOpus Starter',
-            price:    149000,
-            badge:    'Starter',
-            badgeCls: '',
-            thumb:    'linear-gradient(45deg, #f59e0b, #ea580c)',
-            zipUrl:   './downloads/foliOpus-starter.zip'
+            name: 'FoliOpus Starter', price: 149000, badge: 'Starter', badgeCls: '',
+            thumb: 'linear-gradient(45deg, #f59e0b, #ea580c)', zipUrl: './downloads/foliOpus-starter.zip'
         },
         pro: {
-            name:     'FoliOpus Pro',
-            price:    299000,
-            badge:    'Pro',
-            badgeCls: 'badge-pro',
-            thumb:    'linear-gradient(45deg, #1e293b, #f59e0b)',
-            zipUrl:   './downloads/foliOpus-pro.zip'
+            name: 'FoliOpus Pro', price: 299000, badge: 'Pro', badgeCls: 'badge-pro',
+            thumb: 'linear-gradient(45deg, #1e293b, #f59e0b)', zipUrl: './downloads/foliOpus-pro.zip'
         },
         premium: {
-            name:     'FoliOpus Premium',
-            price:    499000,
-            badge:    'Premium',
-            badgeCls: 'badge-premium',
-            thumb:    'linear-gradient(45deg, #eaa70c, #0f172a)',
-            zipUrl:   './downloads/foliOpus-premium.zip'
+            name: 'FoliOpus Premium', price: 499000, badge: 'Premium', badgeCls: 'badge-premium',
+            thumb: 'linear-gradient(45deg, #eaa70c, #0f172a)', zipUrl: './downloads/foliOpus-premium.zip'
         }
     };
  
@@ -446,25 +446,19 @@ if (document.getElementById('btnSudahBayar')) {
         return 'Rp ' + num.toLocaleString('id-ID');
     }
  
-    // Redirect ke login kalau belum login
     const session = AUTH.getSession();
     if (!session?.loggedIn) {
         sessionStorage.setItem('foliOpusRedirect', window.location.href);
         window.location.replace('login.html');
     }
  
-    // Tampilkan username di navbar
     const navUser = document.getElementById('navUser');
-    if (navUser && session?.username) {
-        navUser.textContent = '👤 ' + session.username;
-    }
+    if (navUser && session?.username) navUser.textContent = '👤 ' + session.username;
  
-    // Baca query param ?template=starter
     const params      = new URLSearchParams(window.location.search);
     const templateKey = params.get('template') || 'starter';
     const tmpl        = TEMPLATES[templateKey] || TEMPLATES.starter;
  
-    // Isi ringkasan pesanan
     document.getElementById('summaryName').textContent       = tmpl.name;
     document.getElementById('summaryBadge').textContent      = tmpl.badge;
     document.getElementById('summaryBadge').className        = 'summary-badge ' + tmpl.badgeCls;
@@ -475,12 +469,10 @@ if (document.getElementById('btnSudahBayar')) {
     document.getElementById('downloadName').textContent      = 'Source Code — ' + tmpl.name;
     document.getElementById('downloadLink').href             = tmpl.zipUrl;
  
-    // Step navigation
     function goToStep(step) {
         document.querySelectorAll('.step-panel').forEach((p, i) => {
             p.classList.toggle('active', i + 1 === step);
         });
- 
         [1, 2, 3].forEach(n => {
             const el   = document.getElementById('stepEl' + n);
             const line = document.getElementById('stepLine' + n);
@@ -491,7 +483,6 @@ if (document.getElementById('btnSudahBayar')) {
         });
     }
  
-    // Tombol sudah bayar
     document.getElementById('btnSudahBayar').addEventListener('click', () => {
         goToStep(2);
         setTimeout(() => goToStep(3), 2500);
