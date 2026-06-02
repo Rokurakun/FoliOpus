@@ -132,13 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             }, 150);
         });
-    
+    }
     const metaDescription = document.getElementById('dynamic-meta-desc');
     if (metaDescription && typeof userConfig !== 'undefined' && userConfig.hero) {
         const namaKlien = userConfig.hero.namaLengkap || 'Profesional';
         const roleKlien = userConfig.hero.pekerjaan || 'Kreator Digital';
         const kalimatSEO = `Portofolio digital interaktif milik ${namaKlien}, seorang ${roleKlien}. Jelajahi karya dan keahlian terbaik saya di sini.`;
         metaDescription.setAttribute('content', kalimatSEO);
-    }
     }
 });
