@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoliOpus — Pembayaran</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="payment-page">
+ 
+    <nav class="navbar scrolled">
+        <a href="index.html" class="logo" style="text-decoration:none;">FoliOpus</a>
+        <ul class="nav-links">
+            <li><a href="index.html#hero">Beranda</a></li>
+            <li><a href="index.html#templates">Katalog</a></li>
+        </ul>
+        <span id="navUser" class="nav-user"></span>
+    </nav>
+ 
+    <div class="payment-header">
+        <h1>Selesaikan Pembayaran</h1>
+        <p>Bayar sekali, source code template jadi milikmu selamanya</p>
+    </div>
+
+    <div class="steps">
+        <div class="step active" id="stepEl1">
+            <div class="step-num">1</div>
+            <div class="step-label">Pembayaran</div>
+        </div>
+        <div class="step-line" id="stepLine1"></div>
+        <div class="step" id="stepEl2">
+            <div class="step-num">2</div>
+            <div class="step-label">Konfirmasi</div>
+        </div>
+        <div class="step-line" id="stepLine2"></div>
+        <div class="step" id="stepEl3">
+            <div class="step-num">3</div>
+            <div class="step-label">Download</div>
+        </div>
+    </div>
+ 
+    <div class="payment-layout">
+        <div class="payment-panel">
+            <div class="step-panel active" id="panel1">
+                <div class="card">
+                    <div class="qris-container">
+                        <p class="qris-title">Scan QRIS untuk Membayar</p>
+                        <p class="qris-subtitle">Gunakan aplikasi e-wallet atau mobile banking apapun</p>
+ 
+                        <div class="qris-box">
+                            <svg class="qris-placeholder" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10" y="10" width="50" height="50" rx="4" fill="none" stroke="#111" stroke-width="6"/>
+                                <rect x="20" y="20" width="30" height="30" rx="2" fill="#111"/>
+                                <rect x="140" y="10" width="50" height="50" rx="4" fill="none" stroke="#111" stroke-width="6"/>
+                                <rect x="150" y="20" width="30" height="30" rx="2" fill="#111"/>
+                                <rect x="10" y="140" width="50" height="50" rx="4" fill="none" stroke="#111" stroke-width="6"/>
+                                <rect x="20" y="150" width="30" height="30" rx="2" fill="#111"/>
+                                <rect x="75" y="10" width="8" height="8" fill="#111"/><rect x="90" y="10" width="8" height="8" fill="#111"/>
+                                <rect x="105" y="10" width="8" height="8" fill="#111"/><rect x="120" y="10" width="8" height="8" fill="#111"/>
+                                <rect x="75" y="25" width="8" height="8" fill="#111"/><rect x="105" y="25" width="8" height="8" fill="#111"/>
+                                <rect x="75" y="40" width="8" height="8" fill="#111"/><rect x="90" y="40" width="8" height="8" fill="#111"/>
+                                <rect x="120" y="40" width="8" height="8" fill="#111"/><rect x="75" y="55" width="8" height="8" fill="#111"/>
+                                <rect x="105" y="55" width="8" height="8" fill="#111"/><rect x="120" y="55" width="8" height="8" fill="#111"/>
+                                <rect x="10" y="75" width="8" height="8" fill="#111"/><rect x="25" y="75" width="8" height="8" fill="#111"/>
+                                <rect x="55" y="75" width="8" height="8" fill="#111"/><rect x="75" y="75" width="8" height="8" fill="#111"/>
+                                <rect x="90" y="75" width="8" height="8" fill="#111"/><rect x="105" y="75" width="8" height="8" fill="#111"/>
+                                <rect x="120" y="75" width="8" height="8" fill="#111"/><rect x="135" y="75" width="8" height="8" fill="#111"/>
+                                <rect x="150" y="75" width="8" height="8" fill="#111"/><rect x="175" y="75" width="8" height="8" fill="#111"/>
+                                <rect x="10" y="90" width="8" height="8" fill="#111"/><rect x="40" y="90" width="8" height="8" fill="#111"/>
+                                <rect x="75" y="90" width="8" height="8" fill="#111"/><rect x="105" y="90" width="8" height="8" fill="#111"/>
+                                <rect x="135" y="90" width="8" height="8" fill="#111"/><rect x="165" y="90" width="8" height="8" fill="#111"/>
+                                <rect x="25" y="105" width="8" height="8" fill="#111"/><rect x="55" y="105" width="8" height="8" fill="#111"/>
+                                <rect x="90" y="105" width="8" height="8" fill="#111"/><rect x="120" y="105" width="8" height="8" fill="#111"/>
+                                <rect x="150" y="105" width="8" height="8" fill="#111"/><rect x="175" y="105" width="8" height="8" fill="#111"/>
+                                <rect x="10" y="120" width="8" height="8" fill="#111"/><rect x="40" y="120" width="8" height="8" fill="#111"/>
+                                <rect x="75" y="120" width="8" height="8" fill="#111"/><rect x="105" y="120" width="8" height="8" fill="#111"/>
+                                <rect x="135" y="120" width="8" height="8" fill="#111"/><rect x="160" y="120" width="8" height="8" fill="#111"/>
+                                <rect x="75" y="140" width="8" height="8" fill="#111"/><rect x="90" y="140" width="8" height="8" fill="#111"/>
+                                <rect x="120" y="140" width="8" height="8" fill="#111"/><rect x="75" y="155" width="8" height="8" fill="#111"/>
+                                <rect x="105" y="155" width="8" height="8" fill="#111"/><rect x="135" y="155" width="8" height="8" fill="#111"/>
+                                <rect x="90" y="170" width="8" height="8" fill="#111"/><rect x="105" y="170" width="8" height="8" fill="#111"/>
+                                <rect x="120" y="170" width="8" height="8" fill="#111"/><rect x="75" y="183" width="8" height="8" fill="#111"/>
+                                <rect x="120" y="183" width="8" height="8" fill="#111"/>
+                                <text x="100" y="198" text-anchor="middle" font-size="9" font-weight="bold" fill="#e11d48" font-family="Arial">QRIS</text>
+                            </svg>
+                        </div>
+ 
+                        <p class="qris-merchant">Merchant: <strong>FoliOpus</strong> · NMID: 123456789</p>
+ 
+                        <div class="qris-amount">
+                            <div class="amount-label">Total Pembayaran</div>
+                            <div class="amount-value" id="displayAmount">Rp 0</div>
+                        </div>
+ 
+                        <ol class="qris-instructions">
+                            <li>Buka aplikasi e-wallet atau mobile banking kamu</li>
+                            <li>Pilih menu bayar / scan QR</li>
+                            <li>Arahkan kamera ke kode QRIS di atas</li>
+                            <li>Pastikan nominal sesuai, lalu konfirmasi pembayaran</li>
+                        </ol>
+ 
+                        <button class="btn-primary btn-confirm" id="btnSudahBayar">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Saya Sudah Membayar
+                        </button>
+ 
+                        <div class="pay-disclaimer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            Ini adalah simulasi pembayaran. Klik tombol di atas setelah melakukan transfer untuk mendapatkan link download.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-panel" id="panel2">
+                <div class="card">
+                    <div class="qris-container">
+                        <div class="pay-status-icon" style="background: rgba(245,158,11,0.1); border-color: var(--primary-yellow);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-yellow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <p class="qris-title">Memverifikasi Pembayaran</p>
+                        <p class="qris-subtitle">Harap tunggu sebentar, kami sedang memproses transaksimu...</p>
+                        <div class="pay-spinner"></div>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Proses ini memakan waktu beberapa detik</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-panel" id="panel3">
+                <div class="card">
+                    <div class="qris-container">
+                        <div class="pay-status-icon pay-status-success">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <h2 class="pay-success-title">Pembayaran Berhasil! 🎉</h2>
+                        <p class="pay-success-sub">Terima kasih! Source code template sudah siap untuk diunduh.</p>
+ 
+                        <a id="downloadLink" href="#" class="download-card">
+                            <div class="download-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                            </div>
+                            <div class="download-info">
+                                <h4 id="downloadName">Source Code Template</h4>
+                                <p>Klik untuk mengunduh file .zip</p>
+                            </div>
+                            <svg class="download-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </a>
+ 
+                        <div class="pay-disclaimer" style="margin: 1rem 0 1.5rem;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            Simpan file zip ini baik-baik. Link download hanya berlaku di sesi ini.
+                        </div>
+ 
+                        <a href="index.html" class="btn-secondary" style="display:block; text-align:center; padding: 0.75rem; text-decoration:none;">
+                            Kembali ke Beranda
+                        </a>
+                    </div>
+                </div>
+            </div>
+ 
+        </div>
+
+        <div class="order-summary">
+            <div class="summary-card">
+                <h3 class="summary-label">Ringkasan Pesanan</h3>
+ 
+                <div class="summary-template">
+                    <div class="summary-thumb" id="summaryThumb"></div>
+                    <div class="summary-info">
+                        <h4 id="summaryName">FoliOpus Starter</h4>
+                        <p>Template Portofolio Digital</p>
+                        <span class="summary-badge" id="summaryBadge">Starter</span>
+                    </div>
+                </div>
+ 
+                <div class="summary-row">
+                    <span>Harga template</span>
+                    <span id="summaryPrice">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Biaya layanan</span>
+                    <span>Gratis</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span class="summary-total-price" id="summaryTotal">—</span>
+                </div>
+            </div>
+        </div>
+ 
+    </div>
+ 
+    <script src="script.js"></script>
+</body>
+</html>
