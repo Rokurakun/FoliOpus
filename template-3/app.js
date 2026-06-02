@@ -1,19 +1,9 @@
-/* ═══════════════════════════════════════════════════
-   FOLILOPUS PREMIUM — Creative Studio JS
-   All data, interactions, animations, and dynamic
-   content managed here. Edit data objects to update
-   the entire site without touching HTML/CSS.
-═══════════════════════════════════════════════════ */
-
-/* ─────────────────────────────────────────
-   SITE DATA — edit this section only!
-───────────────────────────────────────── */
 const SITE_DATA = {
   owner: {
     name: "Adhiem Nabil Maulana",
     tagline: "Crafting visual worlds where\nideas breathe and brands come alive.",
     location: "Makassar, Indonesia",
-    timezone: "Asia/Makassar", // WIB = UTC+8
+    timezone: "Asia/Makassar",
     avatar: "AN",
     bio: [
       "I'm a Creative Studio designer obsessed with the space between strategy and aesthetics. Every pixel I place carries intention. Every layout I build tells a story before a single word is read.",
@@ -227,17 +217,11 @@ const SITE_DATA = {
   ],
 };
 
-/* ─────────────────────────────────────────
-   STATE
-───────────────────────────────────────── */
 let introDismissed = false;
 let dragStartY = null;
 let dragCurrentY = null;
 let isDragging = false;
 
-/* ─────────────────────────────────────────
-   DOM REFS
-───────────────────────────────────────── */
 const introScreen   = document.getElementById('intro');
 const dragOverlay   = document.getElementById('dragOverlay');
 const mainPortfolio = document.getElementById('mainPortfolio');
@@ -248,16 +232,12 @@ const dialogClose   = document.getElementById('dialogClose');
 const navHamburger  = document.getElementById('navHamburger');
 const mobileMenu    = document.getElementById('mobileMenu');
 
-/* ─────────────────────────────────────────
-   POPULATE INTRO FROM DATA
-───────────────────────────────────────── */
 function populateIntro() {
   const nameEl    = document.getElementById('intro-name');
   const taglineEl = document.getElementById('intro-tagline');
   if (nameEl) nameEl.textContent = SITE_DATA.owner.name;
   if (taglineEl) taglineEl.innerHTML = SITE_DATA.owner.tagline.replace('\n', '<br>');
 
-  // Intro buttons scroll
   document.querySelectorAll('.intro-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.target;
@@ -271,9 +251,6 @@ function populateIntro() {
   });
 }
 
-/* ─────────────────────────────────────────
-   DISMISS INTRO (drag up to enter)
-───────────────────────────────────────── */
 function dismissIntro(cb) {
   if (introDismissed) return;
   introDismissed = true;
@@ -286,7 +263,6 @@ function dismissIntro(cb) {
   }, 600);
 }
 
-/* Drag logic */
 function handleDragStart(e) {
   dragStartY = e.touches ? e.touches[0].clientY : e.clientY;
   isDragging = true;
@@ -329,15 +305,11 @@ window.addEventListener('touchmove', handleDragMove, { passive: false });
 window.addEventListener('mouseup', handleDragEnd);
 window.addEventListener('touchend', handleDragEnd);
 
-/* Scroll from bottom = also trigger dismiss */
 window.addEventListener('wheel', (e) => {
   if (introDismissed) return;
   if (e.deltaY > 40) dismissIntro();
 }, { passive: true });
 
-/* ─────────────────────────────────────────
-   CUSTOM CURSOR
-───────────────────────────────────────── */
 function initCursor() {
   const dot  = document.createElement('div');
   const ring = document.createElement('div');
@@ -363,9 +335,6 @@ function initCursor() {
   animRing();
 }
 
-/* ─────────────────────────────────────────
-   LOCAL TIME (WIB)
-───────────────────────────────────────── */
 function updateTime() {
   const el = document.getElementById('local-time');
   if (!el) return;
@@ -381,17 +350,11 @@ function initClock() {
   setInterval(updateTime, 1000);
 }
 
-/* ─────────────────────────────────────────
-   FOOTER YEAR
-───────────────────────────────────────── */
 function setFooterYear() {
   const el = document.getElementById('footer-year');
   if (el) el.textContent = `© ${new Date().getFullYear()}`;
 }
 
-/* ─────────────────────────────────────────
-   DIALOG HELPERS
-───────────────────────────────────────── */
 function openDialog(html) {
   dialogContent.innerHTML = html;
   dialogOverlay.classList.add('open');
@@ -443,13 +406,9 @@ function buildDialogHTML(d) {
   `;
 }
 
-/* ─────────────────────────────────────────
-   ABOUT SECTION
-───────────────────────────────────────── */
 function initAbout() {
   const heading = document.querySelector('.about-heading');
   const bioEls  = document.querySelectorAll('.about-bio');
-  // update bio from data
   if (bioEls.length >= 2) {
     bioEls[0].textContent = SITE_DATA.owner.bio[0];
     bioEls[1].textContent = SITE_DATA.owner.bio[1];
@@ -476,9 +435,6 @@ function initAbout() {
   });
 }
 
-/* ─────────────────────────────────────────
-   PROJECTS
-───────────────────────────────────────── */
 function initProjects() {
   const grid = document.getElementById('projectGrid');
   if (!grid) return;
@@ -513,9 +469,6 @@ function initProjects() {
   });
 }
 
-/* ─────────────────────────────────────────
-   BUILD / ACCORDION
-───────────────────────────────────────── */
 function initBuildAccordion() {
   const list = document.getElementById('buildAccordion');
   if (!list) return;
@@ -539,7 +492,6 @@ function initBuildAccordion() {
 
     el.querySelector('.accordion-header').addEventListener('click', () => {
       const isOpen = el.classList.contains('open');
-      // close all
       list.querySelectorAll('.accordion-item.open').forEach(x => x.classList.remove('open'));
       if (!isOpen) el.classList.add('open');
     });
@@ -548,9 +500,6 @@ function initBuildAccordion() {
   });
 }
 
-/* ─────────────────────────────────────────
-   TOOLS
-───────────────────────────────────────── */
 function initTools() {
   const container = document.getElementById('toolsSplit');
   if (!container) return;
@@ -577,9 +526,6 @@ function initTools() {
   });
 }
 
-/* ─────────────────────────────────────────
-   CAPABILITIES
-───────────────────────────────────────── */
 function initCapabilities() {
   const grid = document.getElementById('capGrid');
   if (!grid) return;
@@ -597,9 +543,6 @@ function initCapabilities() {
   });
 }
 
-/* ─────────────────────────────────────────
-   SCROLL REVEAL (IntersectionObserver)
-───────────────────────────────────────── */
 function initScrollReveal() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -607,7 +550,6 @@ function initScrollReveal() {
         const delay = parseInt(entry.target.dataset.delay) || 0;
         setTimeout(() => {
           entry.target.classList.add('in-view');
-          // Project cards use their own animation class
           if (entry.target.classList.contains('project-card')) {
             entry.target.classList.add('revealed');
             entry.target.style.opacity = '';
@@ -619,16 +561,12 @@ function initScrollReveal() {
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-  // Observe all reveal elements (re-query after DOM population)
   setTimeout(() => {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     document.querySelectorAll('.project-card').forEach(el => observer.observe(el));
   }, 200);
 }
 
-/* ─────────────────────────────────────────
-   NAV HAMBURGER
-───────────────────────────────────────── */
 function initNav() {
   let menuOpen = false;
   navHamburger.addEventListener('click', () => {
@@ -644,7 +582,6 @@ function initNav() {
     }
   });
 
-  // Close mobile menu on link click
   document.querySelectorAll('.mobile-link').forEach(link => {
     link.addEventListener('click', () => {
       menuOpen = false;
@@ -654,9 +591,6 @@ function initNav() {
   });
 }
 
-/* ─────────────────────────────────────────
-   NAV ACTIVE STATE ON SCROLL
-───────────────────────────────────────── */
 function initNavActiveState() {
   const sections = document.querySelectorAll('.section');
   const links = document.querySelectorAll('.nav-link:not(.nav-buy)');
@@ -680,12 +614,8 @@ function initNavActiveState() {
   }, { passive: true });
 }
 
-/* ─────────────────────────────────────────
-   FOOTER SOCIAL LINKS UPDATE FROM DATA
-───────────────────────────────────────── */
 function updateSocialLinks() {
   const links = document.querySelectorAll('.footer-link');
-  // We match by text content
   links.forEach(link => {
     const text = link.textContent.toLowerCase();
     if (text.includes('email')) link.href = `mailto:${SITE_DATA.owner.social.email}`;
@@ -695,9 +625,6 @@ function updateSocialLinks() {
   });
 }
 
-/* ─────────────────────────────────────────
-   INTRO BUTTON DATA BRIDGE
-───────────────────────────────────────── */
 function updateNavLogo() {
   const logo = document.getElementById('nav-logo');
   if (logo) {
@@ -706,9 +633,6 @@ function updateNavLogo() {
   }
 }
 
-/* ─────────────────────────────────────────
-   SMOOTH ANCHOR SCROLL + OFFSET FOR NAV
-───────────────────────────────────────── */
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -722,9 +646,6 @@ function initSmoothScroll() {
   });
 }
 
-/* ─────────────────────────────────────────
-   NAV LINK: "Beli Sekarang" PULSING EFFECT
-───────────────────────────────────────── */
 function initBuyPulse() {
   const buyBtn = document.getElementById('nav-buy');
   if (!buyBtn) return;
@@ -737,9 +658,6 @@ function initBuyPulse() {
   }, 3000);
 }
 
-/* ─────────────────────────────────────────
-   BOOT — run everything
-───────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initCursor();
   populateIntro();
@@ -747,7 +665,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setFooterYear();
   updateNavLogo();
 
-  // Build all dynamic sections
   initAbout();
   initProjects();
   initBuildAccordion();
@@ -755,7 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCapabilities();
   updateSocialLinks();
 
-  // Interactions
   initNav();
   initNavActiveState();
   initSmoothScroll();

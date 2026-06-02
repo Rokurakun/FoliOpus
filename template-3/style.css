@@ -1,9 +1,3 @@
-/* ═══════════════════════════════════════════════════
-   FOLILOPUS PREMIUM — Creative Studio CSS
-   Palette: Pastel · Aquamarine · Tiffany Blue · Verdigris
-═══════════════════════════════════════════════════ */
-
-/* ── DESIGN TOKENS ── */
 :root {
   --aqua:        #7FFFD4;
   --tiffany:     #0ABFBC;
@@ -39,7 +33,6 @@
   --dialog-z: 999;
 }
 
-/* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -53,7 +46,6 @@ a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 button { cursor: none; border: none; background: none; font-family: inherit; }
 
-/* ── CUSTOM CURSOR ── */
 .cursor-dot {
   position: fixed; top: 0; left: 0;
   width: 8px; height: 8px;
@@ -80,13 +72,10 @@ body:has(button:hover) .cursor-ring {
   width: 52px; height: 52px; opacity: 0.3;
 }
 
-/* ══════════════════════════════════════════
-   INTRO SCREEN
-══════════════════════════════════════════ */
 .intro-screen {
   position: fixed;
   inset: 0;
-  z-index: var(--intro-z);
+  z-index: 10000;
   background: var(--ink);
   display: flex;
   align-items: center;
@@ -214,24 +203,19 @@ body:has(button:hover) .cursor-ring {
   z-index: 10;
 }
 
-/* ══════════════════════════════════════════
-   MAIN PORTFOLIO
-══════════════════════════════════════════ */
 .main-portfolio {
   min-height: 100vh;
   background: var(--cream);
   transition: opacity 0.5s;
 }
 .main-portfolio.hidden {
-  opacity: 0;
-  pointer-events: none;
+  display: none;
 }
 .main-portfolio.visible {
+  display: block;
   opacity: 1;
-  pointer-events: all;
 }
 
-/* ── NAV ── */
 .main-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -315,7 +299,6 @@ body:has(button:hover) .cursor-ring {
   transition: transform 0.3s, opacity 0.3s;
 }
 
-/* Mobile menu */
 .mobile-menu {
   position: fixed;
   top: var(--nav-h);
@@ -351,7 +334,6 @@ body:has(button:hover) .cursor-ring {
   border-bottom: none !important;
 }
 
-/* ── SECTIONS GENERAL ── */
 .section {
   padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 7vw, 7rem);
   min-height: 80vh;
@@ -384,9 +366,6 @@ body:has(button:hover) .cursor-ring {
   color: var(--verdigris);
 }
 
-/* ══════════════════════════════════════════
-   ABOUT SECTION
-══════════════════════════════════════════ */
 .about-section {
   background: var(--cream);
   padding-top: calc(var(--nav-h) + 5rem);
@@ -478,7 +457,6 @@ body:has(button:hover) .cursor-ring {
   font-weight: 300;
 }
 
-/* Buttons */
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -521,9 +499,6 @@ body:has(button:hover) .cursor-ring {
   box-shadow: 0 12px 40px rgba(10,191,188,0.35);
 }
 
-/* ══════════════════════════════════════════
-   PROJECT SECTION
-══════════════════════════════════════════ */
 .project-section {
   background: var(--mint-pale);
 }
@@ -618,9 +593,6 @@ body:has(button:hover) .cursor-ring {
 }
 .project-cta:hover { gap: 0.8rem; color: var(--verdigris); }
 
-/* ══════════════════════════════════════════
-   BUILD / ACCORDION SECTION
-══════════════════════════════════════════ */
 .build-section {
   background: var(--cream);
 }
@@ -690,9 +662,6 @@ body:has(button:hover) .cursor-ring {
   font-weight: 300;
 }
 
-/* ══════════════════════════════════════════
-   TOOLS SECTION
-══════════════════════════════════════════ */
 .tools-section {
   background: var(--ink);
   color: var(--white);
@@ -707,6 +676,7 @@ body:has(button:hover) .cursor-ring {
   gap: 2rem;
   max-width: 1100px;
   width: 100%;
+  margin: 0 auto;
 }
 .tools-box {
   background: rgba(255,255,255,0.05);
@@ -762,9 +732,6 @@ body:has(button:hover) .cursor-ring {
   margin-left: auto;
 }
 
-/* ══════════════════════════════════════════
-   CAPABILITIES SECTION
-══════════════════════════════════════════ */
 .cap-section {
   background: var(--sage-pale);
 }
@@ -775,6 +742,7 @@ body:has(button:hover) .cursor-ring {
   gap: 1.5rem;
   max-width: 1200px;
   width: 100%;
+  margin: 0 auto;
 }
 .cap-card {
   background: var(--white);
@@ -818,9 +786,6 @@ body:has(button:hover) .cursor-ring {
   font-weight: 300;
 }
 
-/* ══════════════════════════════════════════
-   CONTACT / FOOTER
-══════════════════════════════════════════ */
 .contact-section {
   background: var(--cream);
   min-height: auto;
@@ -895,9 +860,6 @@ body:has(button:hover) .cursor-ring {
   line-height: 1.6;
 }
 
-/* ══════════════════════════════════════════
-   DIALOG BOX
-══════════════════════════════════════════ */
 .dialog-overlay {
   position: fixed;
   inset: 0;
@@ -1024,9 +986,6 @@ body:has(button:hover) .cursor-ring {
   display: block;
 }
 
-/* ══════════════════════════════════════════
-   SCROLL REVEAL UTILITY
-══════════════════════════════════════════ */
 .reveal {
   opacity: 0;
   transform: translateY(36px);
@@ -1037,9 +996,6 @@ body:has(button:hover) .cursor-ring {
   transform: translateY(0);
 }
 
-/* ══════════════════════════════════════════
-   NOISE TEXTURE OVERLAY
-══════════════════════════════════════════ */
 body::after {
   content: '';
   position: fixed;
@@ -1050,24 +1006,15 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
 }
 
-/* ══════════════════════════════════════════
-   DECORATIVE DIVIDERS
-══════════════════════════════════════════ */
 .section + .section {
   position: relative;
 }
 
-/* ══════════════════════════════════════════
-   SCROLLBAR STYLING
-══════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--cream); }
 ::-webkit-scrollbar-thumb { background: var(--sage-pale); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--tiffany); }
 
-/* ══════════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════════ */
 @media (max-width: 900px) {
   .about-grid { grid-template-columns: 1fr; gap: 3rem; }
   .about-left { position: static; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
@@ -1086,9 +1033,6 @@ body::after {
   .intro-name { font-size: clamp(3rem, 18vw, 5rem); }
 }
 
-/* ══════════════════════════════════════════
-   SELECTION
-══════════════════════════════════════════ */
 ::selection {
   background: rgba(10,191,188,0.25);
   color: var(--ink);
