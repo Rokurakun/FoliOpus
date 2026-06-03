@@ -185,9 +185,6 @@ body {
     flex-direction: column;
 }
 
-/* =========================================
-   NEW: CSS MOCKUPS FOR TEMPLATE PREVIEW 
-   ========================================= */
 .mockup-preview {
     height: 180px;
     border-radius: 8px;
@@ -205,7 +202,6 @@ body {
     filter: brightness(1.15);
 }
 
-/* Mockup Starter (Navy Blue & Teal) */
 .mockup-starter {
     background: #0f172a; 
     display: flex;
@@ -221,7 +217,6 @@ body {
 .mockup-starter .m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 100%; }
 .mockup-starter .m-card { height: 45px; background: rgba(255,255,255,0.05); border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); }
 
-/* Mockup Pro (Dark Grid & Gold) */
 .mockup-pro {
     background: #0a0a0a;
     display: flex;
@@ -241,7 +236,6 @@ body {
 .mockup-pro .m-title-2 { width: 55%; height: 22px; background: #eab308; margin-bottom: 15px; border-radius: 2px;}
 .mockup-pro .m-btn { width: 45px; height: 14px; background: #eab308; border-radius: 2px; }
 
-/* Mockup Premium (White/Teal Clean Aesthetic) */
 .mockup-premium {
     background: #f8fafc;
     display: flex;
@@ -259,9 +253,6 @@ body {
 .mockup-premium .m-text-2 { width: 85%; height: 5px; background: #cbd5e1; border-radius: 2px; }
 .mockup-premium .m-btn-outline { width: 50px; height: 14px; border: 1px solid #14b8a6; border-radius: 10px; margin-top: 5px; }
 
-/* =========================================
-   NEW: FAQ SECTION 
-   ========================================= */
 .faq-item {
     background: var(--dark-surface);
     border: 1px solid rgba(255,255,255,0.05);
@@ -297,9 +288,6 @@ body {
     background: rgba(0,0,0,0.1);
 }
 
-/* =========================================
-   NEW: CONTACT SECTION 
-   ========================================= */
 .contact-link {
     display: flex;
     align-items: center;
@@ -333,9 +321,6 @@ body {
 .c-text h4 { margin: 0 0 0.2rem 0; font-size: 1.1rem; color: var(--text-light); }
 .c-text p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
 
-/* =========================================
-   FOOTER & MISC
-   ========================================= */
 .footer {
     background-color: var(--dark-surface);
     padding: 3rem 5%;
@@ -376,9 +361,7 @@ body {
     .hero-cta { flex-direction: column; }
 }
 
-/* =========================================
-   AUTH PAGES (LOGIN & REGISTER)
-   ========================================= */
+/* AUTH PAGES (LOGIN & REGISTER) */
 body.auth-page {
     display: flex;
     align-items: center;
@@ -505,9 +488,7 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
     .back-link      { top: 1rem; left: 1rem; }
 }
 
-/* =========================================
-   PAYMENT PAGE 
-   ========================================= */
+/* PAYMENT PAGE */
 body.payment-page { min-height: 100vh; padding: 2rem 5%; padding-top: 6rem; }
 .payment-header { text-align: center; margin-bottom: 2.5rem; }
 .payment-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
