@@ -117,7 +117,7 @@ const transactions = (() => {
                   'Fani Putri','Gilang Mukti','Hana Wijaya','Ivan Kurniawan','Joko Priyono',
                   'Karin Lestari','Luthfi Hakim','Maya Sari','Nanda Putra','Oka Setiawan'];
   const items  = ['FoliOpus Starter','FoliOpus Pro','FoliOpus Premium'];
-  const prices = [49000, 99000, 199000];
+  const prices = [149000, 299000, 499000];
   const stats  = ['sukses','sukses','sukses','sukses','pending','gagal'];
   const result = [];
 
@@ -147,9 +147,9 @@ const projects = [
 ];
 
 const products = [
-  { id: 1, name: 'FoliOpus Starter', desc: 'Template portofolio dasar dengan fitur esensial.', price: 49000, stock: 999, category: 'starter', active: true },
-  { id: 2, name: 'FoliOpus Pro', desc: 'Template profesional dengan animasi dan SEO lanjutan.', price: 99000, stock: 999, category: 'pro', active: true },
-  { id: 3, name: 'FoliOpus Premium', desc: 'Template premium all-in-one dengan dukungan prioritas.', price: 199000, stock: 50, category: 'premium', active: true },
+  { id: 1, name: 'FoliOpus Starter', desc: 'Template portofolio dasar dengan fitur esensial.', price: 149000, stock: 999, category: 'starter', active: true },
+  { id: 2, name: 'FoliOpus Pro', desc: 'Template profesional dengan animasi dan SEO lanjutan.', price: 299000, stock: 999, category: 'pro', active: true },
+  { id: 3, name: 'FoliOpus Premium', desc: 'Template premium all-in-one dengan dukungan prioritas.', price: 499000, stock: 50, category: 'premium', active: true },
 ];
 
 const mediaAssets = [
@@ -256,15 +256,8 @@ function navigateTo(page) {
 function initLogout() {
   $('#btn-logout').addEventListener('click', () => {
     if (!confirm('Yakin ingin keluar?')) return;
-    Object.values(charts).forEach(c => c.destroy());
-    charts = {};
-
-    $('#admin-app').hidden = true;
-    $('#login-page').hidden = false;
-    $('#login-page').style.animation = '';
-    $('#username').value = '';
-    $('#password').value = '';
-    $('#login-error').textContent = '';
+    localStorage.removeItem('foliOpusUser');
+    window.location.replace('../index.html');
   });
 }
 
@@ -966,5 +959,20 @@ function saveProduct() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initLogin();
+  const sessionData = localStorage.getItem('foliOpusUser');
+  let session = null;
+  
+  try {
+    session = JSON.parse(sessionData);
+  } catch (e) {
+    session = null;
+  }
+
+  if (session && session.loggedIn && session.role === 'admin') {
+    $('#login-page').style.display = 'none';
+    $('#admin-app').hidden = false;
+    initApp();
+  } else {
+    window.location.replace('../login.html'); 
+  }
 });
