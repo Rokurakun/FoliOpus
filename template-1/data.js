@@ -8,12 +8,12 @@ const userConfig = {
     hero: {
         namaLengkap: "Muhammad Rizky Ramadhani",
         pekerjaan: "Fullstack Dev",
-        deskripsiBio: "~~~",
-        teksTombolKontak: ""
+        deskripsiBio: "Halo! Saya seorang Fullstack Developer yang berfokus pada pengembangan sistem yang efisien dan antarmuka yang responsif. Memiliki ketertarikan kuat dalam merancang arsitektur perangkat lunak mulai dari optimasi backend hingga penyajian frontend interaktif.",
+        teksTombolKontak: "Contact"
     },
     sosmed: {
-        github: "",
-        linkedin: "",
+        github: "https://github.com",
+        linkedin: "https://linkedin.com",
         email: ""
     },
     skillset: [
@@ -21,18 +21,18 @@ const userConfig = {
     ],
     projects: [
         {
-            judul: "~~~",
-            deskripsi: "~~~",
+            judul: "Sistem Manajemen Inventaris",
+            deskripsi: "Aplikasi web fullstack untuk memantau stok barang secara real-time. Dibangun menggunakan arsitektur Python di sisi server dan HTML untuk antarmuka pengguna.",
             linkRepo: "https://github.com"
         },
         {
-            judul: "~~~",
-            deskripsi: "~~~",
+            judul: "Algoritma Pemrosesan Data Berkinerja Tinggi",
+            deskripsi: "Program utilitas berbasis C++ untuk memproses ribuan baris data komputasi dengan kecepatan eksekusi tinggi dan penggunaan memori yang minim.",
             linkRepo: "https://github.com"
         },
         {
-            judul: "~~~",
-            deskripsi: "~~~",
+            judul: "Web Scraper & Analisis Otomatis",
+            deskripsi: "Skrip otomatisasi menggunakan Python untuk mengekstrak data publik secara masif, dipadukan dengan laporan berbasis HTML statis.",
             linkRepo: "https://github.com"
         }
     ]

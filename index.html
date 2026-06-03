@@ -16,6 +16,8 @@
             <li><a href="#hero">Beranda</a></li>
             <li><a href="#features">Fitur</a></li>
             <li><a href="#templates">Eksplor</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Kontak</a></li>
         </ul>
         <a href="login.html" class="btn-primary" aria-label="Masuk ke dashboard">Masuk</a>
     </nav>
@@ -48,31 +50,153 @@
         </div>
     </section>
 
+    <!-- TEMPLATES SECTION -->
     <section id="templates" class="templates">
         <h2>Katalog Template</h2>
         <div class="grid-container">
+            
+            <!-- Starter Template -->
             <div class="card template-card" data-url="./template-1/index.html">
-                <div class="template-img" style="background: linear-gradient(45deg, #f59e0b, #ea580c);"></div>
+                <div class="mockup-preview mockup-starter">
+                    <div class="m-title"></div>
+                    <div class="m-subtitle"></div>
+                    <div class="m-tags">
+                        <div class="m-tag"></div>
+                        <div class="m-tag"></div>
+                        <div class="m-tag-active"></div>
+                    </div>
+                    <div class="m-cards">
+                        <div class="m-card"></div>
+                        <div class="m-card"></div>
+                        <div class="m-card"></div>
+                    </div>
+                </div>
                 <h3>FoliOpus Starter</h3>
-                <p>~~~</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Simple, cepat, cocok buat pemula.</p>
             </div>
+
+            <!-- Pro Template -->
             <div class="card template-card" data-url="./template-2/index.html">
-                <div class="template-img" style="background: linear-gradient(45deg, #1e293b, #f59e0b);"></div>
+                <div class="mockup-preview mockup-pro">
+                    <div class="m-eyebrow"></div>
+                    <div class="m-title-1"></div>
+                    <div class="m-title-2"></div>
+                    <div class="m-btn"></div>
+                </div>
                 <h3>FoliOpus Pro</h3>
-                <p>~~~</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Multi-section untuk freelancer & pro.</p>
             </div>
-            <div class="card template-card" data-url="./template-3/index.html">
-                <div class="template-img" style="background: linear-gradient(45deg, #eaa70c, #0f172a);"></div>
+
+            <!-- Premium Template -->
+            <div class="card template-card" data-url="./template-3/index.html" style="border-color: var(--primary-yellow); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);">
+                <div class="mockup-preview mockup-premium">
+                    <div class="m-nav"></div>
+                    <div class="m-left">
+                        <div class="m-avatar"></div>
+                        <div class="m-left-line"></div>
+                        <div class="m-left-line" style="width: 50%;"></div>
+                    </div>
+                    <div class="m-right">
+                        <div class="m-title-serif"></div>
+                        <div class="m-title-italic"></div>
+                        <div class="m-text"></div>
+                        <div class="m-text-2"></div>
+                        <div class="m-btn-outline"></div>
+                    </div>
+                </div>
                 <h3>FoliOpus Premium</h3>
-                <p>~~~</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Desain paling eksklusif dan interaktif.</p>
             </div>
+
+        </div>
+    </section>
+    
+    <section id="faq" class="features" style="background-color: rgba(255,255,255,0.02);">
+        <h2>FAQ FoliOpus</h2>
+        <div class="faq-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <details class="faq-item">
+                <summary>Apakah saya harus jago coding?</summary>
+                <div class="faq-body">Sama sekali tidak! Template kami sudah dirancang agar kamu tinggal mengganti teks dan foto tanpa perlu menyentuh struktur kode yang rumit.</div>
+            </details>
+            <details class="faq-item">
+                <summary>Apakah bayarnya per bulan?</summary>
+                <div class="faq-body">Tidak, pembayaran sistem lisensi sekali bayar (one-time payment). Beli sekali, pakai berkali-kali untuk portofoliomu.</div>
+            </details>
+            <details class="faq-item">
+                <summary>Bisa pakai domain sendiri (.com / .id)?</summary>
+                <div class="faq-body">Tentu saja. Setelah <em>source code</em> kamu dapatkan, kamu bisa <em>deploy</em> di mana saja dan menyambungkannya ke domain pribadi.</div>
+            </details>
+            <details class="faq-item">
+                <summary>Apa beda Starter, Pro, dan Premium?</summary>
+                <div class="faq-body">gatau.</div>
+            </details>
+            <details class="faq-item">
+                <summary>Apakah website ini bisa dibuka di HP?</summary>
+                <div class="faq-body">Tentu. Semua template dirancang mobile-first dan sudah diuji dari layar 360px sampai layar desktop besar.</div>
+            </details>
+            <details class="faq-item">
+                <summary>Apakah sistem login ini sistem autentikasi produksi?</summary>
+                <div class="faq-body">Tidak.</strong> Halaman login/register saat ini adalah <em>demo prototype</em> berbasis localStorage browser. Data akun hanya tersimpan di perangkat lokal pengguna dan tidak dienkripsi. Sistem ini tidak boleh dianggap sebagai autentikasi produksi. Untuk versi commercial release, autentikasi akan dipindahkan ke backend yang aman.</div>
+            </details>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="features">
+        <h2>Contacts</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Ada pertanyaan atau butuh bantuan Full-Service? Silakan hubungi kami melalui jalur di bawah.</p>
+        
+        <div style="max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- WhatsApp -->
+            <a href="https://wa.me/6281234567890" target="_blank" class="contact-link">
+                <div class="c-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </div>
+                <div class="c-text">
+                    <h4>WhatsApp</h4>
+                    <p>Chat langsung untuk respon cepat</p>
+                </div>
+            </a>
+
+            <!-- Email -->
+            <a href="mailto:halo@foliopus.com" class="contact-link">
+                <div class="c-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--primary-yellow);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <div class="c-text">
+                    <h4>Email</h4>
+                    <p>Untuk diskusi kolaborasi atau pertanyaan</p>
+                </div>
+            </a>
+
+            <!-- Instagram / Sosmed -->
+            <a href="https://www.instagram.com/" target="_blank" class="contact-link">
+                <div class="c-icon" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </div>
+                <div class="c-text">
+                    <h4>Instagram</h4>
+                    <p>Lihat update portofolio terbaru kami</p>
+                </div>
+            </a>
+
         </div>
     </section>
 
     <footer class="footer">
         <div class="footer-content">
-            <h2 class="logo">FoliOpus</h2>
-            <p>&copy; 2026 FoliOpus.</p>
+            <h2 class="logo" style="margin-bottom: 0.5rem; font-size: 1.8rem; font-weight: 800; background: linear-gradient(to right, #f59e0b, #ea580c); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">FoliOpus</h2>
+            <p>&copy; 2026 FoliOpus. All rights reserved.</p>
         </div>
     </footer>
 
