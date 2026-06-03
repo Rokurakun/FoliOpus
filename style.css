@@ -527,8 +527,9 @@ body.payment-page { min-height: 100vh; padding: 2rem 5%; padding-top: 6rem; }
 .qris-container { text-align: center; padding: 0.5rem 0; }
 .qris-title    { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
 .qris-subtitle { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.75rem; }
-.qris-box { display: inline-block; background: #fff; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; }
+.qris-box { display: inline-block; background: #fff; border-radius: 16px; padding: 0; margin-bottom: 1.25rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .qris-placeholder { width: 200px; height: 200px; display: block; }
+.qris-image { width: 250px; height: auto;  display: block; }
 .qris-merchant { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.25rem; }
 .qris-merchant strong { color: var(--text-light); }
 .qris-amount { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 0.75rem 1.5rem; display: inline-block; margin-bottom: 1.75rem; }

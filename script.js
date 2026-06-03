@@ -430,15 +430,15 @@ if (document.getElementById('btnSudahBayar')) {
     const TEMPLATES = {
         starter: {
             name: 'FoliOpus Starter', price: 149000, badge: 'Starter', badgeCls: '',
-            thumb: 'linear-gradient(45deg, #f59e0b, #ea580c)', zipUrl: './downloads/foliopus-starter.zip'
+            thumb: 'linear-gradient(135deg, #0f172a 40%, #2dd4bf)', zipUrl: './downloads/foliopus-starter.zip'
         },
         pro: {
             name: 'FoliOpus Pro', price: 299000, badge: 'Pro', badgeCls: 'badge-pro',
-            thumb: 'linear-gradient(45deg, #1e293b, #f59e0b)', zipUrl: './downloads/foliopus-pro.zip'
+            thumb: 'linear-gradient(135deg, #0a0a0a 40%, #eab308)', zipUrl: './downloads/foliopus-pro.zip'
         },
         premium: {
             name: 'FoliOpus Premium', price: 499000, badge: 'Premium', badgeCls: 'badge-premium',
-            thumb: 'linear-gradient(45deg, #eaa70c, #0f172a)', zipUrl: './downloads/foliopus-premium.zip'
+            thumb: 'linear-gradient(135deg, #f8fafc 40%, #14b8a6)', zipUrl: './downloads/foliopus-premium.zip'
         }
     };
  
