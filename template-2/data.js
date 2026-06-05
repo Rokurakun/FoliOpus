@@ -1,6 +1,6 @@
 // PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web akan error.
 
-const SITE_DATA = {
+var SITE_DATA = {
  
   meta: {
     title: 'FoliOpus Pro',

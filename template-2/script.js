@@ -393,14 +393,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'UPDATE_DATA') {
-    // 1. Timpa data global
     window.SITE_DATA = event.data.payload;
     
-    // 2. Tulis ulang DOM secara instan
     renderAll();
-    
-    // 3. BYPASS ANIMASI OBSERVER (Rahasia Dewa)
-    // Supaya elemen hasil render innerHTML gak stuck transparan dan langsung muncul
+
     const newElements = document.querySelectorAll(
       '.log-entry:not(.reveal), .work-card:not(.reveal), .stat-block:not(.reveal), .skill-row:not(.reveal), .skill-tags span:not(.reveal), .buy-feature-item:not(.reveal)'
     );
@@ -409,14 +405,12 @@ window.addEventListener('message', (event) => {
       el.style.transitionDelay = '0ms'; 
     });
 
-    // 4. Force inject stat number biar gak nyangkut di 0
     document.querySelectorAll('.stat-num').forEach(el => {
       const target = el.dataset.target || 0;
       const suffix = el.dataset.suffix || '';
       el.textContent = target + suffix;
     });
 
-    // 5. Force tarik bar skill biar langsung penuh
     document.querySelectorAll('.skill-fill').forEach(fill => {
       fill.style.width = fill.dataset.pct + '%';
     });
