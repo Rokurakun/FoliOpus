@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoliOpus — Riwayat Template</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="padding-top: 6rem;">
+
+    <nav class="navbar scrolled">
+        <a href="index.html" class="logo">FoliOpus</a>
+        <a href="index.html" class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Kembali</a>
+    </nav>
+
+    <div class="features" style="padding-top: 2rem; min-height: 80vh;">
+        <h2 style="margin-bottom: 1rem;">Riwayat Templatemu</h2>
+        <p style="color: var(--text-muted); margin-bottom: 3rem;">Pilih template yang sudah kamu beli untuk mulai mengedit.</p>
+        
+        <div class="grid-container" id="historyContainer" style="max-width: 1000px; margin: 0 auto;">
+            </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 FoliOpus. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Cek Sesi
+        const session = JSON.parse(localStorage.getItem('foliOpusUser'));
+        if (!session || !session.loggedIn) window.location.replace('login.html');
+
+        // Ambil Riwayat
+        const history = JSON.parse(localStorage.getItem('foliOpusHistory_' + session.username)) || [];
+        const container = document.getElementById('historyContainer');
+
+        if (history.length === 0) {
+            container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted);">Kamu belum membeli template apapun. <a href="index.html#templates" style="color: var(--primary-yellow);">Eksplor template sekarang!</a></p>`;
+        } else {
+            container.innerHTML = history.map(item => `
+                <div class="card" style="display:flex; flex-direction:column;">
+                    <div style="height: 140px; background: ${item.thumb}; border-radius: 8px; margin-bottom: 1rem;"></div>
+                    <h3>${item.name}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Dibeli pada: ${new Date(item.date).toLocaleDateString('id-ID')}</p>
+                    <div style="margin-top: auto; display: flex; gap: 0.5rem;">
+                        <a href="editor.html?template=${item.templateKey}" class="btn-primary" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 0.6rem;">Edit Live</a>
+                        <a href="${item.zipUrl}" class="btn-secondary" style="text-align: center; font-size: 0.9rem; padding: 0.6rem;" title="Download Original">⬇️</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
