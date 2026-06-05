@@ -1,4 +1,4 @@
-const SITE_DATA = {
+var SITE_DATA = {
   owner: {
     name: "Adhiem Nabil Maulana",
     tagline: "Crafting visual worlds where\nideas breathe and brands come alive.",

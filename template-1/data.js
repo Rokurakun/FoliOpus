@@ -1,6 +1,6 @@
 // PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web akan error.
 
-const userConfig = {
+var userConfig = {
     meta: {
         titleTag: "FoliOpus Starter",
         seoDescription: "~~~"
