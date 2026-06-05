@@ -17,13 +17,97 @@ var SITE_DATA = {
     },
   },
  
+  intro: {
+    eyebrow: "FoliOpus Premium",
+  },
+ 
+  nav: {
+    links: [
+      { label: "About",      href: "#about"        },
+      { label: "Project",    href: "#project"      },
+      { label: "Experience", href: "#experience"   },
+      { label: "Contact",    href: "#contact"      },
+    ],
+    mobileLinks: [
+      { label: "About",      href: "#about"        },
+      { label: "Project",    href: "#project"      },
+      { label: "Experience", href: "#experience"   },
+      { label: "Contact",    href: "#contact"      },
+    ],
+  },
+ 
+  sections: {
+    about: {
+      label:   "01 — How I Think",
+      heading: ["Design is not", "decoration —", "it is decision."],
+      headingItalicIndex: 1,
+    },
+    project: {
+      label:    "02 — Selected Work",
+      title:    ["Technical", "Work."],
+      titleItalicIndex: 1,
+    },
+    experience: {
+      label:    "03 — What I Build",
+      title:    ["The craft", "behind the result."],
+      titleItalicIndex: 1,
+      titleItalicWord: "result.",
+    },
+    tools: {
+      label:    "04 — The Tools I Use",
+      title:    ["Behind", "the delivery."],
+      titleItalicIndex: 1,
+      titleItalicWord: "delivery.",
+    },
+    capabilities: {
+      label:    "05 — Capabilities",
+      title:    ["What I can", "structure, build,", "and ship."],
+      titleItalicIndex: 2,
+      titleItalicWord: "ship.",
+    },
+    contact: {
+      label:      "06 — Contact",
+      bigText:    ["Let's build", "something", "beautiful."],
+      bigItalicIndex: 2,
+      sub:        "You've seen the work. You know the craft.\nNow let's turn your next idea into something extraordinary.",
+    },
+  },
+ 
+  footer: {
+    cols: {
+      sitemap: {
+        title: "Sitemap",
+        links: [
+          { label: "About",      href: "#about"      },
+          { label: "Project",    href: "#project"    },
+          { label: "Experience", href: "#experience" },
+          { label: "Contact",    href: "#contact"    },
+        ],
+      },
+      social: {
+        title: "Social",
+        links: [
+          { label: "Email ↗",     href: "mailto:adhiemkeren999@gmail.com", external: false },
+          { label: "LinkedIn ↗",  href: "https://linkedin.com",            external: true  },
+          { label: "Discord ↗",   href: "https://discord.gg/creativestudio", external: true },
+          { label: "Instagram ↗", href: "https://instagram.com/aria.novera", external: true },
+        ],
+      },
+      studio: {
+        title:    "Studio",
+        line1:    "FoliOpus Premium",
+        line2:    "Creative Studio Portfolio",
+      },
+    },
+  },
+ 
   achievements: {
     title: "Achievements & Recognition",
     subtitle: "Track Record",
     stats: [
-      { num: "120+", label: "Projects Done" },
+      { num: "120+", label: "Projects Done"    },
       { num: "98%",  label: "Client Satisfied" },
-      { num: "4yr",  label: "Experience" },
+      { num: "4yr",  label: "Experience"       },
     ],
     body: [
       "🏆 Winner — Asia Creative Design Awards 2023 (UI/UX Category)",
@@ -34,6 +118,7 @@ var SITE_DATA = {
       "🚀 Average client retention rate: 87% — they always come back",
     ],
     badges: ["UI/UX", "Branding", "Motion", "Illustration", "Strategy", "Consulting"],
+    btnText: "View Achievements ↗",
   },
  
   projects: [
@@ -44,6 +129,7 @@ var SITE_DATA = {
       desc: "Full visual identity system for an artisanal coffee brand entering international markets — from logo to packaging to digital touchpoints.",
       gradient: "linear-gradient(135deg, #7FFFD4 0%, #0ABFBC 100%)",
       emoji: "☕",
+      ctaText: "View Case Study →",
       dialog: {
         title: "Lumina Coffee Co.",
         subtitle: "Brand Identity · 2024",
@@ -55,8 +141,8 @@ var SITE_DATA = {
         badges: ["Logo Design", "Packaging", "Guidelines", "Web", "Typography"],
         stats: [
           { num: "68", label: "Pages of Guidelines" },
-          { num: "6",  label: "Packaging SKUs" },
-          { num: "3",  label: "Months of Work" },
+          { num: "6",  label: "Packaging SKUs"      },
+          { num: "3",  label: "Months of Work"      },
         ],
       },
     },
@@ -67,6 +153,7 @@ var SITE_DATA = {
       desc: "End-to-end UX design for a fintech app targeting Gen-Z investors. Designed from research to high-fidelity prototype with full design system.",
       gradient: "linear-gradient(135deg, #43B29D 0%, #0D2B27 100%)",
       emoji: "💳",
+      ctaText: "View Case Study →",
       dialog: {
         title: "Vaultify Finance",
         subtitle: "UI/UX · Mobile App · 2024",
@@ -77,8 +164,8 @@ var SITE_DATA = {
         ],
         badges: ["Research", "Wireframes", "Prototyping", "Design System", "Handoff"],
         stats: [
-          { num: "28", label: "User Interviews" },
-          { num: "210", label: "Components" },
+          { num: "28",   label: "User Interviews" },
+          { num: "210",  label: "Components"      },
           { num: "+34%", label: "Conversion Lift" },
         ],
       },
@@ -90,6 +177,7 @@ var SITE_DATA = {
       desc: "Animated brand motion reel and interactive web showcase for a creative production house. Full end-to-end creative direction.",
       gradient: "linear-gradient(135deg, #C8EDE7 0%, #7FFFD4 100%)",
       emoji: "🎬",
+      ctaText: "View Case Study →",
       dialog: {
         title: "Nexus Studio Reel",
         subtitle: "Motion Design · Web · 2023",
@@ -100,8 +188,8 @@ var SITE_DATA = {
         ],
         badges: ["Motion Design", "3D", "Web Dev", "Creative Direction", "Storyboard"],
         stats: [
-          { num: "2.1M", label: "Reel Views" },
-          { num: "90s",  label: "Brand Film" },
+          { num: "2.1M", label: "Reel Views"    },
+          { num: "90s",  label: "Brand Film"    },
           { num: "1",    label: "Webby Honoree" },
         ],
       },
@@ -113,6 +201,7 @@ var SITE_DATA = {
       desc: "Built a scalable, accessible design system for a SaaS platform serving 200,000+ enterprise users across 8 product teams.",
       gradient: "linear-gradient(135deg, #0ABFBC 0%, #43B29D 100%)",
       emoji: "🔮",
+      ctaText: "View Case Study →",
       dialog: {
         title: "Orbit Design System",
         subtitle: "Design System · SaaS · 2023",
@@ -123,8 +212,8 @@ var SITE_DATA = {
         ],
         badges: ["Figma", "Tokens", "Accessibility", "Documentation", "Components"],
         stats: [
-          { num: "186",  label: "Components" },
-          { num: "200K", label: "Active Users" },
+          { num: "186",  label: "Components"   },
+          { num: "200K", label: "Active Users"  },
           { num: "-60%", label: "Onboard Time" },
         ],
       },
@@ -162,7 +251,7 @@ var SITE_DATA = {
     left: {
       title: "Design & Visual",
       items: [
-        { icon: "🎨", name: "Figma",              type: "Primary Tool"    },
+        { icon: "🎨", name: "Figma",             type: "Primary Tool"    },
         { icon: "✨", name: "Adobe Illustrator",  type: "Vector"          },
         { icon: "📸", name: "Adobe Photoshop",    type: "Raster"          },
         { icon: "🎬", name: "After Effects",       type: "Motion"          },
