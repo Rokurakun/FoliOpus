@@ -140,7 +140,7 @@ function updateNavbar() {
     const btnMasuk   = document.querySelector('.navbar .btn-primary');
     const navLinks   = document.querySelector('.navbar .nav-links');
     if (!btnMasuk) return;
- 
+
     const session = AUTH.getSession();
 
     if (session?.loggedIn) {
@@ -153,26 +153,30 @@ function updateNavbar() {
             dropdown = document.createElement('div');
             dropdown.id = 'userDropdown';
             dropdown.className = 'user-dropdown';
-            dropdown.innerHTML = `<button id="btnLogout">Keluar</button>`;
+            dropdown.innerHTML = `
+                <a href="history.html" style="display:block; padding: 0.8rem 1rem; color: var(--text-light); text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Riwayat</a>
+                <button id="btnLogout" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; font-weight: 600; padding: 0.8rem 1rem; cursor: pointer;">Keluar</button>
+            `;
+
             const wrapper = document.createElement('div');
             wrapper.className = 'nav-user-wrap';
             btnMasuk.parentNode.replaceChild(wrapper, btnMasuk);
             wrapper.appendChild(btnMasuk);
             wrapper.appendChild(dropdown);
- 
+
             document.getElementById('btnLogout').addEventListener('click', () => {
                 AUTH.clearSession();
                 location.reload();
             });
         }
- 
+
         btnMasuk.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdown.classList.toggle('show');
         });
- 
+
         document.addEventListener('click', () => dropdown.classList.remove('show'));
- 
+
     } else {
         btnMasuk.textContent = 'Masuk';
         btnMasuk.onclick = () => window.location.href = 'login.html';
@@ -189,13 +193,13 @@ function updateNavbar() {
             <span></span>
         `;
         navbar.insertBefore(hamburger, navLinks);
- 
+
         hamburger.addEventListener('click', (e) => {
             e.stopPropagation();
             const isOpen = navLinks.classList.toggle('nav-open');
             hamburger.classList.toggle('open', isOpen);
         });
- 
+
         document.addEventListener('click', (e) => {
             if (!navbar.contains(e.target)) {
                 navLinks.classList.remove('nav-open');
@@ -204,7 +208,7 @@ function updateNavbar() {
         });
     }
 }
- 
+
 updateNavbar();
 
 // LOGIN PAGE
@@ -424,7 +428,6 @@ if (document.getElementById('btnRegister')) {
     });
 }
 
-// PAYMENT PAGE
 if (document.getElementById('btnSudahBayar')) {
  
     const TEMPLATES = {
@@ -485,6 +488,52 @@ if (document.getElementById('btnSudahBayar')) {
  
     document.getElementById('btnSudahBayar').addEventListener('click', () => {
         goToStep(2);
-        setTimeout(() => goToStep(3), 2500);
+        setTimeout(() => {
+            goToStep(3);
+            
+            // --- LOGIKA BARU: Simpan ke Riwayat Pembelian ---
+            const currentUser = session.username;
+            let history = JSON.parse(localStorage.getItem('foliOpusHistory_' + currentUser)) || [];
+            
+            // Cek biar template yang sama tidak masuk dua kali
+            const alreadyBought = history.find(h => h.templateKey === templateKey);
+            if (!alreadyBought) {
+                history.push({
+                    templateKey: templateKey,
+                    name: tmpl.name,
+                    date: new Date().toISOString(),
+                    zipUrl: tmpl.zipUrl,
+                    thumb: tmpl.thumb
+                });
+                localStorage.setItem('foliOpusHistory_' + currentUser, JSON.stringify(history));
+            }
+
+            // --- UPDATE TOMBOL DI PAYMENT (Munculin tombol Editor) ---
+            const panel3Container = document.querySelector('#panel3 .qris-container');
+            
+            // Sembunyikan tombol download lama & tombol kembali
+            const oldDownload = document.getElementById('downloadLink');
+            if (oldDownload) oldDownload.style.display = 'none';
+            
+            const oldBackBtn = panel3Container.querySelector('.btn-secondary');
+            if (oldBackBtn) oldBackBtn.style.display = 'none';
+
+            // Masukkan tombol baru (Editor & Download Original) kalau belum ada
+            if (!document.getElementById('actionBtnsWrapper')) {
+                const actionBtns = document.createElement('div');
+                actionBtns.id = 'actionBtnsWrapper';
+                actionBtns.innerHTML = `
+                    <a href="editor.html?template=${templateKey}" class="btn-primary" style="display:flex; justify-content:center; padding: 1rem; margin-bottom: 1rem; text-decoration:none; font-size: 1.1rem; box-shadow: 0 10px 25px rgba(245,158,11,0.3);">
+                        🎨 Buka Live Editor
+                    </a>
+                    <a href="${tmpl.zipUrl}" class="btn-secondary" style="display:flex; justify-content:center; padding: 1rem; margin-bottom: 1.5rem; text-decoration:none;">
+                        ⬇️ Download Original Zip
+                    </a>
+                    <a href="index.html" style="display:block; text-align:center; color:var(--text-muted); font-size:0.9rem; text-decoration:underline;">Kembali ke Beranda</a>
+                `;
+                panel3Container.appendChild(actionBtns);
+            }
+
+        }, 2500);
     });
 }

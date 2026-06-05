@@ -17,8 +17,11 @@ function populateIntro() {
   const nameEl    = document.getElementById('intro-name');
   const taglineEl = document.getElementById('intro-tagline');
   if (nameEl) nameEl.textContent = SITE_DATA.owner.name;
-  if (taglineEl) taglineEl.innerHTML = SITE_DATA.owner.tagline.replace('\n', '<br>');
+  if (taglineEl) taglineEl.innerHTML = SITE_DATA.owner.tagline.replace(/\n/g, '<br>');
+}
 
+// Event intro-btn dipisah biar ga numpuk pas render ulang
+function initIntroEvents() {
   document.querySelectorAll('.intro-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.target;
@@ -120,8 +123,12 @@ function updateTime() {
   const el = document.getElementById('local-time');
   if (!el) return;
   const now = new Date();
-  const opts = { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-  el.textContent = new Intl.DateTimeFormat('en-GB', opts).format(now) + ' WIB';
+  const opts = { timeZone: SITE_DATA.owner.timezone || 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  try {
+      el.textContent = new Intl.DateTimeFormat('en-GB', opts).format(now) + ' WIB';
+  } catch(e) {
+      el.textContent = '00:00:00 WIB';
+  }
 }
 
 function initClock() {
@@ -156,7 +163,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 function buildDialogHTML(d) {
-  const statsHTML = d.stats
+  const statsHTML = d.stats && d.stats.length > 0
     ? `<div class="dialog-stat-row">${d.stats.map(s =>
         `<div class="dialog-stat">
           <span class="dialog-stat-num">${s.num}</span>
@@ -164,22 +171,17 @@ function buildDialogHTML(d) {
         </div>`).join('')}
        </div>` : '';
 
-  const badgesHTML = d.badges
+  const badgesHTML = d.badges && d.badges.length > 0
     ? `<div class="dialog-badge-row">${d.badges.map(b =>
         `<span class="dialog-badge">${b}</span>`).join('')}
        </div>` : '';
 
   const bodyHTML = Array.isArray(d.body)
-    ? d.body.map(line => {
-        if (d === SITE_DATA.achievements) {
-          return `<p>${line}</p>`;
-        }
-        return `<p>${line}</p>`;
-      }).join('')
+    ? d.body.map(line => `<p>${line}</p>`).join('')
     : `<p>${d.body}</p>`;
 
   return `
-    <h3>${d.title}</h3>
+    <h3>${d.title || ''}</h3>
     <p class="dialog-sub">${d.subtitle || ''}</p>
     ${statsHTML}
     ${bodyHTML}
@@ -188,14 +190,17 @@ function buildDialogHTML(d) {
 }
 
 function initAbout() {
-  const heading = document.querySelector('.about-heading');
   const bioEls  = document.querySelectorAll('.about-bio');
-  if (bioEls.length >= 2) {
+  if (bioEls.length >= 2 && SITE_DATA.owner.bio.length >= 2) {
     bioEls[0].textContent = SITE_DATA.owner.bio[0];
     bioEls[1].textContent = SITE_DATA.owner.bio[1];
   }
+}
 
-  document.getElementById('openAchievements').addEventListener('click', () => {
+function bindAchievementsBtn() {
+  const btn = document.getElementById('openAchievements');
+  if(!btn) return;
+  btn.addEventListener('click', () => {
     const d = SITE_DATA.achievements;
     const listHTML = d.body.map(line => `<p>${line}</p>`).join('');
     const statsHTML = `<div class="dialog-stat-row">${d.stats.map(s =>
@@ -219,6 +224,7 @@ function initAbout() {
 function initProjects() {
   const grid = document.getElementById('projectGrid');
   if (!grid) return;
+  grid.innerHTML = ''; // Penting: Bersihkan sisa render sebelumnya biar ga numpuk
 
   SITE_DATA.projects.forEach((p, i) => {
     const card = document.createElement('div');
@@ -253,6 +259,7 @@ function initProjects() {
 function initBuildAccordion() {
   const list = document.getElementById('buildAccordion');
   if (!list) return;
+  list.innerHTML = ''; // Bersihkan sebelum render ulang
 
   SITE_DATA.buildItems.forEach((item, i) => {
     const el = document.createElement('div');
@@ -284,6 +291,7 @@ function initBuildAccordion() {
 function initTools() {
   const container = document.getElementById('toolsSplit');
   if (!container) return;
+  container.innerHTML = ''; // Bersihkan kontainer utama
 
   ['left', 'right'].forEach(side => {
     const box = SITE_DATA.tools[side];
@@ -310,6 +318,7 @@ function initTools() {
 function initCapabilities() {
   const grid = document.getElementById('capGrid');
   if (!grid) return;
+  grid.innerHTML = ''; // Bersihkan grid
 
   SITE_DATA.capabilities.forEach((cap, i) => {
     const card = document.createElement('div');
@@ -343,8 +352,8 @@ function initScrollReveal() {
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    document.querySelectorAll('.project-card').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal:not(.in-view)').forEach(el => observer.observe(el));
+    document.querySelectorAll('.project-card:not(.revealed)').forEach(el => observer.observe(el));
   }, 200);
 }
 
@@ -454,20 +463,26 @@ const btnBuyCta = document.querySelector('.btn-primary');
     });
   }
 
-document.addEventListener('DOMContentLoaded', () => {
-  initCursor();
+function renderAllData() {
   populateIntro();
-  initClock();
-  setFooterYear();
   updateNavLogo();
-
   initAbout();
   initProjects();
   initBuildAccordion();
   initTools();
   initCapabilities();
   updateSocialLinks();
+}
 
+document.addEventListener('DOMContentLoaded', () => {
+  renderAllData();
+  
+  initCursor();
+  initClock();
+  setFooterYear();
+  bindAchievementsBtn(); // Event listener cuma dibind sekali di awal
+  initIntroEvents(); // Tombol intro cuma dibind sekali
+  
   initNav();
   initNavActiveState();
   initSmoothScroll();
@@ -475,5 +490,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initBuyPulse();
 
   console.log('%cFoliOpus Premium — Creative Studio', 'color:#0ABFBC;font-size:14px;font-weight:bold;');
-  console.log('%cTo edit content, open app.js and modify SITE_DATA at the top.', 'color:#43B29D;font-size:11px;');
+});
+
+// ==========================================
+// ANTENA PENERIMA SINYAL DARI EDITOR
+// ==========================================
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'UPDATE_DATA') {
+    window.SITE_DATA = event.data.payload;
+    
+    // Tulis ulang DOM secara instan tapi bersih
+    renderAllData();
+
+    // Bypass observer transisi animasi biar pas ngetik nggak nunggu di-scroll dulu
+    const newElements = document.querySelectorAll('.reveal:not(.in-view), .project-card:not(.revealed)');
+    newElements.forEach(el => {
+      el.classList.add('in-view');
+      if (el.classList.contains('project-card')) {
+        el.classList.add('revealed');
+      }
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0) scale(1)';
+      el.style.transitionDelay = '0ms';
+    });
+  }
 });

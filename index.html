@@ -28,7 +28,7 @@
                 <h1>Bangun kariermu dengan FoliOpus</h1>
                 <p>Bangun personal branding lewat portofolio digital interaktif yang menampilkan identitas dan karya terbaikmu secara elegan dan mudah diakses</p>
                 <div class="hero-cta">
-                    <button class="btn-primary large">Coba FoliOpus Sekarang</button>
+                    <button class="btn-primary large" onclick="document.getElementById('templates').scrollIntoView({ behavior: 'smooth' });">Coba FoliOpus Sekarang</button>
                 </div>
             </div>
             
@@ -76,7 +76,7 @@
         <div class="grid-container">
             
             <!-- Starter Template -->
-            <div class="card template-card" data-url="./template-1/index.html">
+            <div class="card template-card" style="cursor: default;">
                 <div class="mockup-preview mockup-starter">
                     <div class="m-title"></div>
                     <div class="m-subtitle"></div>
@@ -93,10 +93,14 @@
                 </div>
                 <h3>FoliOpus Starter</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Simple, cepat, cocok buat pemula.</p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <a href="editor.html?template=template-1&mode=preview" class="btn-secondary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">Live Preview</a>
+                    <a href="payment.html?template=starter" class="btn-primary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">🛒 Beli (149k)</a>
+                </div>
             </div>
 
             <!-- Pro Template -->
-            <div class="card template-card" data-url="./template-2/index.html">
+            <div class="card template-card" style="cursor: default;">
                 <div class="mockup-preview mockup-pro">
                     <div class="m-eyebrow"></div>
                     <div class="m-title-1"></div>
@@ -105,10 +109,14 @@
                 </div>
                 <h3>FoliOpus Pro</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Multi-section untuk freelancer & pro.</p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <a href="editor.html?template=template-2&mode=preview" class="btn-secondary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">Live Preview</a>
+                    <a href="payment.html?template=pro" class="btn-primary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">🛒 Beli (299k)</a>
+                </div>
             </div>
 
             <!-- Premium Template -->
-            <div class="card template-card" data-url="./template-3/index.html" style="border-color: var(--primary-yellow); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);">
+            <div class="card template-card" style="cursor: default; border-color: var(--primary-yellow); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);">
                 <div class="mockup-preview mockup-premium">
                     <div class="m-nav"></div>
                     <div class="m-left">
@@ -126,6 +134,10 @@
                 </div>
                 <h3>FoliOpus Premium</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Desain paling eksklusif dan interaktif.</p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <a href="editor.html?template=template-3&mode=preview" class="btn-secondary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">Live Preview</a>
+                    <a href="payment.html?template=premium" class="btn-primary" style="flex: 1; text-align: center; padding: 0.6rem; font-size: 0.85rem;">🛒 Beli (499k)</a>
+                </div>
             </div>
 
         </div>
@@ -163,7 +175,7 @@
             </details>
             <details class="faq-item">
                 <summary>Apakah sistem login ini sistem autentikasi produksi?</summary>
-                <div class="faq-body">Tidak.</strong> Halaman login/register saat ini adalah <em>demo prototype</em> berbasis localStorage browser. Data akun hanya tersimpan di perangkat lokal pengguna dan tidak dienkripsi. Sistem ini tidak boleh dianggap sebagai autentikasi produksi. Untuk versi commercial release, autentikasi akan dipindahkan ke backend yang aman.</div>
+                <div class="faq-body">Tidak. Halaman login/register saat ini adalah <em>demo prototype</em> berbasis localStorage browser. Data akun hanya tersimpan di perangkat lokal pengguna dan tidak dienkripsi. Sistem ini tidak boleh dianggap sebagai autentikasi produksi. Untuk versi commercial release, autentikasi akan dipindahkan ke backend yang aman.</div>
             </details>
         </div>
     </section>

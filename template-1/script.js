@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Kita bungkus semua logika penulisan DOM ke dalam satu fungsi terpusat
+function renderTemplate() {
     if (typeof userConfig === 'undefined') {
         document.body.innerHTML = `
             <div style="display:flex; height:100vh; align-items:center; justify-content:center; flex-direction:column; text-align:center; background:#0f172a; color:#f8fafc; font-family:sans-serif;">
@@ -21,8 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     safeSetText('render-nama', userConfig.hero?.namaLengkap);
     safeSetText('render-bio', userConfig.hero?.deskripsiBio);
     
-    document.getElementById('render-github').href = userConfig.sosmed?.github || '#';
-    document.getElementById('render-linkedin').href = userConfig.sosmed?.linkedin || '#';
+    const gitBtn = document.getElementById('render-github');
+    if(gitBtn) gitBtn.href = userConfig.sosmed?.github || '#';
+    
+    const inBtn = document.getElementById('render-linkedin');
+    if(inBtn) inBtn.href = userConfig.sosmed?.linkedin || '#';
     
     const emailBtn = document.getElementById('render-email');
     if (emailBtn) {
@@ -30,19 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
         emailBtn.innerText = userConfig.hero?.teksTombolKontak || 'Email Me';
     }
 
+    // Eksekusi ulang typewriter effect
     const roleElement = document.getElementById('render-role');
-    const roleText = userConfig.hero?.pekerjaan || 'Tech Enthusiast';
-    roleElement.innerText = '';
-    
-    let charIndex = 0;
-    const typeWriter = () => {
-        if (charIndex < roleText.length) {
-            roleElement.innerText += roleText.charAt(charIndex);
-            charIndex++;
-            setTimeout(typeWriter, 50); 
-        }
-    };
-    setTimeout(typeWriter, 500);
+    if(roleElement) {
+        const roleText = userConfig.hero?.pekerjaan || 'Tech Enthusiast';
+        roleElement.innerText = '';
+        let charIndex = 0;
+        const typeWriter = () => {
+            if (charIndex < roleText.length) {
+                roleElement.innerText += roleText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 50); 
+            }
+        };
+        setTimeout(typeWriter, 100); // Percepat delay pas render ulang
+    }
 
     const skillsContainer = document.getElementById('render-skills');
     if (skillsContainer && userConfig.skillset && Array.isArray(userConfig.skillset)) {
@@ -62,6 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
         userConfig.projects.forEach(proj => {
             const card = document.createElement('div');
             card.className = 'project-card';
+            // Pastikan card yang dirender ulang langsung keliatan tanpa animasi (bypass observer)
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
             
             const title = document.createElement('h4');
             title.innerText = proj.judul || 'Untitled Project';
@@ -82,6 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const metaDescription = document.getElementById('dynamic-meta-desc');
+    if (metaDescription && userConfig.hero) {
+        const namaKlien = userConfig.hero.namaLengkap || 'Profesional';
+        const roleKlien = userConfig.hero.pekerjaan || 'Kreator Digital';
+        const kalimatSEO = `Portofolio digital interaktif milik ${namaKlien}, seorang ${roleKlien}. Jelajahi karya dan keahlian terbaik saya di sini.`;
+        metaDescription.setAttribute('content', kalimatSEO);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Panggil render pertama kali saat web load
+    renderTemplate();
+
+    // 2. Setup intersection observer cuma sekali di awal
     const sections = document.querySelectorAll('.section');
     const sectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -100,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sectionObserver.observe(section);
     });
 
+    // 3. Setup event button
     const btnBuySticky = document.querySelector('.btn-buy-sticky');
     if (btnBuySticky) {
         btnBuySticky.addEventListener('click', () => {
@@ -116,12 +140,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
-    const metaDescription = document.getElementById('dynamic-meta-desc');
-    if (metaDescription && typeof userConfig !== 'undefined' && userConfig.hero) {
-        const namaKlien = userConfig.hero.namaLengkap || 'Profesional';
-        const roleKlien = userConfig.hero.pekerjaan || 'Kreator Digital';
-        const kalimatSEO = `Portofolio digital interaktif milik ${namaKlien}, seorang ${roleKlien}. Jelajahi karya dan keahlian terbaik saya di sini.`;
-        metaDescription.setAttribute('content', kalimatSEO);
+});
+
+// ==========================================
+// ANTENA PENERIMA SINYAL DARI EDITOR
+// ==========================================
+window.addEventListener('message', (event) => {
+    // Cek apakah sinyal ini beneran datang dari arsitektur editor dewa kita
+    if (event.data && event.data.type === 'UPDATE_DATA') {
+        // Timpa variabel otak utama
+        window.userConfig = event.data.payload;
+        // Gas render ulang HTML pake data baru!
+        renderTemplate();
     }
 });
