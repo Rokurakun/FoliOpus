@@ -669,30 +669,112 @@
             else if(templateName === 'template-3') {
                 html += `
                     <div class="e-group">
+                        <h3>Meta & Intro Screen</h3>
+                        <label class="e-label">Tab Title (meta title)</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['meta','title'], this.value)" value="${currentData.meta.title}">
+                        <label class="e-label">Intro Eyebrow (teks kecil di atas nama)</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['intro','eyebrow'], this.value)" value="${currentData.intro.eyebrow}">
+                    </div>
+                
+                    <div class="e-group">
+                        <h3>Navigation</h3>
+                        <label class="e-label">Teks Tombol Buy (nav kanan atas)</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['nav','buyText'], this.value)" value="${currentData.nav.buyText}">
+                        <h4 style="margin:10px 0 8px; color:var(--text-light);">Nav Links</h4>
+                        ${currentData.nav.links.map((l, i) => `
+                            <div style="display:flex; gap:8px; margin-bottom:6px;">
+                                <div style="flex:1;"><label class="e-label">Label</label><input class="e-input" type="text" oninput="updateDeep(['nav','links',${i},'label'], this.value)" value="${l.label}"></div>
+                                <div style="flex:1;"><label class="e-label">Href</label><input class="e-input" type="text" oninput="updateDeep(['nav','links',${i},'href'], this.value)" value="${l.href}"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                
+                    <div class="e-group">
                         <h3>Identity & Hero</h3>
-                        <label class="e-label">Nama Kreator</label><input class="e-input" type="text" oninput="updateDeep(['owner','name'], this.value)" value="${currentData.owner.name}">
+                        <label class="e-label">Nama Kreator</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['owner','name'], this.value)" value="${currentData.owner.name}">
+                        <label class="e-label">Tagline Hero (gunakan \\n untuk ganti baris)</label>
+                        <textarea class="e-textarea" oninput="updateDeep(['owner','tagline'], this.value)">${currentData.owner.tagline}</textarea>
                         <div style="display:flex; gap:10px;">
                             <div style="flex:1;"><label class="e-label">Lokasi</label><input class="e-input" type="text" oninput="updateDeep(['owner','location'], this.value)" value="${currentData.owner.location}"></div>
-                            <div style="flex:1;"><label class="e-label">Timezone (Msl: Asia/Jakarta)</label><input class="e-input" type="text" oninput="updateDeep(['owner','timezone'], this.value)" value="${currentData.owner.timezone}"></div>
+                            <div style="flex:1;"><label class="e-label">Timezone</label><input class="e-input" type="text" oninput="updateDeep(['owner','timezone'], this.value)" value="${currentData.owner.timezone}"></div>
                         </div>
-                        <label class="e-label">Inisial Avatar</label><input class="e-input" type="text" oninput="updateDeep(['owner','avatar'], this.value)" value="${currentData.owner.avatar}">
-                        <label class="e-label">Tagline Hero (Bisa '\\n')</label><textarea class="e-textarea" oninput="updateDeep(['owner','tagline'], this.value)">${currentData.owner.tagline}</textarea>
-                        <label class="e-label">Bio Utama (Paragraf, pisah Enter)</label><textarea class="e-textarea" style="min-height: 120px;" oninput="updateArrayStr(['owner','bio'], this.value, '\\n')">${currentData.owner.bio.join('\\n')}</textarea>
-                        
+                        <label class="e-label">Inisial Avatar</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['owner','avatar'], this.value)" value="${currentData.owner.avatar}">
+                        <label class="e-label">Bio (pisah Enter untuk paragraf baru)</label>
+                        <textarea class="e-textarea" style="min-height:120px;" oninput="updateArrayStr(['owner','bio'], this.value, '\\n')">${currentData.owner.bio.join('\n')}</textarea>
+                    
                         <h4 style="margin-top:15px; color:var(--text-light);">Sosial Media</h4>
                         <label class="e-label">Email</label><input class="e-input" type="text" oninput="updateDeep(['owner','social','email'], this.value)" value="${currentData.owner.social.email}">
                         <label class="e-label">LinkedIn</label><input class="e-input" type="text" oninput="updateDeep(['owner','social','linkedin'], this.value)" value="${currentData.owner.social.linkedin}">
                         <label class="e-label">Instagram</label><input class="e-input" type="text" oninput="updateDeep(['owner','social','instagram'], this.value)" value="${currentData.owner.social.instagram}">
                         <label class="e-label">Discord</label><input class="e-input" type="text" oninput="updateDeep(['owner','social','discord'], this.value)" value="${currentData.owner.social.discord}">
                     </div>
-
+                
+                    <div class="e-group">
+                        <h3>Section Labels & Headings</h3>
+                    
+                        <h4 style="color:var(--text-light); margin-bottom:8px;">Section About</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','about','label'], this.value)" value="${currentData.sections.about.label}">
+                        <label class="e-label">Heading (gunakan \\n untuk ganti baris, baris terakhir jadi &lt;em&gt;)</label>
+                        <textarea class="e-textarea" oninput="updateDeep(['sections','about','heading'], this.value)">${currentData.sections.about.heading}</textarea>
+                        <label class="e-label">Teks Tombol Achievements</label><input class="e-input" type="text" oninput="updateDeep(['sections','about','achievementsBtn'], this.value)" value="${currentData.sections.about.achievementsBtn}">
+                    
+                        <h4 style="color:var(--text-light); margin:15px 0 8px;">Section Project</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','project','label'], this.value)" value="${currentData.sections.project.label}">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:1;"><label class="e-label">Judul</label><input class="e-input" type="text" oninput="updateDeep(['sections','project','title'], this.value)" value="${currentData.sections.project.title}"></div>
+                            <div style="flex:1;"><label class="e-label">Judul &lt;em&gt;</label><input class="e-input" type="text" oninput="updateDeep(['sections','project','titleEm'], this.value)" value="${currentData.sections.project.titleEm}"></div>
+                        </div>
+                    
+                        <h4 style="color:var(--text-light); margin:15px 0 8px;">Section Experience</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','experience','label'], this.value)" value="${currentData.sections.experience.label}">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:2;"><label class="e-label">Judul (\\n = baris baru)</label><textarea class="e-textarea" oninput="updateDeep(['sections','experience','title'], this.value)">${currentData.sections.experience.title}</textarea></div>
+                            <div style="flex:1;"><label class="e-label">Judul &lt;em&gt;</label><input class="e-input" type="text" oninput="updateDeep(['sections','experience','titleEm'], this.value)" value="${currentData.sections.experience.titleEm}"></div>
+                        </div>
+                    
+                        <h4 style="color:var(--text-light); margin:15px 0 8px;">Section Tools</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','tools','label'], this.value)" value="${currentData.sections.tools.label}">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:2;"><label class="e-label">Judul (\\n = baris baru)</label><textarea class="e-textarea" oninput="updateDeep(['sections','tools','title'], this.value)">${currentData.sections.tools.title}</textarea></div>
+                            <div style="flex:1;"><label class="e-label">Judul &lt;em&gt;</label><input class="e-input" type="text" oninput="updateDeep(['sections','tools','titleEm'], this.value)" value="${currentData.sections.tools.titleEm}"></div>
+                        </div>
+                    
+                        <h4 style="color:var(--text-light); margin:15px 0 8px;">Section Capabilities</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','capabilities','label'], this.value)" value="${currentData.sections.capabilities.label}">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:2;"><label class="e-label">Judul (\\n = baris baru)</label><textarea class="e-textarea" oninput="updateDeep(['sections','capabilities','title'], this.value)">${currentData.sections.capabilities.title}</textarea></div>
+                            <div style="flex:1;"><label class="e-label">Judul &lt;em&gt;</label><input class="e-input" type="text" oninput="updateDeep(['sections','capabilities','titleEm'], this.value)" value="${currentData.sections.capabilities.titleEm}"></div>
+                        </div>
+                    
+                        <h4 style="color:var(--text-light); margin:15px 0 8px;">Section Contact</h4>
+                        <label class="e-label">Label Kecil</label><input class="e-input" type="text" oninput="updateDeep(['sections','contact','label'], this.value)" value="${currentData.sections.contact.label}">
+                        <label class="e-label">Heading Besar (\\n = baris baru, baris terakhir jadi &lt;em&gt;)</label>
+                        <textarea class="e-textarea" oninput="updateDeep(['sections','contact','heading'], this.value)">${currentData.sections.contact.heading}</textarea>
+                        <label class="e-label">Sub / Deskripsi (\\n = baris baru)</label>
+                        <textarea class="e-textarea" oninput="updateDeep(['sections','contact','sub'], this.value)">${currentData.sections.contact.sub}</textarea>
+                    </div>
+                
+                    <div class="e-group">
+                        <h3>Footer</h3>
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:1;"><label class="e-label">Judul Kolom Sitemap</label><input class="e-input" type="text" oninput="updateDeep(['footer','sitemapTitle'], this.value)" value="${currentData.footer.sitemapTitle}"></div>
+                            <div style="flex:1;"><label class="e-label">Judul Kolom Social</label><input class="e-input" type="text" oninput="updateDeep(['footer','socialTitle'], this.value)" value="${currentData.footer.socialTitle}"></div>
+                            <div style="flex:1;"><label class="e-label">Judul Kolom Studio</label><input class="e-input" type="text" oninput="updateDeep(['footer','studioTitle'], this.value)" value="${currentData.footer.studioTitle}"></div>
+                        </div>
+                        <label class="e-label">Teks Footer Studio (pisah Enter)</label>
+                        <textarea class="e-textarea" oninput="updateArrayStr(['footer','studioLines'], this.value, '\\n')">${currentData.footer.studioLines.join('\n')}</textarea>
+                    </div>
+                
                     <div class="e-group">
                         <h3>Achievements</h3>
                         <label class="e-label">Judul Utama</label><input class="e-input" type="text" oninput="updateDeep(['achievements','title'], this.value)" value="${currentData.achievements.title}">
                         <label class="e-label">Sub Title</label><input class="e-input" type="text" oninput="updateDeep(['achievements','subtitle'], this.value)" value="${currentData.achievements.subtitle}">
-                        <label class="e-label">Badges Berjalan (Koma)</label><input class="e-input" type="text" oninput="updateArrayStr(['achievements','badges'], this.value, ',')" value="${currentData.achievements.badges.join(', ')}">
-                        <label class="e-label">List Pencapaian (Pisah Enter)</label><textarea class="e-textarea" oninput="updateArrayStr(['achievements','body'], this.value, '\\n')">${currentData.achievements.body.join('\\n')}</textarea>
-                        
+                        <label class="e-label">Badges Berjalan (koma)</label><input class="e-input" type="text" oninput="updateArrayStr(['achievements','badges'], this.value, ',')" value="${currentData.achievements.badges.join(', ')}">
+                        <label class="e-label">List Pencapaian (pisah Enter)</label>
+                        <textarea class="e-textarea" oninput="updateArrayStr(['achievements','body'], this.value, '\\n')">${currentData.achievements.body.join('\n')}</textarea>
+                    
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; margin-bottom:10px;">
                             <h4 style="color:var(--text-light); margin:0;">Stats Pencapaian</h4>
                             ${!isPreviewMode ? `<button class="btn-add" onclick="addArrayItem('${templateName}', 'achievements_stats')">+ Tambah</button>` : ''}
@@ -705,7 +787,7 @@
                             </div>
                         `).join('')}
                     </div>
-
+                
                     <div class="e-group">
                         <h3>Selected Projects ${!isPreviewMode ? `<button class="btn-add" onclick="addArrayItem('${templateName}', 'projects')">+ Tambah</button>` : ''}</h3>
                         ${currentData.projects.map((p, i) => `
@@ -713,16 +795,22 @@
                                 <h4>${p.name} ${!isPreviewMode ? `<button class="btn-del" onclick="delArrayItem('${templateName}', 'projects', ${i})">Hapus</button>` : ''}</h4>
                                 <div style="display:flex; gap:10px;">
                                     <div style="flex:1;"><label class="e-label">Emoji</label><input class="e-input" type="text" oninput="updateDeep(['projects',${i},'emoji'], this.value)" value="${p.emoji}"></div>
-                                    <div style="flex:4;"><label class="e-label">Warna Gradient Card</label><input class="e-input" type="text" oninput="updateDeep(['projects',${i},'gradient'], this.value)" value="${p.gradient}"></div>
                                     <div style="flex:3;"><label class="e-label">Kategori (Tag)</label><input class="e-input" type="text" oninput="updateDeep(['projects',${i},'tag'], this.value)" value="${p.tag}"></div>
                                 </div>
-                                <label class="e-label">Judul Proyek</label><input class="e-input" type="text" oninput="updateDeep(['projects',${i},'name'], this.value); updateDeep(['projects',${i},'dialog','title'], this.value);" value="${p.name}">
-                                <label class="e-label">Deskripsi Singkat Card</label><textarea class="e-textarea" oninput="updateDeep(['projects',${i},'desc'], this.value)">${p.desc}</textarea>
-                                
-                                <h5 style="margin:10px 0 5px; color:#14b8a6;">Data Popup (Dialog)</h5>
-                                <label class="e-label">Subtitle Dialog</label><input class="e-input" type="text" oninput="updateDeep(['projects',${i},'dialog','subtitle'], this.value)" value="${p.dialog.subtitle}">
-                                <label class="e-label">Deskripsi Full (Pisah Enter)</label><textarea class="e-textarea" oninput="updateArrayStr(['projects',${i},'dialog','body'], this.value, '\\n')">${p.dialog.body.join('\\n')}</textarea>
-                                <label class="e-label">Badges Skill (Koma)</label><input class="e-input" type="text" oninput="updateArrayStr(['projects',${i},'dialog','badges'], this.value, ',')" value="${p.dialog.badges.join(', ')}">
+                                <label class="e-label">Warna Gradient Card</label>
+                                <input class="e-input" type="text" oninput="updateDeep(['projects',${i},'gradient'], this.value)" value="${p.gradient}">
+                                <label class="e-label">Judul Proyek</label>
+                                <input class="e-input" type="text" oninput="updateDeep(['projects',${i},'name'], this.value); updateDeep(['projects',${i},'dialog','title'], this.value);" value="${p.name}">
+                                <label class="e-label">Deskripsi Singkat Card</label>
+                                <textarea class="e-textarea" oninput="updateDeep(['projects',${i},'desc'], this.value)">${p.desc}</textarea>
+                            
+                                <h5 style="margin:10px 0 5px; color:#14b8a6;">Data Popup Dialog</h5>
+                                <label class="e-label">Subtitle Dialog</label>
+                                <input class="e-input" type="text" oninput="updateDeep(['projects',${i},'dialog','subtitle'], this.value)" value="${p.dialog.subtitle}">
+                                <label class="e-label">Deskripsi Full (pisah Enter)</label>
+                                <textarea class="e-textarea" oninput="updateArrayStr(['projects',${i},'dialog','body'], this.value, '\\n')">${p.dialog.body.join('\n')}</textarea>
+                                <label class="e-label">Badges Skill (koma)</label>
+                                <input class="e-input" type="text" oninput="updateArrayStr(['projects',${i},'dialog','badges'], this.value, ',')" value="${p.dialog.badges.join(', ')}">
                                 ${p.dialog.stats.map((st, sti) => `
                                     <div style="display:flex; gap:10px; margin-top:5px;">
                                         <input class="e-input" type="text" style="width:30%; margin:0; padding:0.4rem;" oninput="updateDeep(['projects',${i},'dialog','stats',${sti},'num'], this.value)" value="${st.num}">
@@ -732,40 +820,37 @@
                             </div>
                         `).join('')}
                     </div>
-
+                
                     <div class="e-group">
-                        <h3>What I Build & Capabilities</h3>
-                        <div style="margin-bottom:10px;">
-                            <strong style="color:var(--text-light);">Build Items (Experience)</strong>
-                            ${!isPreviewMode ? `<button class="btn-add" style="margin-left:10px;" onclick="addArrayItem('${templateName}', 'buildItems')">+ Tambah Item</button>` : ''}
-                        </div>
+                        <h3>What I Build (Accordion) ${!isPreviewMode ? `<button class="btn-add" onclick="addArrayItem('${templateName}', 'buildItems')">+ Tambah</button>` : ''}</h3>
                         ${currentData.buildItems.map((b, i) => `
                             <div class="e-project-card">
-                                <h4>Build Item ${i+1} ${!isPreviewMode ? `<button class="btn-del" onclick="delArrayItem('${templateName}', 'buildItems', ${i})">Hapus</button>` : ''}</h4>
+                                <h4>Item ${i+1} ${!isPreviewMode ? `<button class="btn-del" onclick="delArrayItem('${templateName}', 'buildItems', ${i})">Hapus</button>` : ''}</h4>
                                 <input class="e-input" type="text" oninput="updateDeep(['buildItems',${i},'title'], this.value)" value="${b.title}">
                                 <textarea class="e-textarea" oninput="updateDeep(['buildItems',${i},'desc'], this.value)">${b.desc}</textarea>
                             </div>
                         `).join('')}
-                        
-                        <div style="margin:25px 0 10px;">
-                            <strong style="color:var(--text-light);">Capabilities (Layanan)</strong>
-                            ${!isPreviewMode ? `<button class="btn-add" style="margin-left:10px;" onclick="addArrayItem('${templateName}', 'capabilities')">+ Tambah Skill</button>` : ''}
-                        </div>
+                    </div>
+                
+                    <div class="e-group">
+                        <h3>Capabilities ${!isPreviewMode ? `<button class="btn-add" onclick="addArrayItem('${templateName}', 'capabilities')">+ Tambah</button>` : ''}</h3>
                         ${currentData.capabilities.map((c, i) => `
                             <div class="e-project-card">
                                 <h4>Capability ${i+1} ${!isPreviewMode ? `<button class="btn-del" onclick="delArrayItem('${templateName}', 'capabilities', ${i})">Hapus</button>` : ''}</h4>
                                 <div style="display:flex; gap:10px;">
-                                    <input class="e-input" type="text" style="width:20%" oninput="updateDeep(['capabilities',${i},'icon'], this.value)" value="${c.icon}">
-                                    <input class="e-input" type="text" style="width:80%" oninput="updateDeep(['capabilities',${i},'title'], this.value)" value="${c.title}">
+                                    <div style="flex:1;"><label class="e-label">Icon/Emoji</label><input class="e-input" type="text" oninput="updateDeep(['capabilities',${i},'icon'], this.value)" value="${c.icon}"></div>
+                                    <div style="flex:4;"><label class="e-label">Judul</label><input class="e-input" type="text" oninput="updateDeep(['capabilities',${i},'title'], this.value)" value="${c.title}"></div>
                                 </div>
                                 <textarea class="e-textarea" oninput="updateDeep(['capabilities',${i},'desc'], this.value)">${c.desc}</textarea>
                             </div>
                         `).join('')}
                     </div>
-
+                
                     <div class="e-group">
                         <h3>Tools & Software</h3>
-                        <h4 style="color:var(--text-light); margin-bottom:10px;">Kolom Kiri (${currentData.tools.left.title})</h4>
+                        <h4 style="color:var(--text-light); margin-bottom:10px;">Kolom Kiri</h4>
+                        <label class="e-label">Judul Kolom</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['tools','left','title'], this.value)" value="${currentData.tools.left.title}">
                         ${currentData.tools.left.items.map((t, i) => `
                             <div style="display:flex; gap:5px; margin-bottom:5px;">
                                 <input class="e-input" style="width:15%; margin:0;" type="text" value="${t.icon}" oninput="updateDeep(['tools','left','items',${i},'icon'], this.value)">
@@ -774,7 +859,9 @@
                             </div>
                         `).join('')}
                         
-                        <h4 style="color:var(--text-light); margin:15px 0 10px;">Kolom Kanan (${currentData.tools.right.title})</h4>
+                        <h4 style="color:var(--text-light); margin:15px 0 10px;">Kolom Kanan</h4>
+                        <label class="e-label">Judul Kolom</label>
+                        <input class="e-input" type="text" oninput="updateDeep(['tools','right','title'], this.value)" value="${currentData.tools.right.title}">
                         ${currentData.tools.right.items.map((t, i) => `
                             <div style="display:flex; gap:5px; margin-bottom:5px;">
                                 <input class="e-input" style="width:15%; margin:0;" type="text" value="${t.icon}" oninput="updateDeep(['tools','right','items',${i},'icon'], this.value)">
