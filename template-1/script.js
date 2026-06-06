@@ -1,4 +1,3 @@
-// Kita bungkus semua logika penulisan DOM ke dalam satu fungsi terpusat
 function renderTemplate() {
     if (typeof userConfig === 'undefined') {
         document.body.innerHTML = `
@@ -38,16 +37,21 @@ function renderTemplate() {
     const roleElement = document.getElementById('render-role');
     if(roleElement) {
         const roleText = userConfig.hero?.pekerjaan || 'Tech Enthusiast';
+        if (typewriterTimeout) {
+            clearTimeout(typewriterTimeout);
+            typewriterTimeout = null;
+        }
+
         roleElement.innerText = '';
         let charIndex = 0;
         const typeWriter = () => {
             if (charIndex < roleText.length) {
                 roleElement.innerText += roleText.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 50); 
+                typewriterTimeout = setTimeout(typeWriter, 50); 
             }
         };
-        setTimeout(typeWriter, 100); // Percepat delay pas render ulang
+        typewriterTimeout = setTimeout(typeWriter, 100);
     }
 
     const skillsContainer = document.getElementById('render-skills');
@@ -99,6 +103,8 @@ function renderTemplate() {
         metaDescription.setAttribute('content', kalimatSEO);
     }
 }
+
+let typewriterTimeout = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Panggil render pertama kali saat web load
