@@ -638,17 +638,22 @@ function saveProject() {
 
 /* MEDIA LIBRARY */
 
-let mediaList = [
+const mediaAssets = [
   {
     name:  'logo-foliopus.png',
-    src:   './assets/logo.png'
+    size:  '89 KB',
+    color: '#f97316',
+    emoji: '🖼️',
+    src:   './assets/media/logo-foliopus.png'
   },
   {
     name:  'qris-payment.jpeg',
-    src:   './assets/qris.jpeg'
+    size:  '142 KB',
+    color: '#1e293b',
+    emoji: '🖼️',
+    src:   './assets/media/qris-payment.jpeg'
   }
 ];
-
 function initMediaLibrary() {
   renderMediaGrid();
 
