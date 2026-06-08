@@ -6,6 +6,7 @@
     <title>FoliOpus - Portofolio Digital Interaktif</title>
     <meta name="description" content="FoliOpus adalah platform pembuatan portofolio digital profesional dan interaktif secara instan untuk mahasiswa, freelancer, dan pencari kerja.">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="testi.css">
 </head>
 <body>
     <div id="nav-trigger" style="position: absolute; top: 50px; width: 100%; height: 1px; visibility: hidden;"></div>
@@ -142,6 +143,203 @@
 
         </div>
     </section>
+
+<section id="testimonials" class="testimonials">
+
+        <!-- HEAD -->
+        <div class="testimonials-head">
+            <h2>Dipercaya Ribuan Pengguna</h2>
+            <p>Dari mahasiswa sampai freelancer senior, portofolio mereka naik level bareng FoliOpus.</p>
+            <div class="testi-rating-bar">
+                <span class="stars-agg">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <strong id="testiAvgScore">4.9 / 5</strong>
+                <span id="testiTotalCount">dari 1.200+ ulasan</span>
+            </div>
+        </div>
+
+        <!-- TOOLBAR: filter + CTA -->
+        <div class="testi-toolbar">
+            <!-- Filter by rating -->
+            <div class="testi-filter-group" role="group" aria-label="Filter bintang">
+                <span class="testi-filter-label">Bintang:</span>
+                <button class="testi-filter-btn active" data-filter-star="all">Semua</button>
+                <button class="testi-filter-btn" data-filter-star="5">&#9733;&#9733;&#9733;&#9733;&#9733;</button>
+                <button class="testi-filter-btn" data-filter-star="4">&#9733;&#9733;&#9733;&#9733;</button>
+                <button class="testi-filter-btn" data-filter-star="3">&#9733;&#9733;&#9733;</button>
+                <button class="testi-filter-btn" data-filter-star="2">&#9733;&#9733;</button>
+                <button class="testi-filter-btn" data-filter-star="1">&#9733;</button>
+            </div>
+            <!-- Filter by product -->
+            <div class="testi-filter-group" role="group" aria-label="Filter produk">
+                <span class="testi-filter-label">Produk:</span>
+                <button class="testi-filter-btn active" data-filter-product="all">Semua</button>
+                <button class="testi-filter-btn tp-starter" data-filter-product="starter">Starter</button>
+                <button class="testi-filter-btn tp-pro"     data-filter-product="pro">Pro</button>
+                <button class="testi-filter-btn tp-premium" data-filter-product="premium">Premium</button>
+            </div>
+            <!-- Review CTA -->
+            <button class="btn-primary testi-review-btn" id="openReviewModal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                Berikan Ulasan
+            </button>
+        </div>
+
+        <!-- CAROUSEL -->
+        <div class="testi-track-outer">
+            <button class="testi-arrow testi-arrow-prev" id="testiPrev" aria-label="Sebelumnya">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="testi-arrow testi-arrow-next" id="testiNext" aria-label="Berikutnya">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
+            <!-- 2-row grid track: each "column" is a .testi-col with 2 stacked cards -->
+            <div class="testi-track" id="testiTrack">
+                <!-- columns injected by testimonials.js -->
+            </div>
+
+            <!-- empty state -->
+            <div class="testi-empty hidden" id="testiEmpty">
+                <span style="font-size:2rem;">&#128269;</span>
+                <p>Belum ada ulasan untuk filter ini.<br>Jadilah yang pertama!</p>
+                <button class="btn-primary" id="openReviewModal2">Berikan Ulasan</button>
+            </div>
+        </div>
+
+        <!-- DOTS -->
+        <div class="testi-dots" id="testiDots" role="tablist" aria-label="Navigasi halaman ulasan"></div>
+
+    </section>
+    <!-- ══ END TESTIMONIALS ══ -->
+
+     <!-- ══════════════════════════════════════
+         REVIEW MODAL
+    ══════════════════════════════════════ -->
+    <div class="testi-modal-ov" id="reviewModalOv" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+        <div class="testi-modal-box">
+            <div class="testi-modal-hd">
+                <h3 id="reviewModalTitle">&#9733; Berikan Ulasanmu</h3>
+                <button class="testi-modal-x" id="closeReviewModal" aria-label="Tutup">&#10005;</button>
+            </div>
+            <div class="testi-modal-bd">
+
+                <!-- Name -->
+                <div class="testi-modal-fg">
+                    <label for="rv-name">Nama Lengkap <span class="req">*</span></label>
+                    <input type="text" id="rv-name" placeholder="Contoh: Rizky Nugroho" maxlength="40" autocomplete="name">
+                    <span class="rv-err" id="rv-name-err"></span>
+                </div>
+
+                <!-- Role / occupation -->
+                <div class="testi-modal-fg">
+                    <label for="rv-role">Profesi &amp; Kota <span class="req">*</span></label>
+                    <input type="text" id="rv-role" placeholder="Contoh: UI Designer · Bandung" maxlength="50">
+                    <span class="rv-err" id="rv-role-err"></span>
+                </div>
+
+                <!-- Product pick -->
+                <div class="testi-modal-fg">
+                    <label>Template yang Digunakan <span class="req">*</span></label>
+                    <div class="rv-product-pick" id="rv-product-pick">
+                        <button type="button" class="rv-prod-btn tp-starter" data-prod="starter">&#10022; Starter</button>
+                        <button type="button" class="rv-prod-btn tp-pro"     data-prod="pro">&#10022; Pro</button>
+                        <button type="button" class="rv-prod-btn tp-premium" data-prod="premium">&#10022; Premium</button>
+                    </div>
+                    <span class="rv-err" id="rv-prod-err"></span>
+                </div>
+
+                <!-- Star rating -->
+                <div class="testi-modal-fg">
+                    <label>Rating <span class="req">*</span></label>
+                    <div class="rv-stars" id="rv-stars" role="radiogroup" aria-label="Pilih rating">
+                        <button type="button" class="rv-star" data-val="1" aria-label="1 bintang">&#9733;</button>
+                        <button type="button" class="rv-star" data-val="2" aria-label="2 bintang">&#9733;</button>
+                        <button type="button" class="rv-star" data-val="3" aria-label="3 bintang">&#9733;</button>
+                        <button type="button" class="rv-star" data-val="4" aria-label="4 bintang">&#9733;</button>
+                        <button type="button" class="rv-star" data-val="5" aria-label="5 bintang">&#9733;</button>
+                    </div>
+                    <span class="rv-star-label" id="rv-star-label">Pilih rating</span>
+                    <span class="rv-err" id="rv-star-err"></span>
+                </div>
+
+                <!-- Review text -->
+                <div class="testi-modal-fg">
+                    <label for="rv-text">Ulasan <span class="req">*</span></label>
+                    <textarea id="rv-text" rows="4" placeholder="Ceritakan pengalamanmu menggunakan FoliOpus. Apa yang paling berkesan?" maxlength="280"></textarea>
+                    <div class="rv-char-count"><span id="rv-char">0</span> / 280 karakter</div>
+                    <span class="rv-err" id="rv-text-err"></span>
+                </div>
+
+                <!-- Tips -->
+                <div class="rv-tips">
+                    <span>&#128161;</span>
+                    <p>Ulasan jujur dan spesifik membantu pengguna lain membuat keputusan yang tepat.</p>
+                </div>
+
+            </div>
+            <div class="testi-modal-ft">
+                <button class="btn-ghost-dark" id="cancelReview">Batal</button>
+                <button class="btn-primary" id="submitReview">
+                    <span id="rv-btn-text">Kirim Ulasan</span>
+                    <span class="rv-spinner hidden" id="rv-spinner"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+<!--end review modal-->
+
+    <!-- ══════════════════════════════════════
+         REPLY MODAL — Admin Only
+         Hanya muncul jika session role=admin
+    ══════════════════════════════════════ -->
+    <div class="testi-modal-ov" id="replyModalOv" role="dialog" aria-modal="true" aria-labelledby="replyModalTitle">
+        <div class="testi-modal-box">
+
+            <div class="testi-modal-hd">
+                <h3 id="replyModalTitle" style="display:flex;align-items:center;gap:.4rem">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" style="flex-shrink:0">
+                        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+                    </svg>
+                    Balas Ulasan
+                    <span class="modal-admin-badge">&#10022; Admin FoliOpus</span>
+                </h3>
+                <button class="testi-modal-x" id="closeReplyModal" aria-label="Tutup">&#10005;</button>
+            </div>
+
+            <div class="testi-modal-bd">
+
+                <!-- Preview ulasan yang dibalas -->
+                <span class="reply-preview-label">&#128172; Membalas ulasan:</span>
+                <div id="replyReviewPreview"></div>
+
+                <!-- Textarea balasan admin -->
+                <div class="testi-modal-fg">
+                    <label for="rp-text">Balasan Resmi <span class="req">*</span></label>
+                    <textarea id="rp-text" rows="4"
+                        placeholder="Tulis balasan resmi dari Tim FoliOpus. Pastikan profesional, hangat, dan membantu..."
+                        maxlength="300"></textarea>
+                    <div class="rp-char-count"><span id="rp-char">0</span> / 300 karakter</div>
+                    <span class="rv-err" id="rp-text-err"></span>
+                </div>
+
+                <!-- Panduan -->
+                <div class="rv-tips">
+                    <span>&#128737;&#65039;</span>
+                    <p>Balasan ini ditampilkan dengan badge resmi <strong style="color:#f59e0b">Tim FoliOpus</strong> dan terlihat semua pengunjung. Balas dengan profesional dan spesifik sesuai ulasan.</p>
+                </div>
+
+            </div>
+
+            <div class="testi-modal-ft">
+                <button class="btn-ghost-dark" id="cancelReply">Batal</button>
+                <button class="btn-primary" id="submitReply">
+                    <span id="rp-btn-text">Kirim Balasan</span>
+                    <span class="rv-spinner hidden" id="rp-spinner"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
     
     <section id="faq" class="features" style="background-color: rgba(255,255,255,0.02);">
         <h2>FAQ FoliOpus</h2>
@@ -236,6 +434,7 @@
         </div>
     </footer>
 
+    <script src="testi.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
