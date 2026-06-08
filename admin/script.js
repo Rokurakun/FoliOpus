@@ -640,16 +640,18 @@ function saveProject() {
 
 let mediaList = [
   {
-    name: 'logo-foliopus.png',
-    size: '1.2 MB',
+    name:  'logo-foliopus.png',
+    size:  '89 KB',
     color: '#f97316',
-    src: './assets/logo.png'
+    emoji: '🖼️',
+    src:   './assets/media/logo.png'
   },
   {
-    name: 'qris-payment.jpeg',
-    size: '650 KB',
-    color: '#22c55e',
-    src: './assets/qris.jpeg'
+    name:  'qris-payment.jpeg',
+    size:  '142 KB',
+    color: '#1e293b',
+    emoji: '🖼️',
+    src:   './assets/media/qris.jpeg'
   }
 ];
 
