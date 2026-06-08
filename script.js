@@ -66,6 +66,7 @@ const AUTH = {
     }
 };
 
+// ── NAVBAR (hanya halaman yang punya navbar) ──
 const navbar     = document.querySelector('.navbar');
 const navTrigger = document.getElementById('nav-trigger');
  
@@ -78,8 +79,10 @@ if (navbar && navTrigger) {
     navObserver.observe(navTrigger);
 }
 
+// ── CARD HOVER (skip card di payment page) ──
 const cards = document.querySelectorAll('.card');
 cards.forEach(card => {
+    if (card.closest('.payment-layout')) return;
     card.addEventListener('mouseenter', () => {
         card.style.transform = 'translateY(-10px)';
         card.style.boxShadow = '0 10px 30px rgba(245, 158, 11, 0.15)';
@@ -211,7 +214,7 @@ function updateNavbar() {
 
 updateNavbar();
 
-// LOGIN PAGE
+// ── LOGIN PAGE ───────────────────────────────────────────────
 if (document.getElementById('btnLogin')) {
     const btnLogin   = document.getElementById('btnLogin');
     const btnText    = document.getElementById('btnText');
@@ -323,7 +326,7 @@ if (document.getElementById('btnLogin')) {
     });
 }
 
-// REGISTER PAGE
+// ── REGISTER PAGE ────────────────────────────────────────────
 if (document.getElementById('btnRegister')) {
     const btnRegister = document.getElementById('btnRegister');
     const btnText     = document.getElementById('btnText');
@@ -428,112 +431,273 @@ if (document.getElementById('btnRegister')) {
     });
 }
 
+// ── PAYMENT PAGE ─────────────────────────────────────────────
 if (document.getElementById('btnSudahBayar')) {
- 
-    const TEMPLATES = {
-        starter: {
-            name: 'FoliOpus Starter', price: 149000, badge: 'Starter', badgeCls: '',
-            thumb: 'linear-gradient(135deg, #0f172a 40%, #2dd4bf)', zipUrl: './downloads/foliopus-starter.zip'
-        },
-        pro: {
-            name: 'FoliOpus Pro', price: 299000, badge: 'Pro', badgeCls: 'badge-pro',
-            thumb: 'linear-gradient(135deg, #0a0a0a 40%, #eab308)', zipUrl: './downloads/foliopus-pro.zip'
-        },
-        premium: {
-            name: 'FoliOpus Premium', price: 499000, badge: 'Premium', badgeCls: 'badge-premium',
-            thumb: 'linear-gradient(135deg, #f8fafc 40%, #14b8a6)', zipUrl: './downloads/foliopus-premium.zip'
-        }
-    };
- 
-    function formatRupiah(num) {
-        return 'Rp ' + num.toLocaleString('id-ID');
-    }
- 
+
     const session = AUTH.getSession();
     if (!session?.loggedIn) {
         sessionStorage.setItem('foliOpusRedirect', window.location.href);
         window.location.replace('login.html');
-    }
- 
-    const navUser = document.getElementById('navUser');
-    if (navUser && session?.username) navUser.textContent = '👤 ' + session.username;
- 
-    const params      = new URLSearchParams(window.location.search);
-    const templateKey = params.get('template') || 'starter';
-    const tmpl        = TEMPLATES[templateKey] || TEMPLATES.starter;
- 
-    document.getElementById('summaryName').textContent       = tmpl.name;
-    document.getElementById('summaryBadge').textContent      = tmpl.badge;
-    document.getElementById('summaryBadge').className        = 'summary-badge ' + tmpl.badgeCls;
-    document.getElementById('summaryThumb').style.background = tmpl.thumb;
-    document.getElementById('summaryPrice').textContent      = formatRupiah(tmpl.price);
-    document.getElementById('summaryTotal').textContent      = formatRupiah(tmpl.price);
-    document.getElementById('displayAmount').textContent     = formatRupiah(tmpl.price);
-    document.getElementById('downloadName').textContent      = 'Source Code — ' + tmpl.name;
-    document.getElementById('downloadLink').href             = tmpl.zipUrl;
- 
-    function goToStep(step) {
-        document.querySelectorAll('.step-panel').forEach((p, i) => {
-            p.classList.toggle('active', i + 1 === step);
-        });
-        [1, 2, 3].forEach(n => {
-            const el   = document.getElementById('stepEl' + n);
-            const line = document.getElementById('stepLine' + n);
-            el.classList.remove('active', 'done');
-            if (n < step)        el.classList.add('done');
-            else if (n === step) el.classList.add('active');
-            if (line) line.classList.toggle('done', n < step);
-        });
-    }
- 
-    document.getElementById('btnSudahBayar').addEventListener('click', () => {
-        goToStep(2);
-        setTimeout(() => {
-            goToStep(3);
-            
-            // --- LOGIKA BARU: Simpan ke Riwayat Pembelian ---
-            const currentUser = session.username;
-            let history = JSON.parse(localStorage.getItem('foliOpusHistory_' + currentUser)) || [];
-            
-            // Cek biar template yang sama tidak masuk dua kali
-            const alreadyBought = history.find(h => h.templateKey === templateKey);
-            if (!alreadyBought) {
-                history.push({
-                    templateKey: templateKey,
-                    name: tmpl.name,
-                    date: new Date().toISOString(),
-                    zipUrl: tmpl.zipUrl,
-                    thumb: tmpl.thumb
-                });
-                localStorage.setItem('foliOpusHistory_' + currentUser, JSON.stringify(history));
+    } else {
+
+        const TEMPLATES = {
+            starter: {
+                name: 'FoliOpus Starter', price: 149000, badge: 'Starter', badgeCls: '',
+                thumb: 'linear-gradient(135deg, #0f172a 40%, #2dd4bf)', zipUrl: './downloads/foliopus-starter.zip'
+            },
+            pro: {
+                name: 'FoliOpus Pro', price: 299000, badge: 'Pro', badgeCls: 'badge-pro',
+                thumb: 'linear-gradient(135deg, #0a0a0a 40%, #eab308)', zipUrl: './downloads/foliopus-pro.zip'
+            },
+            premium: {
+                name: 'FoliOpus Premium', price: 499000, badge: 'Premium', badgeCls: 'badge-premium',
+                thumb: 'linear-gradient(135deg, #f8fafc 40%, #14b8a6)', zipUrl: './downloads/foliopus-premium.zip'
             }
+        };
 
-            // --- UPDATE TOMBOL DI PAYMENT (Munculin tombol Editor) ---
-            const panel3Container = document.querySelector('#panel3 .qris-container');
-            
-            // Sembunyikan tombol download lama & tombol kembali
-            const oldDownload = document.getElementById('downloadLink');
-            if (oldDownload) oldDownload.style.display = 'none';
-            
-            const oldBackBtn = panel3Container.querySelector('.btn-secondary');
-            if (oldBackBtn) oldBackBtn.style.display = 'none';
+        function formatRupiah(num) {
+            return 'Rp ' + num.toLocaleString('id-ID');
+        }
 
-            // Masukkan tombol baru (Editor & Download Original) kalau belum ada
-            if (!document.getElementById('actionBtnsWrapper')) {
-                const actionBtns = document.createElement('div');
-                actionBtns.id = 'actionBtnsWrapper';
-                actionBtns.innerHTML = `
-                    <a href="editor.html?template=${templateKey}" class="btn-primary" style="display:flex; justify-content:center; padding: 1rem; margin-bottom: 1rem; text-decoration:none; font-size: 1.1rem; box-shadow: 0 10px 25px rgba(245,158,11,0.3);">
+        const navUser = document.getElementById('navUser');
+        if (navUser && session?.username) navUser.textContent = '👤 ' + session.username;
+
+        const params      = new URLSearchParams(window.location.search);
+        const templateKey = params.get('template') || 'starter';
+        const tmpl        = TEMPLATES[templateKey] || TEMPLATES.starter;
+
+        document.getElementById('summaryName').textContent       = tmpl.name;
+        document.getElementById('summaryBadge').textContent      = tmpl.badge;
+        document.getElementById('summaryBadge').className        = 'summary-badge ' + tmpl.badgeCls;
+        document.getElementById('summaryThumb').style.background = tmpl.thumb;
+        document.getElementById('summaryPrice').textContent      = formatRupiah(tmpl.price);
+        document.getElementById('summaryTotal').textContent      = formatRupiah(tmpl.price);
+        // document.getElementById('displayAmount').textContent     = formatRupiah(tmpl.price);
+
+        // ── STEP NAVIGATION ──
+        function goToStep(step) {
+            document.querySelectorAll('.step-panel').forEach((p, i) => {
+                p.classList.toggle('active', i + 1 === step);
+            });
+            [1, 2, 3].forEach(n => {
+                const el   = document.getElementById('stepEl' + n);
+                const line = document.getElementById('stepLine' + n);
+                el.classList.remove('active', 'done');
+                if (n < step)        el.classList.add('done');
+                else if (n === step) el.classList.add('active');
+                if (line) line.classList.toggle('done', n < step);
+            });
+        }
+
+        // ── TIMER (15 MENIT) ──
+        const TIMER_DURATION = 15 * 60;
+        let timerSeconds     = TIMER_DURATION;
+        let timerInterval    = null;
+        let timerExpired     = false;
+
+        const timerEl        = document.getElementById('paymentTimer');
+        const timerCountEl   = document.getElementById('timerCount');
+        const timerExpiredEl = document.getElementById('timerExpiredMsg');
+        const btnSudahBayar  = document.getElementById('btnSudahBayar');
+
+        function formatTime(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return m + ':' + s;
+        }
+
+        function tickTimer() {
+            timerSeconds--;
+            timerCountEl.textContent = formatTime(timerSeconds);
+            if (timerSeconds <= 120) timerEl.classList.add('warning');
+            if (timerSeconds <= 0) {
+                clearInterval(timerInterval);
+                timerExpired = true;
+                timerEl.style.display        = 'none';
+                timerExpiredEl.style.display = 'block';
+                btnSudahBayar.disabled       = true;
+                btnSudahBayar.style.opacity  = '0.4';
+                btnSudahBayar.style.cursor   = 'not-allowed';
+            }
+        }
+
+        timerInterval = setInterval(tickTimer, 1000);
+
+        // ── UPLOAD BUKTI ──
+        const proofInput        = document.getElementById('proofInput');
+        const uploadDropzone    = document.getElementById('uploadDropzone');
+        const uploadPreviewWrap = document.getElementById('uploadPreviewWrap');
+        const uploadThumb       = document.getElementById('uploadThumb');
+        const uploadFileName    = document.getElementById('uploadFileName');
+        const uploadFileSize    = document.getElementById('uploadFileSize');
+        const uploadRemove      = document.getElementById('uploadRemove');
+
+        let proofDataUrl = null;
+
+        function formatBytes(bytes) {
+            if (bytes < 1024)      return bytes + ' B';
+            if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+            return (bytes/1024/1024).toFixed(1) + ' MB';
+        }
+
+        function handleFile(file) {
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { alert('Ukuran file maksimal 5 MB.'); return; }
+            if (!file.type.startsWith('image/')) { alert('Hanya file gambar (PNG/JPG) yang diterima.'); return; }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                proofDataUrl = e.target.result;
+                uploadThumb.src            = proofDataUrl;
+                uploadFileName.textContent = file.name;
+                uploadFileSize.textContent = formatBytes(file.size);
+                uploadPreviewWrap.classList.add('show');
+                uploadDropzone.style.display = 'none';
+                if (!timerExpired) btnSudahBayar.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        proofInput.addEventListener('change', () => handleFile(proofInput.files[0]));
+
+        uploadDropzone.addEventListener('dragover',  (e) => { e.preventDefault(); uploadDropzone.classList.add('dragover'); });
+        uploadDropzone.addEventListener('dragleave', ()  => uploadDropzone.classList.remove('dragover'));
+        uploadDropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadDropzone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        uploadRemove.addEventListener('click', () => {
+            proofDataUrl = null;
+            proofInput.value = '';
+            uploadPreviewWrap.classList.remove('show');
+            uploadDropzone.style.display = '';
+            if (!timerExpired) btnSudahBayar.disabled = true;
+        });
+
+        // ── GENERATE TRX ID ──
+        function generateTrxId() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = 'FO-';
+            for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            code += '-';
+            for (let i = 0; i < 2; i++) code += Math.floor(Math.random() * 10);
+            return code;
+        }
+
+        // ── BARCODE DEKORATIF ──
+        function generateBarcode(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            const heights = [18,28,36,22,40,30,18,38,26,20,35,28,40,18,32,24,38,20,30,36,22,18,40,28,34,20,38,26,18,32,40,22,30,18,36,28,20,40,24,34,18,30];
+            for (let i = 0; i < 42; i++) {
+                const bar = document.createElement('span');
+                bar.style.height = heights[i % heights.length] + 'px';
+                bar.style.width  = (i % 3 === 0) ? '3px' : '2px';
+                container.appendChild(bar);
+            }
+        }
+
+        // ── POPULASI STRUK ──
+        function populateReceipt(trxId) {
+            const now   = new Date();
+            const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            const tgl   = now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear();
+            const jam   = String(now.getHours()).padStart(2,'0') + '.' +
+                          String(now.getMinutes()).padStart(2,'0') + '.' +
+                          String(now.getSeconds()).padStart(2,'0') + ' WITA';
+
+            document.getElementById('rcTrxId').textContent    = trxId;
+            document.getElementById('rcDate').textContent     = tgl;
+            document.getElementById('rcTime').textContent     = jam;
+            document.getElementById('rcUser').textContent     = session?.username || '—';
+            document.getElementById('rcTemplate').textContent = tmpl.name;
+            document.getElementById('rcPaket').textContent    = tmpl.badge;
+            document.getElementById('rcTotal').textContent    = formatRupiah(tmpl.price);
+            document.getElementById('rcBarcodeText').textContent = trxId;
+
+            generateBarcode('rcBarcode');
+
+            if (proofDataUrl) {
+                document.getElementById('rcProofImg').src          = proofDataUrl;
+                document.getElementById('rcProofSection').style.display = 'block';
+            }
+        }
+
+        // ── TOMBOL KONFIRMASI ──
+        btnSudahBayar.addEventListener('click', () => {
+            if (timerExpired || !proofDataUrl) return;
+            clearInterval(timerInterval);
+            goToStep(2);
+
+            setTimeout(() => {
+                goToStep(3);
+
+                const trxId = generateTrxId();
+                populateReceipt(trxId);
+
+                // Simpan riwayat
+                let history = JSON.parse(localStorage.getItem('foliOpusHistory_' + session.username)) || [];
+                if (!history.find(h => h.templateKey === templateKey)) {
+                    history.push({
+                        templateKey, name: tmpl.name,
+                        date: new Date().toISOString(),
+                        zipUrl: tmpl.zipUrl, thumb: tmpl.thumb, trxId
+                    });
+                    localStorage.setItem('foliOpusHistory_' + session.username, JSON.stringify(history));
+                }
+
+                // Tombol Editor & Download
+                document.getElementById('actionBtnsPlaceholder').innerHTML = `
+                    <a href="editor.html?template=${templateKey}" class="btn-primary" style="display:flex;justify-content:center;padding:1rem;margin-bottom:0.75rem;text-decoration:none;font-size:1.05rem;box-shadow:0 10px 25px rgba(245,158,11,0.3);">
                         🎨 Buka Live Editor
                     </a>
-                    <a href="${tmpl.zipUrl}" class="btn-secondary" style="display:flex; justify-content:center; padding: 1rem; margin-bottom: 1.5rem; text-decoration:none;">
+                    <a href="${tmpl.zipUrl}" class="btn-secondary" style="display:flex;justify-content:center;padding:0.9rem;margin-bottom:1rem;text-decoration:none;">
                         ⬇️ Download Original Zip
                     </a>
-                    <a href="index.html" style="display:block; text-align:center; color:var(--text-muted); font-size:0.9rem; text-decoration:underline;">Kembali ke Beranda</a>
                 `;
-                panel3Container.appendChild(actionBtns);
-            }
 
-        }, 2500);
-    });
+                const backBtn = document.getElementById('backHomeBtn');
+                if (backBtn) backBtn.style.display = 'none';
+
+            }, 2500);
+        });
+
+        // ── SIMPAN STRUK PNG ──
+        document.getElementById('btnSaveReceipt').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSaveReceipt');
+            btn.textContent = 'Menyimpan...';
+            btn.disabled    = true;
+
+            try {
+                if (!window.html2canvas) {
+                    await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                        s.onload = resolve;
+                        s.onerror = reject;
+                        document.head.appendChild(s);
+                    });
+                }
+
+                const canvas = await html2canvas(document.getElementById('receiptEl'), {
+                    backgroundColor: '#1e293b', scale: 2, useCORS: true, logging: false
+                });
+
+                const link    = document.createElement('a');
+                link.download = 'struk-foliopus-' + (document.getElementById('rcTrxId').textContent || 'trx') + '.png';
+                link.href     = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                alert('Gagal menyimpan gambar. Coba gunakan Cetak Struk (Ctrl+P) sebagai alternatif.');
+                console.error(err);
+            } finally {
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Simpan PNG`;
+                btn.disabled = false;
+            }
+        });
+
+    } // end else (session valid)
 }

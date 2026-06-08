@@ -5,6 +5,285 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoliOpus — Pembayaran</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── TIMER ── */
+        .payment-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 10px;
+            padding: 0.65rem 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .payment-timer.warning {
+            background: rgba(239,68,68,0.08);
+            border-color: rgba(239,68,68,0.3);
+            animation: pulse-border 1s ease-in-out infinite;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(239,68,68,0.3); }
+            50%       { border-color: rgba(239,68,68,0.7); }
+        }
+        .timer-icon { width: 16px; height: 16px; flex-shrink: 0; }
+        .timer-count {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-yellow);
+            min-width: 48px;
+            letter-spacing: 0.03em;
+            transition: color 0.3s;
+        }
+        .payment-timer.warning .timer-count { color: #ef4444; }
+        .timer-expired-msg {
+            display: none;
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #fca5a5;
+            margin-bottom: 1.5rem;
+        }
+        .timer-expired-msg strong { display: block; font-size: 1rem; margin-bottom: 0.25rem; color: #ef4444; }
+
+        /* ── UPLOAD BUKTI ── */
+        .upload-section {
+            margin-bottom: 1.5rem;
+        }
+        .upload-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+        .upload-dropzone {
+            border: 2px dashed rgba(245,158,11,0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+            background: rgba(245,158,11,0.03);
+            position: relative;
+        }
+        .upload-dropzone:hover, .upload-dropzone.dragover {
+            border-color: var(--primary-yellow);
+            background: rgba(245,158,11,0.07);
+        }
+        .upload-dropzone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .upload-icon-wrap {
+            width: 44px;
+            height: 44px;
+            background: rgba(245,158,11,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+        }
+        .upload-icon-wrap svg { width: 22px; height: 22px; color: var(--primary-yellow); }
+        .upload-hint { font-size: 0.85rem; color: var(--text-muted); }
+        .upload-hint strong { color: var(--text-light); }
+        .upload-formats { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; opacity: 0.7; }
+        .upload-preview-wrap {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(34,197,94,0.05);
+            border: 1px solid rgba(34,197,94,0.2);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            margin-top: 0.75rem;
+        }
+        .upload-preview-wrap.show { display: flex; animation: fadeIn 0.3s ease; }
+        .upload-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .upload-file-info { flex: 1; text-align: left; overflow: hidden; }
+        .upload-file-name { font-size: 0.85rem; font-weight: 600; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .upload-file-size { font-size: 0.75rem; color: var(--text-muted); }
+        .upload-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0.25rem;
+            display: flex;
+            transition: color 0.2s;
+        }
+        .upload-remove:hover { color: #ef4444; }
+        .upload-remove svg { width: 16px; height: 16px; }
+        .upload-required-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .upload-required-note svg { width: 13px; height: 13px; color: var(--primary-orange); flex-shrink: 0; }
+
+        /* ── STRUK ── */
+        .receipt-wrapper {
+            margin: 0 auto 1.5rem;
+            max-width: 420px;
+        }
+        .receipt {
+            background: var(--dark-surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .receipt-header {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--primary-orange));
+            padding: 1.5rem 1.75rem 1.25rem;
+            text-align: center;
+            position: relative;
+        }
+        .receipt-header-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.2rem;
+        }
+        .receipt-header-sub {
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.75);
+            font-weight: 600;
+        }
+        .receipt-zigzag {
+            display: flex;
+            overflow: hidden;
+            line-height: 0;
+            margin-top: -1px;
+        }
+        .receipt-zigzag svg { width: 100%; display: block; }
+        .receipt-body { padding: 1.25rem 1.75rem; }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.875rem;
+            padding: 0.55rem 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.06);
+        }
+        .receipt-row:last-child { border-bottom: none; }
+        .receipt-row-label { color: var(--text-muted); }
+        .receipt-row-value { font-weight: 600; color: var(--text-light); text-align: right; max-width: 55%; }
+        .receipt-row-value.green { color: #22c55e; }
+        .receipt-divider {
+            border: none;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            margin: 0.75rem 0;
+        }
+        .receipt-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0 0.25rem;
+        }
+        .receipt-total-label { font-size: 0.875rem; font-weight: 700; color: var(--text-light); }
+        .receipt-total-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary-yellow), var(--primary-orange));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .receipt-proof-section {
+            margin: 0.5rem 0 0.75rem;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            padding-top: 0.75rem;
+        }
+        .receipt-proof-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .receipt-proof-img {
+            width: 100%;
+            max-height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.07);
+            display: block;
+        }
+        .receipt-footer {
+            text-align: center;
+            padding: 1rem 1.75rem 1.5rem;
+            border-top: 1px dashed rgba(255,255,255,0.08);
+        }
+        .receipt-barcode {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 1.5px;
+            height: 40px;
+            margin-bottom: 0.6rem;
+        }
+        .receipt-barcode span {
+            background: rgba(255,255,255,0.25);
+            border-radius: 1px;
+            width: 2px;
+        }
+        .receipt-trx-code {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+        .receipt-thanks {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+        .receipt-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .receipt-actions .btn-secondary {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.7rem;
+            font-size: 0.875rem;
+            text-decoration: none;
+        }
+        .receipt-actions .btn-secondary svg { width: 16px; height: 16px; }
+    </style>
 </head>
 <body class="payment-page">
 
@@ -29,50 +308,107 @@
             <div class="step-label">Download</div>
         </div>
     </div>
- 
+
     <div class="payment-layout">
         <div class="payment-panel">
+
+            <!-- PANEL 1: QRIS + Timer + Upload -->
             <div class="step-panel active" id="panel1">
                 <div class="card">
                     <div class="qris-container">
                         <p class="qris-title">Scan QRIS untuk Membayar</p>
                         <p class="qris-subtitle">Gunakan aplikasi e-wallet atau mobile banking apapun</p>
- 
+
+                        <!-- Timer -->
+                        <div class="payment-timer" id="paymentTimer">
+                            <svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>Selesaikan dalam</span>
+                            <span class="timer-count" id="timerCount">15:00</span>
+                        </div>
+                        <div class="timer-expired-msg" id="timerExpiredMsg">
+                            <strong>⏰ Waktu Pembayaran Habis</strong>
+                            Sesi ini telah berakhir. <a href="" style="color: var(--primary-yellow);">Muat ulang halaman</a> untuk mencoba lagi.
+                        </div>
+
                         <div class="qris-box">
                             <img src="assets/qris.jpeg" alt="QRIS FoliOpus" class="qris-image">
                         </div>
- 
+
                         <p class="qris-merchant">Merchant: <strong>FoliOpus</strong> · NMID: 123456789</p>
- 
-                        <div class="qris-amount">
-                            <div class="amount-label">Total Pembayaran</div>
-                            <div class="amount-value" id="displayAmount">Rp 0</div>
-                        </div>
- 
+
+                        <a href="assets/qris.jpeg" download="QRIS-FoliOpus.jpeg" class="btn-secondary" style="display:inline-flex; align-items:center; gap:0.45rem; padding:0.5rem 1.1rem; font-size:0.82rem; margin-bottom:1.25rem; text-decoration:none;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Download QR Code
+                        </a>
+
                         <ol class="qris-instructions">
                             <li>Buka aplikasi e-wallet atau mobile banking kamu</li>
                             <li>Pilih menu bayar / scan QR</li>
                             <li>Arahkan kamera ke kode QRIS di atas</li>
                             <li>Pastikan nominal sesuai, lalu konfirmasi pembayaran</li>
                         </ol>
- 
-                        <button class="btn-primary btn-confirm" id="btnSudahBayar">
+
+                        <!-- Upload Bukti Pembayaran -->
+                        <div class="upload-section">
+                            <span class="upload-label">Bukti Pembayaran</span>
+                            <div class="upload-dropzone" id="uploadDropzone">
+                                <input type="file" id="proofInput" accept="image/*">
+                                <div class="upload-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                </div>
+                                <p class="upload-hint"><strong>Klik atau seret foto</strong> ke sini</p>
+                                <p class="upload-formats">PNG, JPG, JPEG · Maks. 5 MB</p>
+                            </div>
+
+                            <div class="upload-preview-wrap" id="uploadPreviewWrap">
+                                <img src="" alt="Preview bukti" class="upload-thumb" id="uploadThumb">
+                                <div class="upload-file-info">
+                                    <div class="upload-file-name" id="uploadFileName">—</div>
+                                    <div class="upload-file-size" id="uploadFileSize">—</div>
+                                </div>
+                                <button class="upload-remove" id="uploadRemove" title="Hapus file">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <p class="upload-required-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                                Upload screenshot/foto bukti transfer sebelum konfirmasi
+                            </p>
+                        </div>
+
+                        <button class="btn-primary btn-confirm" id="btnSudahBayar" disabled>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
                             Saya Sudah Membayar
                         </button>
- 
+
                         <div class="pay-disclaimer">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                             </svg>
-                            Ini adalah simulasi pembayaran. Klik tombol di atas setelah melakukan transfer untuk mendapatkan link download.
+                            Ini adalah simulasi pembayaran. Upload bukti transfer lalu klik tombol di atas untuk mendapatkan link download.
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- PANEL 2: Verifikasi -->
             <div class="step-panel" id="panel2">
                 <div class="card">
                     <div class="qris-container">
@@ -89,6 +425,7 @@
                 </div>
             </div>
 
+            <!-- PANEL 3: Sukses + Struk -->
             <div class="step-panel" id="panel3">
                 <div class="card">
                     <div class="qris-container">
@@ -98,45 +435,117 @@
                             </svg>
                         </div>
                         <h2 class="pay-success-title">Pembayaran Berhasil! 🎉</h2>
-                        <p class="pay-success-sub">Terima kasih! Source code template sudah siap untuk diunduh.</p>
- 
-                        <a id="downloadLink" href="#" class="download-card">
-                            <div class="download-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <p class="pay-success-sub">Terima kasih! Berikut struk transaksimu.</p>
+
+                        <!-- STRUK DIGITAL -->
+                        <div class="receipt-wrapper" id="receiptWrapper">
+                            <div class="receipt" id="receiptEl">
+                                <div class="receipt-header">
+                                    <div class="receipt-header-logo">FoliOpus</div>
+                                    <div class="receipt-header-sub">Bukti Transaksi Digital</div>
+                                </div>
+                                <!-- Zigzag dekoratif -->
+                                <div class="receipt-zigzag">
+                                    <svg viewBox="0 0 420 12" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0,0 L10,12 L20,0 L30,12 L40,0 L50,12 L60,0 L70,12 L80,0 L90,12 L100,0 L110,12 L120,0 L130,12 L140,0 L150,12 L160,0 L170,12 L180,0 L190,12 L200,0 L210,12 L220,0 L230,12 L240,0 L250,12 L260,0 L270,12 L280,0 L290,12 L300,0 L310,12 L320,0 L330,12 L340,0 L350,12 L360,0 L370,12 L380,0 L390,12 L400,0 L410,12 L420,0 L420,0 L0,0 Z" fill="#1e293b"/>
+                                    </svg>
+                                </div>
+
+                                <div class="receipt-body">
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">No. Transaksi</span>
+                                        <span class="receipt-row-value" id="rcTrxId">—</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Tanggal</span>
+                                        <span class="receipt-row-value" id="rcDate">—</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Waktu</span>
+                                        <span class="receipt-row-value" id="rcTime">—</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Nama Akun</span>
+                                        <span class="receipt-row-value" id="rcUser">—</span>
+                                    </div>
+                                    <hr class="receipt-divider">
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Template</span>
+                                        <span class="receipt-row-value" id="rcTemplate">—</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Paket</span>
+                                        <span class="receipt-row-value" id="rcPaket">—</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Metode</span>
+                                        <span class="receipt-row-value">QRIS</span>
+                                    </div>
+                                    <div class="receipt-row">
+                                        <span class="receipt-row-label">Status</span>
+                                        <span class="receipt-row-value green">✓ LUNAS</span>
+                                    </div>
+                                    <hr class="receipt-divider">
+                                    <div class="receipt-total-row">
+                                        <span class="receipt-total-label">TOTAL</span>
+                                        <span class="receipt-total-value" id="rcTotal">—</span>
+                                    </div>
+
+                                    <!-- Preview bukti bayar di struk -->
+                                    <div class="receipt-proof-section" id="rcProofSection" style="display:none;">
+                                        <div class="receipt-proof-label">Bukti Pembayaran</div>
+                                        <img src="" alt="Bukti Pembayaran" class="receipt-proof-img" id="rcProofImg">
+                                    </div>
+                                </div>
+
+                                <div class="receipt-footer">
+                                    <div class="receipt-barcode" id="rcBarcode"></div>
+                                    <div class="receipt-trx-code" id="rcBarcodeText">FO-XXXX-XX</div>
+                                    <div class="receipt-thanks">Terima kasih telah mempercayai FoliOpus!</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tombol aksi struk -->
+                        <div class="receipt-actions">
+                            <button class="btn-secondary" id="btnPrintReceipt" onclick="window.print()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+                                </svg>
+                                Cetak Struk
+                            </button>
+                            <button class="btn-secondary" id="btnSaveReceipt">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                     <polyline points="7 10 12 15 17 10"/>
                                     <line x1="12" y1="15" x2="12" y2="3"/>
                                 </svg>
-                            </div>
-                            <div class="download-info">
-                                <h4 id="downloadName">Source Code Template</h4>
-                                <p>Klik untuk mengunduh file .zip</p>
-                            </div>
-                            <svg class="download-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 18l6-6-6-6"/>
-                            </svg>
-                        </a>
- 
+                                Simpan PNG
+                            </button>
+                        </div>
+
+                        <div id="actionBtnsPlaceholder"></div>
+
                         <div class="pay-disclaimer" style="margin: 1rem 0 1.5rem;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                             </svg>
-                            Simpan file zip ini baik-baik. Link download hanya berlaku di sesi ini.
+                            Simpan struk ini sebagai bukti pembelian. Link download hanya berlaku di sesi ini.
                         </div>
- 
-                        <a href="index.html" class="btn-secondary" style="display:block; text-align:center; padding: 0.75rem; text-decoration:none;">
+
+                        <a href="index.html" class="btn-secondary" style="display:block; text-align:center; padding: 0.75rem; text-decoration:none;" id="backHomeBtn">
                             Kembali ke Beranda
                         </a>
                     </div>
                 </div>
             </div>
- 
+
         </div>
 
+        <!-- ORDER SUMMARY (tidak berubah) -->
         <div class="order-summary">
             <div class="summary-card">
                 <h3 class="summary-label">Ringkasan Pesanan</h3>
- 
                 <div class="summary-template">
                     <div class="summary-thumb" id="summaryThumb"></div>
                     <div class="summary-info">
@@ -145,7 +554,6 @@
                         <span class="summary-badge" id="summaryBadge">Starter</span>
                     </div>
                 </div>
- 
                 <div class="summary-row">
                     <span>Harga template</span>
                     <span id="summaryPrice">—</span>
@@ -160,9 +568,9 @@
                 </div>
             </div>
         </div>
- 
+
     </div>
- 
+
     <script src="script.js"></script>
 </body>
 </html>
