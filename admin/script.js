@@ -829,7 +829,6 @@ function renderSalesCharts() {
 }
 
 /* PRODUCT MANAGER */
-
 let productList    = [...products];
 let selectedProdId = null;
 
@@ -867,7 +866,7 @@ function renderProductCards() {
         <div class="product-card-name">${p.name}</div>
         <div class="product-card-price">${formatCurrency(p.price)}</div>
         <div style="font-size:.72rem;color:var(--text-muted);margin-top:.1rem;">
-          Stok: ${p.stock} · ${p.active ? '<span style="color:var(--success)">Aktif</span>' : '<span style="color:var(--danger)">Nonaktif</span>'}
+          Status: ${p.active ? '<span style="color:var(--success)">Aktif</span>' : '<span style="color:var(--danger)">Nonaktif</span>'}
         </div>
       </div>
       <div class="product-card-actions">
@@ -911,7 +910,6 @@ function loadProductForm(p) {
   $('#product-name').value  = p.name;
   $('#product-desc').value  = p.desc;
   $('#product-price').value = p.price;
-  $('#product-stock').value = p.stock;
   $('#product-category').value = p.category;
   $('#product-active').checked = p.active;
   $('#product-active-label').textContent = p.active ? 'Aktif / Dijual' : 'Nonaktif / Disembunyikan';
@@ -924,7 +922,6 @@ function clearProductForm(title = 'Detail Produk') {
   $('#product-name').value  = '';
   $('#product-desc').value  = '';
   $('#product-price').value = '';
-  $('#product-stock').value = '';
   $('#product-category').value = 'starter';
   $('#product-active').checked = true;
   $('#product-active-label').textContent = 'Aktif / Dijual';
@@ -936,21 +933,19 @@ function saveProduct() {
   const name   = $('#product-name').value.trim();
   const desc   = $('#product-desc').value.trim();
   const price  = +$('#product-price').value;
-  const stock  = +$('#product-stock').value;
   const cat    = $('#product-category').value;
   const active = $('#product-active').checked;
 
   if (!name)        { toast('Nama produk wajib diisi.', 'error'); return; }
   if (isNaN(price) || price < 0) { toast('Harga tidak valid.', 'error'); return; }
-  if (isNaN(stock) || stock < 0) { toast('Stok tidak valid.', 'error');  return; }
 
   if (id) {
     const idx = productList.findIndex(p => p.id === +id);
-    if (idx > -1) productList[idx] = { id: +id, name, desc, price, stock, category: cat, active };
+    if (idx > -1) productList[idx] = { id: +id, name, desc, price, category: cat, active };
     toast('Produk berhasil diperbarui.', 'success');
   } else {
     const newId = Math.max(...productList.map(p => p.id), 0) + 1;
-    productList.push({ id: newId, name, desc, price, stock, category: cat, active });
+    productList.push({ id: newId, name, desc, price, category: cat, active });
     selectedProdId = newId;
     toast('Produk baru berhasil ditambahkan!', 'success');
   }
