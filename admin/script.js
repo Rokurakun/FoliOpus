@@ -643,13 +643,13 @@ let mediaList = [
     name: 'logo-foliopus.png',
     size: '1.2 MB',
     color: '#f97316',
-    src: './logo.png'
+    src: 'assets/logo.png'
   },
   {
     name: 'qris-payment.jpeg',
     size: '650 KB',
     color: '#22c55e',
-    src: './qris.jpeg'
+    src: 'assets/qris.jpeg'
   }
 ];
 
