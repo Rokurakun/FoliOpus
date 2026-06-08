@@ -1,11 +1,3 @@
-/* ============================================================
-   testimonials.css — FoliOpus
-   Dedicated stylesheet for the Testimonials section.
-   Relies on CSS custom properties from style.css:
-     --dark-bg, --dark-surface, --primary-yellow,
-     --primary-orange, --text-light, --text-muted
-   ============================================================ */
-
 /* ── 1. SECTION WRAPPER ─────────────────────────────────── */
 .testimonials {
     padding: 6rem 0 4.5rem;

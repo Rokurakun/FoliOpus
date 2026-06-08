@@ -1,28 +1,13 @@
-/* ============================================================
-   testimonials.js — FoliOpus
-   ─────────────────────────────────────────────────────────────
-   Layout    : 2 rows × 3 cols per page  (6 cards visible)
-   Scroll    : horizontal, page-based, JS-controlled
-   Filter    : star rating (5→1) + product (starter/pro/premium)
-   Sort      : highest rating first, then newest
-   Reviews   : 12 seed entries + user submissions via localStorage
-   Replies   : admin-only (checks foliOpusUser session)
-   Extras    : drag, touch-swipe, auto-play, dot nav, toast
-   ─────────────────────────────────────────────────────────────
-   Dependencies : testimonials.css, style.css
-   HTML refs    : testimonials section in index.html (v2)
-   ============================================================ */
-
 'use strict';
 
 /* ── CONFIGURATION ─────────────────────────────────────── */
 const CFG = {
-  CARD_GAP     : 20,    // px — matches CSS gap on .testi-track
-  COLS_PER_PAGE: 3,     // columns visible at once
-  ROWS_PER_COL : 2,     // cards stacked per column
-  AUTOPLAY_MS  : 5500,  // ms between auto-advance
-  MAX_REVIEW   : 280,   // max chars for user review
-  MAX_REPLY    : 300,   // max chars for admin reply
+  CARD_GAP     : 20,
+  COLS_PER_PAGE: 3,
+  ROWS_PER_COL : 2,
+  AUTOPLAY_MS  : 5500,
+  MAX_REVIEW   : 280,
+  MAX_REPLY    : 300,
 };
 
 /* ── STORAGE KEYS ──────────────────────────────────────── */
@@ -32,7 +17,7 @@ const LS = {
   SESSION : 'foliOpusUser',
 };
 
-/* ── SEED DATA (12 reviews) ────────────────────────────── */
+/* ── SEED DATA ─────────────────────────────────────────── */
 const SEED = [
   {
     id:'s01', featured:true,
@@ -167,17 +152,48 @@ function saveReplies(obj) { lsSet(LS.REPLIES, obj); }
 function allReviews() { return [...SEED, ...loadUserReviews()]; }
 
 /* ══════════════════════════════════════════════════════════
-   AUTH
+   AUTH & SESSION
 ══════════════════════════════════════════════════════════ */
+function getSession() {
+  return lsGet(LS.SESSION, null);
+}
+
 function isAdmin() {
-  const s = lsGet(LS.SESSION, null);
+  const s = getSession();
   return !!(s && s.loggedIn && s.role === 'admin');
+}
+
+function isLoggedIn() {
+  const s = getSession();
+  return !!(s && s.loggedIn);
+}
+
+function currentUsername() {
+  return getSession()?.username || null;
+}
+
+/* ── Cek apakah user sudah pernah beli minimal 1 template ── */
+function hasPurchase() {
+  const username = currentUsername();
+  if (!username) return false;
+  const history = lsGet('foliOpusHistory_' + username, []);
+  return Array.isArray(history) && history.length > 0;
+}
+
+/* ── Apakah review ini milik user yang sedang login ── */
+function isOwnReview(review) {
+  /* Hanya user-generated review (id dimulai 'u') yang bisa dihapus.
+     Seed data (id 's...') tidak boleh dihapus siapapun. */
+  if (!review.id.startsWith('u')) return false;
+  const username = currentUsername();
+  if (!username) return false;
+  /* Kita simpan username di review saat submit, bandingkan di sini */
+  return review.submittedBy === username;
 }
 
 /* ══════════════════════════════════════════════════════════
    UTILITIES
 ══════════════════════════════════════════════════════════ */
-/* HTML-escape to prevent XSS */
 function esc(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -187,7 +203,6 @@ function esc(str) {
     .replace(/'/g, '&#39;');
 }
 
-/* Initials from full name (max 2 chars) */
 function initials(name) {
   return name.trim()
     .split(/\s+/)
@@ -196,14 +211,12 @@ function initials(name) {
     .join('');
 }
 
-/* Deterministic colour from name string */
 function hashColor(name) {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
   return AV_POOL[h % AV_POOL.length];
 }
 
-/* Star row HTML — filled vs empty */
 function starsHTML(rating, max = 5) {
   let h = '';
   for (let i = 1; i <= max; i++) {
@@ -213,7 +226,6 @@ function starsHTML(rating, max = 5) {
   return h;
 }
 
-/* Human-readable relative timestamp */
 function relTime(ts) {
   const diff = Date.now() - ts;
   const m = Math.floor(diff / 60000);
@@ -227,7 +239,6 @@ function relTime(ts) {
   return `${mo} bulan lalu`;
 }
 
-/* Read actual column width from the DOM (respects responsive CSS) */
 function getColW() {
   const col = document.querySelector('.testi-col');
   return col ? col.offsetWidth + CFG.CARD_GAP : 308 + CFG.CARD_GAP;
@@ -243,7 +254,6 @@ function getFiltered() {
       if (State.filterProduct !== 'all' && r.product !== State.filterProduct) return false;
       return true;
     })
-    /* highest rating first; same rating → newest first */
     .sort((a, b) => b.rating - a.rating || (b.ts || 0) - (a.ts || 0));
 }
 
@@ -267,8 +277,17 @@ function updateStats() {
    HTML BUILDERS
 ══════════════════════════════════════════════════════════ */
 
-/* ── Reply section injected at bottom of each card ── */
-function buildReplyHTML(rid, reply, admin) {
+/* ── Reply section ──
+   - Tombol "Balas" hanya muncul untuk admin
+   - Tombol edit/hapus reply hanya untuk admin
+   - Tombol hapus review hanya untuk pemilik review itu sendiri
+*/
+function buildReplyHTML(review) {
+  const rid   = review.id;
+  const admin = isAdmin();
+  const reply = loadReplies()[rid] || null;
+  const own   = isOwnReview(review);   // user ini yang buat review-nya
+
   const SHIELD = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#f59e0b">
     <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35
              C17.25 22.15 21 17.25 21 12V7L12 2z"/>
@@ -289,6 +308,13 @@ function buildReplyHTML(rid, reply, admin) {
     <polyline points="9 17 4 12 9 7"/>
     <path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
   </svg>`;
+
+  /* Kalau tidak ada yang perlu ditampilkan, skip wrapper */
+  const hasReplyBubble = !!reply;
+  const hasAdminBtn    = admin;           // tombol "Balas" hanya admin
+  const hasDeleteOwn   = own;             // tombol hapus review sendiri
+
+  if (!hasReplyBubble && !hasAdminBtn && !hasDeleteOwn) return '';
 
   let h = `<div class="testi-reply-wrap">`;
 
@@ -314,17 +340,25 @@ function buildReplyHTML(rid, reply, admin) {
       </div>`;
   }
 
-  /* "Balas" / "Edit Balasan" button */
-  const isLocked  = !admin;
-  const btnLabel  = (admin && reply) ? 'Edit Balasan' : 'Balas';
-  const lockClass = isLocked ? 'btn-reply-locked' : '';
+  /* Tombol "Balas" — HANYA admin */
+  if (admin) {
+    const btnLabel = reply ? 'Edit Balasan' : 'Balas';
+    h += `
+      <button class="btn-testi-reply"
+              data-id="${rid}"
+              aria-label="${btnLabel}">
+        ${REPLY} ${btnLabel}
+      </button>`;
+  }
 
-  h += `
-    <button class="btn-testi-reply ${lockClass}"
-            data-id="${rid}"
-            aria-label="${isLocked ? 'Login admin untuk membalas' : btnLabel}">
-      ${REPLY} ${btnLabel}
-    </button>`;
+  /* Tombol hapus review sendiri — HANYA pemilik review */
+  if (own) {
+    h += `
+      <button class="btn-delete-own" data-id="${rid}"
+              aria-label="Hapus ulasanmu">
+        ${TRASH} Hapus Ulasanmu
+      </button>`;
+  }
 
   h += `</div>`;
   return h;
@@ -337,8 +371,6 @@ function buildCardHTML(r) {
   const ini   = r.av   || initials(r.name);
   const feat  = r.featured ? 'featured' : '';
   const ts    = r.ts ? relTime(r.ts) : '';
-  const admin = isAdmin();
-  const reply = loadReplies()[r.id] || null;
 
   return `
     <div class="testi-card ${feat}" data-review-id="${esc(r.id)}">
@@ -361,12 +393,12 @@ function buildCardHTML(r) {
         </div>
       </div>
 
-      ${buildReplyHTML(r.id, reply, admin)}
+      ${buildReplyHTML(r)}
     </div>`;
 }
 
 /* ══════════════════════════════════════════════════════════
-   RENDER — builds columns + dots, scrolls to current page
+   RENDER
 ══════════════════════════════════════════════════════════ */
 function render() {
   const track    = document.getElementById('testiTrack');
@@ -378,7 +410,6 @@ function render() {
 
   const reviews = getFiltered();
 
-  /* ── empty state ── */
   if (!reviews.length) {
     track.innerHTML = '';
     track.classList.add('hidden');
@@ -389,7 +420,6 @@ function render() {
   track.classList.remove('hidden');
   empty?.classList.add('hidden');
 
-  /* ── build columns (each = ROWS_PER_COL cards stacked) ── */
   let html = '';
   for (let i = 0; i < reviews.length; i += CFG.ROWS_PER_COL) {
     const chunk = reviews.slice(i, i + CFG.ROWS_PER_COL);
@@ -397,12 +427,10 @@ function render() {
   }
   track.innerHTML = html;
 
-  /* ── calculate pages ── */
   const totalCols  = Math.ceil(reviews.length / CFG.ROWS_PER_COL);
   State.totalPages = Math.max(1, Math.ceil(totalCols / CFG.COLS_PER_PAGE));
   if (State.currentPage >= State.totalPages) State.currentPage = 0;
 
-  /* ── build dots (one pill per page) ── */
   if (dotsWrap) {
     dotsWrap.innerHTML = '';
     for (let p = 0; p < State.totalPages; p++) {
@@ -414,10 +442,7 @@ function render() {
     }
   }
 
-  /* ── restore scroll position ── */
   scrollToPage(State.currentPage, false);
-
-  /* ── re-bind card-level events after innerHTML swap ── */
   bindCardEvents(track);
 }
 
@@ -425,7 +450,6 @@ function render() {
    SCROLL / PAGINATION
 ══════════════════════════════════════════════════════════ */
 function pageScrollLeft(page) {
-  /* left edge of the first column on this page */
   return page * CFG.COLS_PER_PAGE * getColW();
 }
 
@@ -449,7 +473,6 @@ function setActiveDot(page) {
   });
 }
 
-/* Debounced scroll listener — syncs dots when user drags manually */
 let _scrollTimer = null;
 function onTrackScroll() {
   clearTimeout(_scrollTimer);
@@ -462,7 +485,7 @@ function onTrackScroll() {
 }
 
 /* ══════════════════════════════════════════════════════════
-   DRAG-TO-SCROLL (mouse)
+   DRAG-TO-SCROLL
 ══════════════════════════════════════════════════════════ */
 function bindDrag(el) {
   if (!el) return;
@@ -489,14 +512,13 @@ function bindDrag(el) {
     })
   );
 
-  /* Block click propagation if the user dragged (prevents accidental card clicks) */
   el.addEventListener('click', e => {
     if (movedPx > 6) { e.preventDefault(); e.stopPropagation(); movedPx = 0; }
   }, true);
 }
 
 /* ══════════════════════════════════════════════════════════
-   TOUCH SWIPE (mobile)
+   TOUCH SWIPE
 ══════════════════════════════════════════════════════════ */
 function initTouch() {
   const track = document.getElementById('testiTrack');
@@ -528,30 +550,21 @@ function stopAuto() { clearInterval(State.autoTimer); }
 
 /* ══════════════════════════════════════════════════════════
    CARD-LEVEL EVENT DELEGATION
-   (reply button, edit/delete admin reply)
-   Called after every render() since innerHTML is replaced
 ══════════════════════════════════════════════════════════ */
 function bindCardEvents(track) {
   if (!track) return;
 
   track.addEventListener('click', e => {
 
-    /* ── "Balas" / "Edit Balasan" button ── */
+    /* ── "Balas" / "Edit Balasan" — admin only ── */
     const replyBtn = e.target.closest('.btn-testi-reply');
     if (replyBtn) {
       e.stopPropagation();
-      const rid = replyBtn.dataset.id;
-
-      if (replyBtn.classList.contains('btn-reply-locked')) {
-        showToast('🔒 Fitur ini hanya untuk Admin FoliOpus.',
-                  'Silakan login sebagai admin terlebih dahulu.', 'lock');
-      } else {
-        openReplyModal(rid);
-      }
+      openReplyModal(replyBtn.dataset.id);
       return;
     }
 
-    /* ── Edit reply (inline button) ── */
+    /* ── Edit reply bubble — admin only ── */
     const editBtn = e.target.closest('.btn-rp-edit');
     if (editBtn) {
       e.stopPropagation();
@@ -559,16 +572,33 @@ function bindCardEvents(track) {
       return;
     }
 
-    /* ── Delete reply (inline button) ── */
-    const delBtn = e.target.closest('.btn-rp-del');
-    if (delBtn) {
+    /* ── Hapus reply bubble — admin only ── */
+    const delReplyBtn = e.target.closest('.btn-rp-del');
+    if (delReplyBtn) {
       e.stopPropagation();
       if (!confirm('Hapus balasan ini?')) return;
       const replies = loadReplies();
-      delete replies[delBtn.dataset.id];
+      delete replies[delReplyBtn.dataset.id];
       saveReplies(replies);
       render();
       showToast('⚠️ Balasan dihapus.', '', 'warn');
+      return;
+    }
+
+    /* ── Hapus review sendiri — pemilik review ── */
+    const delOwnBtn = e.target.closest('.btn-delete-own');
+    if (delOwnBtn) {
+      e.stopPropagation();
+      if (!confirm('Hapus ulasanmu? Tindakan ini tidak bisa dibatalkan.')) return;
+      const rid         = delOwnBtn.dataset.id;
+      const userReviews = loadUserReviews().filter(r => r.id !== rid);
+      saveUserReviews(userReviews);
+      /* Hapus juga reply-nya jika ada */
+      const replies = loadReplies();
+      delete replies[rid];
+      saveReplies(replies);
+      render();
+      showToast('🗑️ Ulasanmu dihapus.', 'Ulasan berhasil dihapus dari halaman ini.', 'warn');
       return;
     }
 
@@ -576,7 +606,7 @@ function bindCardEvents(track) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   CONTROLS INIT (arrows + scroll event)
+   CONTROLS INIT
 ══════════════════════════════════════════════════════════ */
 function initControls() {
   const track = document.getElementById('testiTrack');
@@ -588,7 +618,6 @@ function initControls() {
 
   track?.addEventListener('scroll', onTrackScroll, { passive: true });
 
-  /* pause auto-play when user interacts */
   const pauseEls = [track,
     document.getElementById('testiPrev'),
     document.getElementById('testiNext')];
@@ -607,7 +636,6 @@ function initControls() {
    FILTER INIT
 ══════════════════════════════════════════════════════════ */
 function initFilters() {
-  /* star filter */
   document.querySelectorAll('[data-filter-star]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-filter-star]')
@@ -619,7 +647,6 @@ function initFilters() {
     });
   });
 
-  /* product filter */
   document.querySelectorAll('[data-filter-product]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-filter-product]')
@@ -635,9 +662,33 @@ function initFilters() {
 /* ══════════════════════════════════════════════════════════
    REVIEW MODAL — user-facing
 ══════════════════════════════════════════════════════════ */
-let rv = { rating: 0, product: '' };  // mutable review form state
+let rv = { rating: 0, product: '' };
 
 function openReviewModal() {
+  /* ── Gate 1: harus login ── */
+  if (!isLoggedIn()) {
+    showToast(
+      '🔒 Login dulu yuk!',
+      'Kamu perlu login untuk memberikan ulasan.',
+      'lock'
+    );
+    setTimeout(() => {
+      sessionStorage.setItem('foliOpusRedirect', window.location.href);
+      window.location.href = 'login.html';
+    }, 1800);
+    return;
+  }
+
+  /* ── Gate 2: harus punya minimal 1 pembelian ── */
+  if (!hasPurchase()) {
+    showToast(
+      '🛒 Beli dulu, baru ulasan!',
+      'Kamu perlu memiliki minimal 1 template untuk bisa memberikan ulasan.',
+      'warn'
+    );
+    return;
+  }
+
   resetReviewForm();
   document.getElementById('reviewModalOv')?.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -654,31 +705,25 @@ function closeReviewModal() {
 function resetReviewForm() {
   rv = { rating: 0, product: '' };
 
-  /* clear inputs */
   ['rv-name', 'rv-role', 'rv-text'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.value = ''; el.classList.remove('is-err'); }
   });
 
-  /* clear error messages */
   ['rv-name-err','rv-role-err','rv-prod-err','rv-star-err','rv-text-err'].forEach(id => {
     const el = document.getElementById(id); if (el) el.textContent = '';
   });
 
-  /* char counter */
   const rvChar = document.getElementById('rv-char');
   if (rvChar) rvChar.textContent = '0';
 
-  /* product picker */
   document.querySelectorAll('.rv-prod-btn').forEach(b => b.classList.remove('selected'));
 
-  /* stars */
   document.querySelectorAll('.rv-star').forEach(s =>
     s.classList.remove('selected', 'hovered'));
   const lbl = document.getElementById('rv-star-label');
   if (lbl) lbl.textContent = 'Pilih rating';
 
-  /* submit button */
   const btn = document.getElementById('submitReview');
   const btx = document.getElementById('rv-btn-text');
   const spn = document.getElementById('rv-spinner');
@@ -688,25 +733,21 @@ function resetReviewForm() {
 }
 
 function initReviewModal() {
-  /* open triggers */
   ['openReviewModal', 'openReviewModal2'].forEach(id =>
     document.getElementById(id)?.addEventListener('click', openReviewModal));
 
-  /* close triggers */
   document.getElementById('closeReviewModal')?.addEventListener('click', closeReviewModal);
   document.getElementById('cancelReview')?.addEventListener('click', closeReviewModal);
   document.getElementById('reviewModalOv')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) closeReviewModal();
   });
 
-  /* ESC key */
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' &&
         document.getElementById('reviewModalOv')?.classList.contains('open'))
       closeReviewModal();
   });
 
-  /* product pick */
   document.querySelectorAll('.rv-prod-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rv-prod-btn').forEach(b => b.classList.remove('selected'));
@@ -717,7 +758,6 @@ function initReviewModal() {
     });
   });
 
-  /* star hover + click */
   const stars = document.querySelectorAll('.rv-star');
   const lbl   = document.getElementById('rv-star-label');
 
@@ -743,7 +783,6 @@ function initReviewModal() {
     });
   });
 
-  /* char counter */
   const rvText = document.getElementById('rv-text');
   rvText?.addEventListener('input', () => {
     const len = rvText.value.length;
@@ -755,7 +794,6 @@ function initReviewModal() {
       len > CFG.MAX_REVIEW * .70 ? '#f59e0b' : '';
   });
 
-  /* clear field error on input */
   ['rv-name', 'rv-role', 'rv-text'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', () => {
       document.getElementById(id)?.classList.remove('is-err');
@@ -763,7 +801,6 @@ function initReviewModal() {
     });
   });
 
-  /* submit */
   document.getElementById('submitReview')?.addEventListener('click', submitReview);
 }
 
@@ -779,7 +816,6 @@ function submitReview() {
     valid = false;
   }
 
-  /* validation */
   if (!name || name.length < 2) fieldErr('rv-name', 'rv-name-err', 'Nama minimal 2 karakter.');
   if (!role)                     fieldErr('rv-role', 'rv-role-err', 'Profesi & kota tidak boleh kosong.');
   if (!rv.product) {
@@ -796,7 +832,6 @@ function submitReview() {
 
   if (!valid) return;
 
-  /* loading state */
   const btn = document.getElementById('submitReview');
   const btx = document.getElementById('rv-btn-text');
   const spn = document.getElementById('rv-spinner');
@@ -807,20 +842,20 @@ function submitReview() {
   setTimeout(() => {
     const userReviews = loadUserReviews();
     userReviews.push({
-      id      : 'u' + Date.now(),
+      id          : 'u' + Date.now(),
+      submittedBy : currentUsername(),   /* simpan username untuk verifikasi kepemilikan */
       name, role, text,
-      av      : initials(name),
-      avc     : hashColor(name),
-      product : rv.product,
-      rating  : rv.rating,
-      featured: false,
-      ts      : Date.now(),
+      av          : initials(name),
+      avc         : hashColor(name),
+      product     : rv.product,
+      rating      : rv.rating,
+      featured    : false,
+      ts          : Date.now(),
     });
     saveUserReviews(userReviews);
 
     closeReviewModal();
 
-    /* reset filters so the new review is always visible */
     State.filterStar    = 'all';
     State.filterProduct = 'all';
     State.currentPage   = 0;
@@ -842,15 +877,10 @@ function submitReview() {
    REPLY MODAL — admin-only
 ══════════════════════════════════════════════════════════ */
 function openReplyModal(reviewId) {
-  if (!isAdmin()) {
-    showToast('🔒 Akses ditolak.',
-              'Login sebagai admin untuk membalas ulasan.', 'lock');
-    return;
-  }
+  if (!isAdmin()) return;   /* tidak ada fallback toast — tombol tidak muncul untuk non-admin */
 
   State.replyTargetId = reviewId;
 
-  /* ── populate review preview ── */
   const review  = allReviews().find(r => r.id === reviewId);
   const preview = document.getElementById('replyReviewPreview');
   if (preview && review) {
@@ -886,7 +916,6 @@ function openReplyModal(reviewId) {
       </div>`;
   }
 
-  /* ── pre-fill if reply already exists ── */
   const existing = loadReplies()[reviewId];
   const textarea = document.getElementById('rp-text');
   const charEl   = document.getElementById('rp-char');
@@ -896,7 +925,6 @@ function openReplyModal(reviewId) {
   const errEl = document.getElementById('rp-text-err');
   if (errEl) errEl.textContent = '';
 
-  /* ── button label ── */
   const btx = document.getElementById('rp-btn-text');
   const spn = document.getElementById('rp-spinner');
   const btn = document.getElementById('submitReply');
@@ -924,14 +952,12 @@ function initReplyModal() {
     if (e.target === e.currentTarget) closeReplyModal();
   });
 
-  /* ESC key */
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' &&
         document.getElementById('replyModalOv')?.classList.contains('open'))
       closeReplyModal();
   });
 
-  /* char counter for reply textarea */
   const rpText = document.getElementById('rp-text');
   rpText?.addEventListener('input', () => {
     const len = rpText.value.length;
@@ -961,7 +987,6 @@ function submitReply() {
     return;
   }
 
-  /* loading */
   const btn = document.getElementById('submitReply');
   const btx = document.getElementById('rp-btn-text');
   const spn = document.getElementById('rp-spinner');
@@ -1021,7 +1046,7 @@ function showToast(title, message, type = 'ok') {
 }
 
 /* ══════════════════════════════════════════════════════════
-   BOOT — DOMContentLoaded
+   BOOT
 ══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initFilters();
@@ -1029,6 +1054,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTouch();
   initReviewModal();
   initReplyModal();
-  render();       /* first render — also builds dots & binds card events */
+  render();
   startAuto();
 });

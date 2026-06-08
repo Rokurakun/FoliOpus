@@ -61,6 +61,17 @@ body {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+    -webkit-text-fill-color: initial;
 }
 
 .nav-links {
