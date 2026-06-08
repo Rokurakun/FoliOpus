@@ -172,6 +172,37 @@
     transform: translateY(-1px);
 }
 
+/* ── Tombol Hapus Ulasan Sendiri (User) ── */
+.btn-delete-own {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: inherit;
+    color: rgba(148, 163, 184, 0.8);
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 99px;
+    padding: 0.25rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    align-self: flex-start;
+    margin-top: 0.2rem;
+}
+
+.btn-delete-own:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444; /* Merah terang untuk aksi destruktif */
+}
+
+.btn-delete-own svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
 /* ── 4. TRACK OUTER ─────────────────────────────────────── */
 .testi-track-outer {
     position: relative;
@@ -801,6 +832,22 @@
     border-color: rgba(236, 72, 153, 0.5);
     color: #f472b6;
     box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+}
+
+/* ── State tombol produk yang dilock/disabled ── */
+.rv-prod-btn:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.rv-prod-btn.locked {
+    background: rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.03);
+    color: rgba(148, 163, 184, 0.35);
+}
+.rv-prod-btn.reviewed {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.15);
+    color: rgba(16, 185, 129, 0.6);
 }
 
 /* star picker */

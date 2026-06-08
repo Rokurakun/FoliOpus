@@ -180,6 +180,31 @@ function hasPurchase() {
   return Array.isArray(history) && history.length > 0;
 }
 
+/* ── Mengambil daftar template yang dibeli user ── */
+function getPurchasedTemplates() {
+    const username = currentUsername();
+    if (!username) return [];
+    
+    // Ambil data history dari localStorage
+    const history = lsGet('foliOpusHistory_' + username, []);
+    
+    // Looping data history dan ambil nilai dari 'templateKey'
+    return history.map(item => {
+        return (item && item.templateKey) ? item.templateKey.toLowerCase() : '';
+    }).filter(Boolean); // Hapus string kosong jika ada
+}
+
+/* ── Mengambil daftar template yang SUDAH diulas user ini ── */
+function getReviewedTemplates() {
+    const username = currentUsername();
+    if (!username) return [];
+    
+    // Looping data review user dan ambil produk yang sudah diulas
+    return loadUserReviews()
+        .filter(r => r.submittedBy === username)
+        .map(r => (r.product || '').toLowerCase());
+}
+
 /* ── Apakah review ini milik user yang sedang login ── */
 function isOwnReview(review) {
   /* Hanya user-generated review (id dimulai 'u') yang bisa dihapus.
@@ -589,16 +614,7 @@ function bindCardEvents(track) {
     const delOwnBtn = e.target.closest('.btn-delete-own');
     if (delOwnBtn) {
       e.stopPropagation();
-      if (!confirm('Hapus ulasanmu? Tindakan ini tidak bisa dibatalkan.')) return;
-      const rid         = delOwnBtn.dataset.id;
-      const userReviews = loadUserReviews().filter(r => r.id !== rid);
-      saveUserReviews(userReviews);
-      /* Hapus juga reply-nya jika ada */
-      const replies = loadReplies();
-      delete replies[rid];
-      saveReplies(replies);
-      render();
-      showToast('🗑️ Ulasanmu dihapus.', 'Ulasan berhasil dihapus dari halaman ini.', 'warn');
+      openDeleteModal(delOwnBtn.dataset.id);
       return;
     }
 
@@ -664,36 +680,74 @@ function initFilters() {
 ══════════════════════════════════════════════════════════ */
 let rv = { rating: 0, product: '' };
 
+/* ── Mengatur state tombol pilihan template di Modal ── */
+function setupProductPicker(purchased, reviewed) {
+    document.querySelectorAll('.rv-prod-btn').forEach(btn => {
+        const prod = btn.dataset.prod.toLowerCase(); // 'starter', 'pro', 'premium'
+        
+        // Reset state awal
+        btn.classList.remove('selected', 'locked', 'reviewed');
+        btn.disabled = false;
+        
+        // Label dasar
+        const baseText = prod === 'starter' ? 'Starter' : (prod === 'pro' ? 'Pro' : 'Premium');
+
+        if (!purchased.includes(prod)) {
+            // Kondisi 1: Belum dibeli (Gembok)
+            btn.classList.add('locked');
+            btn.disabled = true;
+            btn.innerHTML = `🔒 ${baseText}`;
+            btn.title = "Kamu belum membeli template ini";
+        } else if (reviewed.includes(prod)) {
+            // Kondisi 2: Sudah dibeli & sudah diulas (Centang Hijau)
+            btn.classList.add('reviewed');
+            btn.disabled = true;
+            btn.innerHTML = `✅ ${baseText}`;
+            btn.title = "Sudah diulas";
+        } else {
+            // Kondisi 3: Sudah dibeli & belum diulas (Bisa di-klik)
+            btn.innerHTML = `&#10022; ${baseText}`;
+            btn.title = "";
+        }
+    });
+}
+
 function openReviewModal() {
-  /* ── Gate 1: harus login ── */
-  if (!isLoggedIn()) {
-    showToast(
-      '🔒 Login dulu yuk!',
-      'Kamu perlu login untuk memberikan ulasan.',
-      'lock'
-    );
-    setTimeout(() => {
-      sessionStorage.setItem('foliOpusRedirect', window.location.href);
-      window.location.href = 'login.html';
-    }, 1800);
-    return;
-  }
+    /* ── Gate 1: harus login ── */
+    if (!isLoggedIn()) {
+        showToast('🔒 Login dulu yuk!', 'Kamu perlu login untuk memberikan ulasan.', 'lock');
+        setTimeout(() => {
+            sessionStorage.setItem('foliOpusRedirect', window.location.href);
+            window.location.href = 'login.html';
+        }, 1800);
+        return;
+    }
 
-  /* ── Gate 2: harus punya minimal 1 pembelian ── */
-  if (!hasPurchase()) {
-    showToast(
-      '🛒 Beli dulu, baru ulasan!',
-      'Kamu perlu memiliki minimal 1 template untuk bisa memberikan ulasan.',
-      'warn'
-    );
-    return;
-  }
+    const purchased = getPurchasedTemplates();
+    const reviewed = getReviewedTemplates();
+    
+    /* ── Gate 2: harus punya minimal 1 pembelian ── */
+    if (purchased.length === 0) {
+        showToast('🛒 Beli dulu, baru ulasan!', 'Kamu perlu memiliki minimal 1 template untuk bisa memberikan ulasan.', 'warn');
+        return;
+    }
 
-  resetReviewForm();
-  document.getElementById('reviewModalOv')?.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  stopAuto();
-  setTimeout(() => document.getElementById('rv-name')?.focus(), 220);
+    /* ── Gate 3: Cek apakah SEMUA yang dibeli sudah diulas ── */
+    const availableToReview = purchased.filter(p => !reviewed.includes(p));
+    if (availableToReview.length === 0) {
+        showToast('🎉 Selesai!', 'Kamu sudah memberikan ulasan untuk semua template yang kamu miliki.', 'ok');
+        return;
+    }
+
+    resetReviewForm();
+    
+    // Panggil fungsi setup tombol
+    setupProductPicker(purchased, reviewed);
+
+    document.getElementById('reviewModalOv')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    stopAuto();
+    setTimeout(() => document.getElementById('rv-name')?.focus(), 220);
 }
 
 function closeReviewModal() {
@@ -975,6 +1029,58 @@ function initReplyModal() {
   document.getElementById('submitReply')?.addEventListener('click', submitReply);
 }
 
+/* ══════════════════════════════════════════════════════════
+   DELETE MODAL
+══════════════════════════════════════════════════════════ */
+let reviewToDelete = null;
+
+function openDeleteModal(reviewId) {
+  reviewToDelete = reviewId;
+  document.getElementById('deleteModalOv')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  stopAuto();
+}
+
+function closeDeleteModal() {
+  reviewToDelete = null;
+  document.getElementById('deleteModalOv')?.classList.remove('open');
+  document.body.style.overflow = '';
+  startAuto();
+}
+
+function initDeleteModal() {
+  document.getElementById('closeDeleteModal')?.addEventListener('click', closeDeleteModal);
+  document.getElementById('cancelDeleteBtn')?.addEventListener('click', closeDeleteModal);
+  document.getElementById('deleteModalOv')?.addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeDeleteModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('deleteModalOv')?.classList.contains('open')) {
+      closeDeleteModal();
+    }
+  });
+
+  document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+    if (!reviewToDelete) return;
+    
+    const rid = reviewToDelete;
+    
+    // Hapus ulasan dari storage
+    const userReviews = loadUserReviews().filter(r => r.id !== rid);
+    saveUserReviews(userReviews);
+    
+    // Hapus juga reply-nya jika ada
+    const replies = loadReplies();
+    delete replies[rid];
+    saveReplies(replies);
+    
+    render();
+    closeDeleteModal();
+    showToast('🗑️ Ulasanmu dihapus.', 'Ulasan berhasil dihapus dari halaman ini.', 'warn');
+  });
+}
+
 function submitReply() {
   if (!isAdmin()) { closeReplyModal(); return; }
 
@@ -1054,6 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTouch();
   initReviewModal();
   initReplyModal();
+  initDeleteModal();
   render();
   startAuto();
 });
