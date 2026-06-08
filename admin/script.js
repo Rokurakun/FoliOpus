@@ -641,11 +641,11 @@ function saveProject() {
 let mediaList = [
   {
     name:  'logo-foliopus.png',
-    src:   './assets/media/logo.png'
+    src:   './assets/logo.png'
   },
   {
     name:  'qris-payment.jpeg',
-    src:   './assets/media/qris.jpeg'
+    src:   './assets/qris.jpeg'
   }
 ];
 
