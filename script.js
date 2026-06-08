@@ -472,7 +472,70 @@ if (document.getElementById('btnSudahBayar')) {
         document.getElementById('summaryThumb').style.background = tmpl.thumb;
         document.getElementById('summaryPrice').textContent      = formatRupiah(tmpl.price);
         document.getElementById('summaryTotal').textContent      = formatRupiah(tmpl.price);
-        // document.getElementById('displayAmount').textContent     = formatRupiah(tmpl.price);
+
+        // ── LOGIKA VOUCHER DISKON ──
+        let currentPrice = tmpl.price;
+        let isVoucherApplied = false;
+
+        const voucherInput = document.getElementById('voucherInput');
+        const btnApplyVoucher = document.getElementById('btnApplyVoucher');
+        const voucherMsg = document.getElementById('voucherMsg');
+        const discountRow = document.getElementById('discountRow');
+        const summaryDiscount = document.getElementById('summaryDiscount');
+
+        const voucherKey = 'foliOpusVoucher_' + session.username;
+        const hasUsedVoucher = localStorage.getItem(voucherKey) === 'used';
+
+        if (btnApplyVoucher) {
+            btnApplyVoucher.addEventListener('click', () => {
+                const code = voucherInput.value.trim().toLowerCase();
+                
+                // Reset styling input jika error sebelumnya
+                voucherInput.style.borderColor = 'rgba(255,255,255,0.09)';
+                voucherMsg.style.display = 'none';
+
+                if (!code) return;
+
+                if (code !== 'opus222') {
+                    showMsg('Kode voucher tidak valid atau kedaluwarsa.', '#ef4444');
+                    voucherInput.style.borderColor = '#ef4444';
+                    return;
+                }
+                
+                if (hasUsedVoucher) {
+                    showMsg('Gagal! Kuota voucher OPUS222 untuk akunmu sudah habis (maks 1x pemakaian).', '#ef4444');
+                    voucherInput.style.borderColor = '#ef4444';
+                    return;
+                }
+
+                if (isVoucherApplied) return;
+
+                // Eksekusi diskon 25%
+                isVoucherApplied = true;
+                const discountAmount = currentPrice * 0.25;
+                currentPrice = currentPrice - discountAmount; // Update total harga
+
+                // Update UI Visual
+                discountRow.style.display = 'flex';
+                summaryDiscount.textContent = '-' + formatRupiah(discountAmount);
+                document.getElementById('summaryTotal').textContent = formatRupiah(currentPrice);
+                
+                // Kunci form input biar gak diklik dobel
+                voucherInput.disabled = true;
+                btnApplyVoucher.disabled = true;
+                voucherInput.style.borderColor = '#22c55e';
+                btnApplyVoucher.style.opacity = '0.5';
+                btnApplyVoucher.textContent = 'Terpasang';
+                
+                showMsg('Voucher berhasil dipasang! Kamu hemat 25% 🎉', '#22c55e');
+            });
+        }
+
+        function showMsg(msg, color) {
+            voucherMsg.style.display = 'block';
+            voucherMsg.textContent = msg;
+            voucherMsg.style.color = color;
+        }
 
         // ── STEP NAVIGATION ──
         function goToStep(step) {
@@ -615,7 +678,7 @@ if (document.getElementById('btnSudahBayar')) {
             document.getElementById('rcUser').textContent     = session?.username || '—';
             document.getElementById('rcTemplate').textContent = tmpl.name;
             document.getElementById('rcPaket').textContent    = tmpl.badge;
-            document.getElementById('rcTotal').textContent    = formatRupiah(tmpl.price);
+            document.getElementById('rcTotal').textContent    = formatRupiah(currentPrice);
             document.getElementById('rcBarcodeText').textContent = trxId;
 
             generateBarcode('rcBarcode');
@@ -634,9 +697,12 @@ if (document.getElementById('btnSudahBayar')) {
 
             setTimeout(() => {
                 goToStep(3);
-
                 const trxId = generateTrxId();
                 populateReceipt(trxId);
+                
+                if (isVoucherApplied) {
+                    localStorage.setItem(voucherKey, 'used');
+                }
 
                 // Simpan riwayat
                 let history = JSON.parse(localStorage.getItem('foliOpusHistory_' + session.username)) || [];

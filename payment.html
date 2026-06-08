@@ -536,8 +536,7 @@
 
         </div>
 
-        <!-- ORDER SUMMARY (tidak berubah) -->
-        <div class="order-summary">
+       <div class="order-summary">
             <div class="summary-card">
                 <h3 class="summary-label">Ringkasan Pesanan</h3>
                 <div class="summary-template">
@@ -556,9 +555,24 @@
                     <span>Biaya layanan</span>
                     <span>Gratis</span>
                 </div>
+                
+                <div class="summary-row" id="discountRow" style="display: none; color: #22c55e;">
+                    <span>Diskon 25% (OPUS222)</span>
+                    <span id="summaryDiscount">-Rp 0</span>
+                </div>
+
                 <div class="summary-total">
                     <span>Total</span>
                     <span class="summary-total-price" id="summaryTotal">—</span>
+                </div>
+
+                <div class="voucher-box" style="margin-top: 1.5rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    <label style="display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem;">Punya Kode Voucher?</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="voucherInput" placeholder="Masukkan Voucher" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 8px; padding: 0.55rem 0.75rem; color: #f8fafc; font-family: inherit; font-size: 0.85rem; outline: none; text-transform: uppercase; transition: all 0.2s;">
+                        <button id="btnApplyVoucher" class="btn-secondary" style="padding: 0.55rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); cursor: pointer; color: #cbd5e1;">Gunakan</button>
+                    </div>
+                    <div id="voucherMsg" style="font-size: 0.75rem; margin-top: 0.6rem; font-weight: 600; display: none;"></div>
                 </div>
             </div>
         </div>
