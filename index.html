@@ -218,18 +218,6 @@
             <div class="testi-modal-bd">
 
                 <div class="testi-modal-fg">
-                    <label for="rv-name">Nama Lengkap <span class="req">*</span></label>
-                    <input type="text" id="rv-name" placeholder="Contoh: Rizky Nugroho" maxlength="40" autocomplete="name">
-                    <span class="rv-err" id="rv-name-err"></span>
-                </div>
-
-                <div class="testi-modal-fg">
-                    <label for="rv-role">Profesi<span class="req">*</span></label>
-                    <input type="text" id="rv-role" placeholder="Contoh: UI Designer" maxlength="50">
-                    <span class="rv-err" id="rv-role-err"></span>
-                </div>
-
-                <div class="testi-modal-fg">
                     <label>Template yang Digunakan <span class="req">*</span></label>
                     <div class="rv-product-pick" id="rv-product-pick">
                         <button type="button" class="rv-prod-btn tp-starter" data-prod="starter">&#10022; Starter</button>
@@ -254,7 +242,7 @@
 
                 <div class="testi-modal-fg">
                     <label for="rv-text">Ulasan <span class="req">*</span></label>
-                    <textarea id="rv-text" rows="4" placeholder="Ceritakan pengalamanmu menggunakan FoliOpus. Apa yang paling berkesan?" maxlength="280"></textarea>
+                    <textarea id="rv-text" rows="4" placeholder="Ceritakan pengalamanmu menggunakan FoliOpus. Apa yang paling berkesan? (Min 15 karakter)" maxlength="280"></textarea>
                     <div class="rv-char-count"><span id="rv-char">0</span> / 280 karakter</div>
                     <span class="rv-err" id="rv-text-err"></span>
                 </div>
@@ -298,7 +286,7 @@
                 <div class="testi-modal-fg">
                     <label for="rp-text">Balasan Resmi <span class="req">*</span></label>
                     <textarea id="rp-text" rows="4"
-                        placeholder="Tulis balasan resmi dari Tim FoliOpus. Pastikan profesional, hangat, dan membantu..."
+                        placeholder="Min 10 karakter"
                         maxlength="300"></textarea>
                     <div class="rp-char-count"><span id="rp-char">0</span> / 300 karakter</div>
                     <span class="rv-err" id="rp-text-err"></span>

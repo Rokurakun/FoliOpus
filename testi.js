@@ -759,12 +759,12 @@ function closeReviewModal() {
 function resetReviewForm() {
   rv = { rating: 0, product: '' };
 
-  ['rv-name', 'rv-role', 'rv-text'].forEach(id => {
+  ['rv-text'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.value = ''; el.classList.remove('is-err'); }
   });
 
-  ['rv-name-err','rv-role-err','rv-prod-err','rv-star-err','rv-text-err'].forEach(id => {
+  ['rv-prod-err','rv-star-err','rv-text-err'].forEach(id => {
     const el = document.getElementById(id); if (el) el.textContent = '';
   });
 
@@ -848,7 +848,7 @@ function initReviewModal() {
       len > CFG.MAX_REVIEW * .70 ? '#f59e0b' : '';
   });
 
-  ['rv-name', 'rv-role', 'rv-text'].forEach(id => {
+  ['rv-text'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', () => {
       document.getElementById(id)?.classList.remove('is-err');
       const e = document.getElementById(id + '-err'); if (e) e.textContent = '';
@@ -859,8 +859,7 @@ function initReviewModal() {
 }
 
 function submitReview() {
-  const name = document.getElementById('rv-name')?.value.trim() || '';
-  const role = document.getElementById('rv-role')?.value.trim() || '';
+  const name = currentUsername() || '';
   const text = document.getElementById('rv-text')?.value.trim() || '';
   let   valid = true;
 
@@ -870,8 +869,6 @@ function submitReview() {
     valid = false;
   }
 
-  if (!name || name.length < 2) fieldErr('rv-name', 'rv-name-err', 'Nama minimal 2 karakter.');
-  if (!role)                     fieldErr('rv-role', 'rv-role-err', 'Profesi & kota tidak boleh kosong.');
   if (!rv.product) {
     const e = document.getElementById('rv-prod-err');
     if (e) e.textContent = 'Pilih template yang kamu gunakan.';
@@ -897,8 +894,8 @@ function submitReview() {
     const userReviews = loadUserReviews();
     userReviews.push({
       id          : 'u' + Date.now(),
-      submittedBy : currentUsername(),   /* simpan username untuk verifikasi kepemilikan */
-      name, role, text,
+      submittedBy : currentUsername(),
+      name, role: '', text,
       av          : initials(name),
       avc         : hashColor(name),
       product     : rv.product,
