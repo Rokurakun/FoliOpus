@@ -13,10 +13,6 @@ const dialogClose   = document.getElementById('dialogClose');
 const navHamburger  = document.getElementById('navHamburger');
 const mobileMenu    = document.getElementById('mobileMenu');
 
-// ==========================================
-// RENDER FUNCTIONS
-// ==========================================
-
 function renderMeta() {
   document.title = SITE_DATA.meta.title;
 }
@@ -39,7 +35,6 @@ function updateNavLogo() {
 }
 
 function renderNav() {
-  // Desktop links
   const navLinks = document.querySelector('.nav-links');
   if (navLinks) {
     const linksHTML = SITE_DATA.nav.links.map(l =>
@@ -49,7 +44,6 @@ function renderNav() {
       + `<a href="#buy" class="nav-link nav-buy" id="nav-buy">${SITE_DATA.nav.buyText}</a>`;
   }
 
-  // Mobile links
   const mob = document.getElementById('mobileMenu');
   if (mob) {
     mob.innerHTML = SITE_DATA.nav.links.map(l =>
@@ -61,15 +55,12 @@ function renderNav() {
 
 function renderSectionHeaders() {
   const s = SITE_DATA.sections;
-
-  // About
   const aboutLabel = document.querySelector('#about .section-label');
   if (aboutLabel) aboutLabel.textContent = s.about.label;
 
   const aboutHeading = document.querySelector('#about .about-heading');
   if (aboutHeading) {
     const lines = s.about.heading.split('\n');
-    // Last line gets <em>
     aboutHeading.innerHTML = lines.map((line, i) =>
       i === lines.length - 1 ? `<em>${line}</em>` : line
     ).join('<br>');
@@ -78,13 +69,11 @@ function renderSectionHeaders() {
   const achievBtn = document.getElementById('openAchievements');
   if (achievBtn) achievBtn.textContent = s.about.achievementsBtn;
 
-  // Project
   const projectLabel = document.querySelector('#project .section-label');
   if (projectLabel) projectLabel.textContent = s.project.label;
   const projectTitle = document.querySelector('#project .section-title');
   if (projectTitle) projectTitle.innerHTML = `${s.project.title}<br><em>${s.project.titleEm}</em>`;
 
-  // Experience
   const expLabel = document.querySelector('#experience .section-label');
   if (expLabel) expLabel.textContent = s.experience.label;
   const expTitle = document.querySelector('#experience .section-title');
@@ -93,7 +82,6 @@ function renderSectionHeaders() {
     expTitle.innerHTML = lines.join('<br>') + ` <em>${s.experience.titleEm}</em>`;
   }
 
-  // Tools
   const toolsLabel = document.querySelector('#tools .section-label');
   if (toolsLabel) toolsLabel.textContent = s.tools.label;
   const toolsTitle = document.querySelector('#tools .section-title');
@@ -102,7 +90,6 @@ function renderSectionHeaders() {
     toolsTitle.innerHTML = lines.join('<br>') + ` <em>${s.tools.titleEm}</em>`;
   }
 
-  // Capabilities
   const capLabel = document.querySelector('#capabilities .section-label');
   if (capLabel) capLabel.textContent = s.capabilities.label;
   const capTitle = document.querySelector('#capabilities .section-title');
@@ -111,13 +98,11 @@ function renderSectionHeaders() {
     capTitle.innerHTML = lines.join('<br>') + ` <em>${s.capabilities.titleEm}</em>`;
   }
 
-  // Contact
   const contactLabel = document.querySelector('#contact .section-label');
   if (contactLabel) contactLabel.textContent = s.contact.label;
   const contactHeading = document.querySelector('.contact-big');
   if (contactHeading) {
     const lines = s.contact.heading.split('\n');
-    // Last line gets <em>
     contactHeading.innerHTML = lines.map((line, i) =>
       i === lines.length - 1 ? `<em>${line}</em>` : line
     ).join('<br>');
@@ -132,7 +117,6 @@ function renderFooter() {
   const sitemapTitle = document.querySelector('.footer-col:nth-child(1) .footer-col-title');
   if (sitemapTitle) sitemapTitle.textContent = f.sitemapTitle;
 
-  // Rebuild sitemap links from nav
   const sitemapCol = document.querySelector('.footer-col:nth-child(1)');
   if (sitemapCol) {
     const title = sitemapCol.querySelector('.footer-col-title').outerHTML;
@@ -320,10 +304,6 @@ function renderAllData() {
   updateSocialLinks();
 }
 
-// ==========================================
-// INTRO / DRAG
-// ==========================================
-
 function initIntroEvents() {
   document.querySelectorAll('.intro-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -395,10 +375,6 @@ window.addEventListener('wheel', (e) => {
   if (e.deltaY > 40) dismissIntro();
 }, { passive: true });
 
-// ==========================================
-// CURSOR
-// ==========================================
-
 function initCursor() {
   const dot  = document.createElement('div');
   const ring = document.createElement('div');
@@ -423,10 +399,6 @@ function initCursor() {
   animRing();
 }
 
-// ==========================================
-// CLOCK
-// ==========================================
-
 function updateTime() {
   const el = document.getElementById('local-time');
   if (!el) return;
@@ -447,10 +419,6 @@ function setFooterYear() {
   const el = document.getElementById('footer-year');
   if (el) el.textContent = `© ${new Date().getFullYear()}`;
 }
-
-// ==========================================
-// DIALOG
-// ==========================================
 
 function openDialog(html) {
   dialogContent.innerHTML = html;
@@ -482,10 +450,6 @@ function buildDialogHTML(d) {
     : `<p>${d.body}</p>`;
   return `<h3>${d.title || ''}</h3><p class="dialog-sub">${d.subtitle || ''}</p>${statsHTML}${bodyHTML}${badgesHTML}`;
 }
-
-// ==========================================
-// NAV, SCROLL, MISC
-// ==========================================
 
 function initNav() {
   let menuOpen = false;
@@ -585,10 +549,6 @@ if (btnBuyCta) {
   });
 }
 
-// ==========================================
-// INIT
-// ==========================================
-
 document.addEventListener('DOMContentLoaded', () => {
   renderAllData();
 
@@ -606,16 +566,12 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('%cFoliOpus Premium — Creative Studio', 'color:#0ABFBC;font-size:14px;font-weight:bold;');
 });
 
-// ==========================================
-// ANTENA PENERIMA SINYAL DARI EDITOR
-// ==========================================
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'UPDATE_DATA') {
     window.SITE_DATA = event.data.payload;
 
     renderAllData();
 
-    // Bypass animasi reveal biar langsung keliatan di editor
     const newElements = document.querySelectorAll('.reveal:not(.in-view), .project-card:not(.revealed)');
     newElements.forEach(el => {
       el.classList.add('in-view');

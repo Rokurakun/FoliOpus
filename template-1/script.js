@@ -33,7 +33,6 @@ function renderTemplate() {
         emailBtn.innerText = userConfig.hero?.teksTombolKontak || 'Email Me';
     }
 
-    // Eksekusi ulang typewriter effect
     const roleElement = document.getElementById('render-role');
     if(roleElement) {
         const roleText = userConfig.hero?.pekerjaan || 'Tech Enthusiast';
@@ -72,7 +71,6 @@ function renderTemplate() {
         userConfig.projects.forEach(proj => {
             const card = document.createElement('div');
             card.className = 'project-card';
-            // Pastikan card yang dirender ulang langsung keliatan tanpa animasi (bypass observer)
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
             
@@ -107,10 +105,8 @@ function renderTemplate() {
 let typewriterTimeout = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Panggil render pertama kali saat web load
     renderTemplate();
 
-    // 2. Setup intersection observer cuma sekali di awal
     const sections = document.querySelectorAll('.section');
     const sectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -129,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sectionObserver.observe(section);
     });
 
-    // 3. Setup event button
     const btnBuySticky = document.querySelector('.btn-buy-sticky');
     if (btnBuySticky) {
         btnBuySticky.addEventListener('click', () => {
@@ -148,15 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ==========================================
-// ANTENA PENERIMA SINYAL DARI EDITOR
-// ==========================================
 window.addEventListener('message', (event) => {
-    // Cek apakah sinyal ini beneran datang dari arsitektur editor dewa kita
     if (event.data && event.data.type === 'UPDATE_DATA') {
-        // Timpa variabel otak utama
         window.userConfig = event.data.payload;
-        // Gas render ulang HTML pake data baru!
         renderTemplate();
     }
 });

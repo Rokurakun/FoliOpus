@@ -388,9 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
  
 });
 
-// ==========================================
-// ANTENA PENERIMA SINYAL DARI EDITOR
-// ==========================================
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'UPDATE_DATA') {
     window.SITE_DATA = event.data.payload;

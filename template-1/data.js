@@ -1,5 +1,3 @@
-// PERINGATAN: Jangan hapus tanda kutip ("") atau koma (,). Rusak satu karakter, web akan error.
-
 var userConfig = {
     meta: {
         titleTag: "FoliOpus Starter",
