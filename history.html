@@ -26,11 +26,9 @@
     </footer>
 
     <script>
-        // Cek Sesi
         const session = JSON.parse(localStorage.getItem('foliOpusUser'));
         if (!session || !session.loggedIn) window.location.replace('login.html');
 
-        // Ambil Riwayat
         const history = JSON.parse(localStorage.getItem('foliOpusHistory_' + session.username)) || [];
         const container = document.getElementById('historyContainer');
 

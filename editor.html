@@ -58,7 +58,6 @@
     </div>
 
     <script>
-        // 1. Setup Parameter Mode & URL
         const urlParams = new URLSearchParams(window.location.search);
         const rawTemplateParam = urlParams.get('template') || 'template-1';
         const isPreviewMode = urlParams.get('mode') === 'preview';
@@ -68,7 +67,7 @@
         if(rawTemplateParam === 'template-3' || rawTemplateParam === 'premium') { templateName = 'template-3'; templateKey = 'premium'; priceStr = '499.000'; }
         const dataVarName = templateName === 'template-1' ? 'userConfig' : 'SITE_DATA';
 
-        // 2. Data Master Full
+        // Data Semua Template
         const DEFAULT_DATA = {
             'template-1': {
                 meta: { titleTag: "FoliOpus Starter", seoDescription: "Portofolio digital profesional." },
@@ -412,7 +411,6 @@
 
         let currentData = DEFAULT_DATA[templateName];
 
-        // Helper update
         function updateDeep(pathArray, value) {
             let obj = currentData;
             for (let i = 0; i < pathArray.length - 1; i++) obj = obj[pathArray[i]];
@@ -423,7 +421,7 @@
             updateDeep(pathArray, value.split(separator).map(s => s.trim()).filter(Boolean));
         }
 
-        // FUNGSI TAMBAH (Hanya jalan di mode Full)
+        // FUNGSI TAMBAH
         window.addArrayItem = function(template, type) {
             if (template === 'template-1') {
                 if(type === 'projects') currentData.projects.push({ judul: "Proyek Baru", deskripsi: "Deskripsi", linkRepo: "#" });
@@ -443,7 +441,7 @@
             triggerPreviewUpdate();
         };
 
-        // FUNGSI HAPUS (Hanya jalan di mode Full)
+        // FUNGSI HAPUS
         window.delArrayItem = function(template, type, idx) {
             if(!confirm("Yakin ingin menghapus item ini?")) return;
             if (template === 'template-1') {
@@ -464,12 +462,11 @@
             triggerPreviewUpdate();
         };
 
-        // 3. Render Dinamis Berdasarkan Template
         function renderForm() {
             const container = document.getElementById('formContainer');
             let html = isPreviewMode ? `<div style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;"><strong>⚠️ MODE PREVIEW</strong><br>Beli template untuk membuka semua fitur edit mendetail (Logs, Projects array, Stats) dan mendownload kode.</div>` : '';
 
-            // ================= TEMPLATE 1 (STARTER) =================
+            // TEMPLATE 1 (STARTER)
             if(templateName === 'template-1') {
                 html += `
                     <div class="e-group">
@@ -503,7 +500,7 @@
                     </div>
                 `;
             } 
-            // ================= TEMPLATE 2 (PRO) =================
+            // TEMPLATE 2 (PRO)
             else if(templateName === 'template-2') {
                 html += `
                     <div class="e-group">
@@ -714,7 +711,7 @@
                     </div>
                 `;
             }
-            // ================= TEMPLATE 3 (PREMIUM) =================
+            // TEMPLATE 3 (PREMIUM)
             else if(templateName === 'template-3') {
                 html += `
                     <div class="e-group">
@@ -924,7 +921,7 @@
             container.innerHTML = html;
         }
 
-        // 4. Live Preview (Decoupled Message Architecture)
+        // Live Preview
         let isIframeLoaded = false;
         let timeout;
 
@@ -960,7 +957,6 @@
             }, '*');
         }
 
-        // 5. Inisialisasi Mode & Tombol
         window.onload = () => {
             const btnDownload = document.getElementById('btnDownload');
             if(isPreviewMode) {

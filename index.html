@@ -80,7 +80,7 @@
         <h2>Katalog Template</h2>
         <div class="grid-container">
             
-            <!-- Starter Template -->
+            <!-- Starter -->
             <div class="card template-card" style="cursor: default;">
                 <div class="mockup-preview mockup-starter">
                     <div class="m-title"></div>
@@ -104,7 +104,7 @@
                 </div>
             </div>
 
-            <!-- Pro Template -->
+            <!-- Pro -->
             <div class="card template-card" style="cursor: default;">
                 <div class="mockup-preview mockup-pro">
                     <div class="m-eyebrow"></div>
@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- Premium Template -->
+            <!-- Premium -->
             <div class="card template-card" style="cursor: default; border-color: var(--primary-yellow); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);">
                 <div class="mockup-preview mockup-premium">
                     <div class="m-nav"></div>
@@ -163,7 +163,6 @@
 
         <!-- TOOLBAR: filter + CTA -->
         <div class="testi-toolbar">
-            <!-- Filter by rating -->
             <div class="testi-filter-group" role="group" aria-label="Filter bintang">
                 <span class="testi-filter-label">Bintang:</span>
                 <button class="testi-filter-btn active" data-filter-star="all">Semua</button>
@@ -173,7 +172,6 @@
                 <button class="testi-filter-btn" data-filter-star="2">&#9733;&#9733;</button>
                 <button class="testi-filter-btn" data-filter-star="1">&#9733;</button>
             </div>
-            <!-- Filter by product -->
             <div class="testi-filter-group" role="group" aria-label="Filter produk">
                 <span class="testi-filter-label">Produk:</span>
                 <button class="testi-filter-btn active" data-filter-product="all">Semua</button>
@@ -181,7 +179,6 @@
                 <button class="testi-filter-btn tp-pro"     data-filter-product="pro">Pro</button>
                 <button class="testi-filter-btn tp-premium" data-filter-product="premium">Premium</button>
             </div>
-            <!-- Review CTA -->
             <button class="btn-primary testi-review-btn" id="openReviewModal">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
                 Berikan Ulasan
@@ -197,12 +194,9 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
-            <!-- 2-row grid track: each "column" is a .testi-col with 2 stacked cards -->
             <div class="testi-track" id="testiTrack">
-                <!-- columns injected by testimonials.js -->
             </div>
 
-            <!-- empty state -->
             <div class="testi-empty hidden" id="testiEmpty">
                 <span style="font-size:2rem;">&#128269;</span>
                 <p>Belum ada ulasan untuk filter ini.<br>Jadilah yang pertama!</p>
@@ -210,15 +204,11 @@
             </div>
         </div>
 
-        <!-- DOTS -->
         <div class="testi-dots" id="testiDots" role="tablist" aria-label="Navigasi halaman ulasan"></div>
 
     </section>
-    <!-- ══ END TESTIMONIALS ══ -->
 
-     <!-- ══════════════════════════════════════
-         REVIEW MODAL
-    ══════════════════════════════════════ -->
+     <!-- REVIEW MODAL -->
     <div class="testi-modal-ov" id="reviewModalOv" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
         <div class="testi-modal-box">
             <div class="testi-modal-hd">
@@ -227,21 +217,18 @@
             </div>
             <div class="testi-modal-bd">
 
-                <!-- Name -->
                 <div class="testi-modal-fg">
                     <label for="rv-name">Nama Lengkap <span class="req">*</span></label>
                     <input type="text" id="rv-name" placeholder="Contoh: Rizky Nugroho" maxlength="40" autocomplete="name">
                     <span class="rv-err" id="rv-name-err"></span>
                 </div>
 
-                <!-- Role / occupation -->
                 <div class="testi-modal-fg">
                     <label for="rv-role">Profesi<span class="req">*</span></label>
                     <input type="text" id="rv-role" placeholder="Contoh: UI Designer" maxlength="50">
                     <span class="rv-err" id="rv-role-err"></span>
                 </div>
 
-                <!-- Product pick -->
                 <div class="testi-modal-fg">
                     <label>Template yang Digunakan <span class="req">*</span></label>
                     <div class="rv-product-pick" id="rv-product-pick">
@@ -252,7 +239,6 @@
                     <span class="rv-err" id="rv-prod-err"></span>
                 </div>
 
-                <!-- Star rating -->
                 <div class="testi-modal-fg">
                     <label>Rating <span class="req">*</span></label>
                     <div class="rv-stars" id="rv-stars" role="radiogroup" aria-label="Pilih rating">
@@ -266,7 +252,6 @@
                     <span class="rv-err" id="rv-star-err"></span>
                 </div>
 
-                <!-- Review text -->
                 <div class="testi-modal-fg">
                     <label for="rv-text">Ulasan <span class="req">*</span></label>
                     <textarea id="rv-text" rows="4" placeholder="Ceritakan pengalamanmu menggunakan FoliOpus. Apa yang paling berkesan?" maxlength="280"></textarea>
@@ -274,7 +259,6 @@
                     <span class="rv-err" id="rv-text-err"></span>
                 </div>
 
-                <!-- Tips -->
                 <div class="rv-tips">
                     <span>&#128161;</span>
                     <p>Ulasan jujur dan spesifik membantu pengguna lain membuat keputusan yang tepat.</p>
@@ -290,12 +274,8 @@
             </div>
         </div>
     </div>
-<!--end review modal-->
 
-    <!-- ══════════════════════════════════════
-         REPLY MODAL — Admin Only
-         Hanya muncul jika session role=admin
-    ══════════════════════════════════════ -->
+    <!-- REPLY MODAL — Admin Only -->
     <div class="testi-modal-ov" id="replyModalOv" role="dialog" aria-modal="true" aria-labelledby="replyModalTitle">
         <div class="testi-modal-box">
 
@@ -312,11 +292,9 @@
 
             <div class="testi-modal-bd">
 
-                <!-- Preview ulasan yang dibalas -->
                 <span class="reply-preview-label">&#128172; Membalas ulasan:</span>
                 <div id="replyReviewPreview"></div>
 
-                <!-- Textarea balasan admin -->
                 <div class="testi-modal-fg">
                     <label for="rp-text">Balasan Resmi <span class="req">*</span></label>
                     <textarea id="rp-text" rows="4"
@@ -326,7 +304,6 @@
                     <span class="rv-err" id="rp-text-err"></span>
                 </div>
 
-                <!-- Panduan -->
                 <div class="rv-tips">
                     <span>&#128737;&#65039;</span>
                     <p>Balasan ini ditampilkan dengan badge resmi <strong style="color:#f59e0b">Tim FoliOpus</strong> dan terlihat semua pengunjung. Balas dengan profesional dan spesifik sesuai ulasan.</p>
