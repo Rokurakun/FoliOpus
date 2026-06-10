@@ -41,7 +41,6 @@ function renderNav() {
       `<a href="${l.href}" class="nav-link">${l.label}</a>`
     ).join('');
     navLinks.innerHTML = linksHTML
-      + `<a href="#buy" class="nav-link nav-buy" id="nav-buy">${SITE_DATA.nav.buyText}</a>`;
   }
 
   const mob = document.getElementById('mobileMenu');
@@ -49,7 +48,6 @@ function renderNav() {
     mob.innerHTML = SITE_DATA.nav.links.map(l =>
       `<a href="${l.href}" class="mobile-link">${l.label}</a>`
     ).join('')
-      + `<a href="#buy" class="mobile-link mobile-buy">${SITE_DATA.nav.buyText}</a>`;
   }
 }
 
