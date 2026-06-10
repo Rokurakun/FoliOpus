@@ -1,6 +1,5 @@
 'use strict';
 
-/* ── CONFIGURATION ─────────────────────────────────────── */
 const CFG = {
   CARD_GAP     : 20,
   COLS_PER_PAGE: 3,
@@ -10,14 +9,12 @@ const CFG = {
   MAX_REPLY    : 300,
 };
 
-/* ── STORAGE KEYS ──────────────────────────────────────── */
 const LS = {
   REVIEWS : 'foliOpusReviews_v3',
   REPLIES : 'foliOpusReplies_v1',
   SESSION : 'foliOpusUser',
 };
 
-/* ── SEED DATA ─────────────────────────────────────────── */
 const SEED = [
   {
     id:'s01', featured:true,
@@ -105,7 +102,6 @@ const SEED = [
   },
 ];
 
-/* ── LOOKUP MAPS ───────────────────────────────────────── */
 const STAR_LABEL = [
   '', 'Kecewa 😞', 'Kurang memuaskan 😕',
   'Cukup bagus 🙂', 'Bagus! 😊', 'Luar biasa! 🔥',
@@ -122,7 +118,6 @@ const AV_POOL = [
   'av-green','av-purple','av-pink','av-teal','av-red','av-indigo',
 ];
 
-/* ── REACTIVE STATE ────────────────────────────────────── */
 const State = {
   filterStar    : 'all',
   filterProduct : 'all',
@@ -132,9 +127,6 @@ const State = {
   replyTargetId : null,
 };
 
-/* ══════════════════════════════════════════════════════════
-   STORAGE HELPERS
-══════════════════════════════════════════════════════════ */
 function lsGet(key, fallback) {
   try   { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
   catch { return fallback; }
@@ -151,9 +143,6 @@ function saveReplies(obj) { lsSet(LS.REPLIES, obj); }
 
 function allReviews() { return [...SEED, ...loadUserReviews()]; }
 
-/* ══════════════════════════════════════════════════════════
-   AUTH & SESSION
-══════════════════════════════════════════════════════════ */
 function getSession() {
   return lsGet(LS.SESSION, null);
 }
@@ -172,7 +161,6 @@ function currentUsername() {
   return getSession()?.username || null;
 }
 
-/* ── Cek apakah user sudah pernah beli minimal 1 template ── */
 function hasPurchase() {
   const username = currentUsername();
   if (!username) return false;
@@ -180,45 +168,33 @@ function hasPurchase() {
   return Array.isArray(history) && history.length > 0;
 }
 
-/* ── Mengambil daftar template yang dibeli user ── */
 function getPurchasedTemplates() {
     const username = currentUsername();
     if (!username) return [];
     
-    // Ambil data history dari localStorage
     const history = lsGet('foliOpusHistory_' + username, []);
     
-    // Looping data history dan ambil nilai dari 'templateKey'
     return history.map(item => {
         return (item && item.templateKey) ? item.templateKey.toLowerCase() : '';
-    }).filter(Boolean); // Hapus string kosong jika ada
+    }).filter(Boolean);
 }
 
-/* ── Mengambil daftar template yang SUDAH diulas user ini ── */
 function getReviewedTemplates() {
     const username = currentUsername();
     if (!username) return [];
     
-    // Looping data review user dan ambil produk yang sudah diulas
     return loadUserReviews()
         .filter(r => r.submittedBy === username)
         .map(r => (r.product || '').toLowerCase());
 }
 
-/* ── Apakah review ini milik user yang sedang login ── */
 function isOwnReview(review) {
-  /* Hanya user-generated review (id dimulai 'u') yang bisa dihapus.
-     Seed data (id 's...') tidak boleh dihapus siapapun. */
   if (!review.id.startsWith('u')) return false;
   const username = currentUsername();
   if (!username) return false;
-  /* Kita simpan username di review saat submit, bandingkan di sini */
   return review.submittedBy === username;
 }
 
-/* ══════════════════════════════════════════════════════════
-   UTILITIES
-══════════════════════════════════════════════════════════ */
 function esc(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -269,9 +245,6 @@ function getColW() {
   return col ? col.offsetWidth + CFG.CARD_GAP : 308 + CFG.CARD_GAP;
 }
 
-/* ══════════════════════════════════════════════════════════
-   FILTER + SORT
-══════════════════════════════════════════════════════════ */
 function getFiltered() {
   return allReviews()
     .filter(r => {
@@ -282,9 +255,6 @@ function getFiltered() {
     .sort((a, b) => b.rating - a.rating || (b.ts || 0) - (a.ts || 0));
 }
 
-/* ══════════════════════════════════════════════════════════
-   STATISTICS BAR
-══════════════════════════════════════════════════════════ */
 function updateStats() {
   const all   = allReviews();
   const total = 1200 + loadUserReviews().length;
@@ -298,20 +268,11 @@ function updateStats() {
   if (cntEl) cntEl.textContent = `dari ${total.toLocaleString('id-ID')}+ ulasan`;
 }
 
-/* ══════════════════════════════════════════════════════════
-   HTML BUILDERS
-══════════════════════════════════════════════════════════ */
-
-/* ── Reply section ──
-   - Tombol "Balas" hanya muncul untuk admin
-   - Tombol edit/hapus reply hanya untuk admin
-   - Tombol hapus review hanya untuk pemilik review itu sendiri
-*/
 function buildReplyHTML(review) {
   const rid   = review.id;
   const admin = isAdmin();
   const reply = loadReplies()[rid] || null;
-  const own   = isOwnReview(review);   // user ini yang buat review-nya
+  const own   = isOwnReview(review);
 
   const SHIELD = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#f59e0b">
     <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35
@@ -334,16 +295,14 @@ function buildReplyHTML(review) {
     <path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
   </svg>`;
 
-  /* Kalau tidak ada yang perlu ditampilkan, skip wrapper */
   const hasReplyBubble = !!reply;
-  const hasAdminBtn    = admin;           // tombol "Balas" hanya admin
-  const hasDeleteOwn   = own;             // tombol hapus review sendiri
+  const hasAdminBtn    = admin;
+  const hasDeleteOwn   = own;
 
   if (!hasReplyBubble && !hasAdminBtn && !hasDeleteOwn) return '';
 
   let h = `<div class="testi-reply-wrap">`;
 
-  /* existing admin reply bubble */
   if (reply) {
     const editedMark = reply.edited
       ? `<span class="reply-edited">· diedit</span>`
@@ -365,7 +324,6 @@ function buildReplyHTML(review) {
       </div>`;
   }
 
-  /* Tombol "Balas" — HANYA admin */
   if (admin) {
     const btnLabel = reply ? 'Edit Balasan' : 'Balas';
     h += `
@@ -376,7 +334,6 @@ function buildReplyHTML(review) {
       </button>`;
   }
 
-  /* Tombol hapus review sendiri — HANYA pemilik review */
   if (own) {
     h += `
       <button class="btn-delete-own" data-id="${rid}"
@@ -389,7 +346,6 @@ function buildReplyHTML(review) {
   return h;
 }
 
-/* ── Full card HTML ── */
 function buildCardHTML(r) {
   const prod  = PROD_META[r.product] || PROD_META.starter;
   const avc   = r.avc  || hashColor(r.name);
@@ -422,9 +378,6 @@ function buildCardHTML(r) {
     </div>`;
 }
 
-/* ══════════════════════════════════════════════════════════
-   RENDER
-══════════════════════════════════════════════════════════ */
 function render() {
   const track    = document.getElementById('testiTrack');
   const empty    = document.getElementById('testiEmpty');
@@ -471,9 +424,6 @@ function render() {
   bindCardEvents(track);
 }
 
-/* ══════════════════════════════════════════════════════════
-   SCROLL / PAGINATION
-══════════════════════════════════════════════════════════ */
 function pageScrollLeft(page) {
   return page * CFG.COLS_PER_PAGE * getColW();
 }
@@ -509,9 +459,6 @@ function onTrackScroll() {
   }, 90);
 }
 
-/* ══════════════════════════════════════════════════════════
-   DRAG-TO-SCROLL
-══════════════════════════════════════════════════════════ */
 function bindDrag(el) {
   if (!el) return;
   let dragging = false, startX = 0, scrollStart = 0, movedPx = 0;
@@ -542,9 +489,6 @@ function bindDrag(el) {
   }, true);
 }
 
-/* ══════════════════════════════════════════════════════════
-   TOUCH SWIPE
-══════════════════════════════════════════════════════════ */
 function initTouch() {
   const track = document.getElementById('testiTrack');
   if (!track) return;
@@ -562,9 +506,6 @@ function initTouch() {
   }, { passive: true });
 }
 
-/* ══════════════════════════════════════════════════════════
-   AUTO-PLAY
-══════════════════════════════════════════════════════════ */
 function startAuto() {
   stopAuto();
   State.autoTimer = setInterval(() => {
@@ -573,15 +514,11 @@ function startAuto() {
 }
 function stopAuto() { clearInterval(State.autoTimer); }
 
-/* ══════════════════════════════════════════════════════════
-   CARD-LEVEL EVENT DELEGATION
-══════════════════════════════════════════════════════════ */
 function bindCardEvents(track) {
   if (!track) return;
 
   track.addEventListener('click', e => {
 
-    /* ── "Balas" / "Edit Balasan" — admin only ── */
     const replyBtn = e.target.closest('.btn-testi-reply');
     if (replyBtn) {
       e.stopPropagation();
@@ -589,7 +526,6 @@ function bindCardEvents(track) {
       return;
     }
 
-    /* ── Edit reply bubble — admin only ── */
     const editBtn = e.target.closest('.btn-rp-edit');
     if (editBtn) {
       e.stopPropagation();
@@ -597,7 +533,6 @@ function bindCardEvents(track) {
       return;
     }
 
-    /* ── Hapus reply bubble — admin only ── */
     const delReplyBtn = e.target.closest('.btn-rp-del');
     if (delReplyBtn) {
       e.stopPropagation();
@@ -610,7 +545,6 @@ function bindCardEvents(track) {
       return;
     }
 
-    /* ── Hapus review sendiri — pemilik review ── */
     const delOwnBtn = e.target.closest('.btn-delete-own');
     if (delOwnBtn) {
       e.stopPropagation();
@@ -621,9 +555,6 @@ function bindCardEvents(track) {
   });
 }
 
-/* ══════════════════════════════════════════════════════════
-   CONTROLS INIT
-══════════════════════════════════════════════════════════ */
 function initControls() {
   const track = document.getElementById('testiTrack');
 
@@ -648,9 +579,6 @@ function initControls() {
   bindDrag(track);
 }
 
-/* ══════════════════════════════════════════════════════════
-   FILTER INIT
-══════════════════════════════════════════════════════════ */
 function initFilters() {
   document.querySelectorAll('[data-filter-star]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -675,37 +603,28 @@ function initFilters() {
   });
 }
 
-/* ══════════════════════════════════════════════════════════
-   REVIEW MODAL — user-facing
-══════════════════════════════════════════════════════════ */
 let rv = { rating: 0, product: '' };
 
-/* ── Mengatur state tombol pilihan template di Modal ── */
 function setupProductPicker(purchased, reviewed) {
     document.querySelectorAll('.rv-prod-btn').forEach(btn => {
-        const prod = btn.dataset.prod.toLowerCase(); // 'starter', 'pro', 'premium'
-        
-        // Reset state awal
+        const prod = btn.dataset.prod.toLowerCase();
+
         btn.classList.remove('selected', 'locked', 'reviewed');
         btn.disabled = false;
-        
-        // Label dasar
+
         const baseText = prod === 'starter' ? 'Starter' : (prod === 'pro' ? 'Pro' : 'Premium');
 
         if (!purchased.includes(prod)) {
-            // Kondisi 1: Belum dibeli (Gembok)
             btn.classList.add('locked');
             btn.disabled = true;
             btn.innerHTML = `🔒 ${baseText}`;
             btn.title = "Kamu belum membeli template ini";
         } else if (reviewed.includes(prod)) {
-            // Kondisi 2: Sudah dibeli & sudah diulas (Centang Hijau)
             btn.classList.add('reviewed');
             btn.disabled = true;
             btn.innerHTML = `✅ ${baseText}`;
             btn.title = "Sudah diulas";
         } else {
-            // Kondisi 3: Sudah dibeli & belum diulas (Bisa di-klik)
             btn.innerHTML = `&#10022; ${baseText}`;
             btn.title = "";
         }
@@ -713,7 +632,6 @@ function setupProductPicker(purchased, reviewed) {
 }
 
 function openReviewModal() {
-    /* ── Gate 1: harus login ── */
     if (!isLoggedIn()) {
         showToast('🔒 Login dulu yuk!', 'Kamu perlu login untuk memberikan ulasan.', 'lock');
         setTimeout(() => {
@@ -726,13 +644,11 @@ function openReviewModal() {
     const purchased = getPurchasedTemplates();
     const reviewed = getReviewedTemplates();
     
-    /* ── Gate 2: harus punya minimal 1 pembelian ── */
     if (purchased.length === 0) {
         showToast('🛒 Beli dulu, baru ulasan!', 'Kamu perlu memiliki minimal 1 template untuk bisa memberikan ulasan.', 'warn');
         return;
     }
 
-    /* ── Gate 3: Cek apakah SEMUA yang dibeli sudah diulas ── */
     const availableToReview = purchased.filter(p => !reviewed.includes(p));
     if (availableToReview.length === 0) {
         showToast('🎉 Selesai!', 'Kamu sudah memberikan ulasan untuk semua template yang kamu miliki.', 'ok');
@@ -741,7 +657,6 @@ function openReviewModal() {
 
     resetReviewForm();
     
-    // Panggil fungsi setup tombol
     setupProductPicker(purchased, reviewed);
 
     document.getElementById('reviewModalOv')?.classList.add('open');
@@ -924,11 +839,8 @@ function submitReview() {
   }, 900);
 }
 
-/* ══════════════════════════════════════════════════════════
-   REPLY MODAL — admin-only
-══════════════════════════════════════════════════════════ */
 function openReplyModal(reviewId) {
-  if (!isAdmin()) return;   /* tidak ada fallback toast — tombol tidak muncul untuk non-admin */
+  if (!isAdmin()) return;
 
   State.replyTargetId = reviewId;
 
@@ -1026,9 +938,6 @@ function initReplyModal() {
   document.getElementById('submitReply')?.addEventListener('click', submitReply);
 }
 
-/* ══════════════════════════════════════════════════════════
-   DELETE MODAL
-══════════════════════════════════════════════════════════ */
 let reviewToDelete = null;
 
 function openDeleteModal(reviewId) {
@@ -1063,11 +972,9 @@ function initDeleteModal() {
     
     const rid = reviewToDelete;
     
-    // Hapus ulasan dari storage
     const userReviews = loadUserReviews().filter(r => r.id !== rid);
     saveUserReviews(userReviews);
     
-    // Hapus juga reply-nya jika ada
     const replies = loadReplies();
     delete replies[rid];
     saveReplies(replies);
@@ -1117,9 +1024,6 @@ function submitReply() {
   }, 750);
 }
 
-/* ══════════════════════════════════════════════════════════
-   TOAST NOTIFICATION
-══════════════════════════════════════════════════════════ */
 function showToast(title, message, type = 'ok') {
   const icons = { ok: '✅', warn: '⚠️', lock: '🔒', err: '❌' };
   const borderColors = {
@@ -1148,9 +1052,6 @@ function showToast(title, message, type = 'ok') {
   }, 4200);
 }
 
-/* ══════════════════════════════════════════════════════════
-   BOOT
-══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initFilters();
   initControls();
