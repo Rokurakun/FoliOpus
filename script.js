@@ -5,7 +5,7 @@ const AUTH = {
     ADMIN: {
         username:   'admin',
         password:   'admin123',
-        redirectTo: 'admin/index.html'
+        redirectTo: 'admin/admin.html'
     },
  
     getUsers() {
