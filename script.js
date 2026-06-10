@@ -66,7 +66,6 @@ const AUTH = {
     }
 };
 
-// ── NAVBAR (hanya halaman yang punya navbar) ──
 const navbar     = document.querySelector('.navbar');
 const navTrigger = document.getElementById('nav-trigger');
  
@@ -79,7 +78,6 @@ if (navbar && navTrigger) {
     navObserver.observe(navTrigger);
 }
 
-// ── CARD HOVER (skip card di payment page) ──
 const cards = document.querySelectorAll('.card');
 cards.forEach(card => {
     if (card.closest('.payment-layout')) return;
@@ -214,7 +212,6 @@ function updateNavbar() {
 
 updateNavbar();
 
-// ── LOGIN PAGE ───────────────────────────────────────────────
 if (document.getElementById('btnLogin')) {
     const btnLogin   = document.getElementById('btnLogin');
     const btnText    = document.getElementById('btnText');
@@ -326,7 +323,6 @@ if (document.getElementById('btnLogin')) {
     });
 }
 
-// ── REGISTER PAGE ────────────────────────────────────────────
 if (document.getElementById('btnRegister')) {
     const btnRegister = document.getElementById('btnRegister');
     const btnText     = document.getElementById('btnText');
@@ -431,7 +427,6 @@ if (document.getElementById('btnRegister')) {
     });
 }
 
-// ── PAYMENT PAGE ─────────────────────────────────────────────
 if (document.getElementById('btnSudahBayar')) {
 
     const session = AUTH.getSession();
@@ -473,7 +468,6 @@ if (document.getElementById('btnSudahBayar')) {
         document.getElementById('summaryPrice').textContent      = formatRupiah(tmpl.price);
         document.getElementById('summaryTotal').textContent      = formatRupiah(tmpl.price);
 
-        // ── LOGIKA VOUCHER DISKON ──
         let currentPrice = tmpl.price;
         let isVoucherApplied = false;
 
@@ -490,7 +484,6 @@ if (document.getElementById('btnSudahBayar')) {
             btnApplyVoucher.addEventListener('click', () => {
                 const code = voucherInput.value.trim().toLowerCase();
                 
-                // Reset styling input jika error sebelumnya
                 voucherInput.style.borderColor = 'rgba(255,255,255,0.09)';
                 voucherMsg.style.display = 'none';
 
@@ -510,17 +503,14 @@ if (document.getElementById('btnSudahBayar')) {
 
                 if (isVoucherApplied) return;
 
-                // Eksekusi diskon 25%
                 isVoucherApplied = true;
                 const discountAmount = currentPrice * 0.25;
-                currentPrice = currentPrice - discountAmount; // Update total harga
+                currentPrice = currentPrice - discountAmount;
 
-                // Update UI Visual
                 discountRow.style.display = 'flex';
                 summaryDiscount.textContent = '-' + formatRupiah(discountAmount);
                 document.getElementById('summaryTotal').textContent = formatRupiah(currentPrice);
                 
-                // Kunci form input biar gak diklik dobel
                 voucherInput.disabled = true;
                 btnApplyVoucher.disabled = true;
                 voucherInput.style.borderColor = '#22c55e';
@@ -537,7 +527,6 @@ if (document.getElementById('btnSudahBayar')) {
             voucherMsg.style.color = color;
         }
 
-        // ── STEP NAVIGATION ──
         function goToStep(step) {
             document.querySelectorAll('.step-panel').forEach((p, i) => {
                 p.classList.toggle('active', i + 1 === step);
@@ -552,7 +541,6 @@ if (document.getElementById('btnSudahBayar')) {
             });
         }
 
-        // ── TIMER (15 MENIT) ──
         const TIMER_DURATION = 15 * 60;
         let timerSeconds     = TIMER_DURATION;
         let timerInterval    = null;
@@ -586,7 +574,6 @@ if (document.getElementById('btnSudahBayar')) {
 
         timerInterval = setInterval(tickTimer, 1000);
 
-        // ── UPLOAD BUKTI ──
         const proofInput        = document.getElementById('proofInput');
         const uploadDropzone    = document.getElementById('uploadDropzone');
         const uploadPreviewWrap = document.getElementById('uploadPreviewWrap');
@@ -639,7 +626,6 @@ if (document.getElementById('btnSudahBayar')) {
             if (!timerExpired) btnSudahBayar.disabled = true;
         });
 
-        // ── GENERATE TRX ID ──
         function generateTrxId() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = 'FO-';
@@ -649,7 +635,6 @@ if (document.getElementById('btnSudahBayar')) {
             return code;
         }
 
-        // ── BARCODE DEKORATIF ──
         function generateBarcode(containerId) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -663,7 +648,6 @@ if (document.getElementById('btnSudahBayar')) {
             }
         }
 
-        // ── POPULASI STRUK ──
         function populateReceipt(trxId) {
             const now   = new Date();
             const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -689,7 +673,6 @@ if (document.getElementById('btnSudahBayar')) {
             }
         }
 
-        // ── TOMBOL KONFIRMASI ──
         btnSudahBayar.addEventListener('click', () => {
             if (timerExpired || !proofDataUrl) return;
             clearInterval(timerInterval);
@@ -704,7 +687,6 @@ if (document.getElementById('btnSudahBayar')) {
                     localStorage.setItem(voucherKey, 'used');
                 }
 
-                // Simpan riwayat
                 let history = JSON.parse(localStorage.getItem('foliOpusHistory_' + session.username)) || [];
                 if (!history.find(h => h.templateKey === templateKey)) {
                     history.push({
@@ -715,7 +697,6 @@ if (document.getElementById('btnSudahBayar')) {
                     localStorage.setItem('foliOpusHistory_' + session.username, JSON.stringify(history));
                 }
 
-                // Tombol Editor & Download
                 document.getElementById('actionBtnsPlaceholder').innerHTML = `
                     <a href="editor.html?template=${templateKey}" class="btn-primary" style="display:flex;justify-content:center;padding:1rem;margin-bottom:0.75rem;text-decoration:none;font-size:1.05rem;box-shadow:0 10px 25px rgba(245,158,11,0.3);">
                         🎨 Buka Live Editor
@@ -731,7 +712,6 @@ if (document.getElementById('btnSudahBayar')) {
             }, 2500);
         });
 
-        // ── SIMPAN STRUK PNG ──
         document.getElementById('btnSaveReceipt').addEventListener('click', async () => {
             const btn = document.getElementById('btnSaveReceipt');
             btn.textContent = 'Menyimpan...';
@@ -765,5 +745,5 @@ if (document.getElementById('btnSudahBayar')) {
             }
         });
 
-    } // end else (session valid)
+    }
 }
