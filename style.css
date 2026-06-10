@@ -142,7 +142,6 @@ body {
     text-align: left;
 }
 
-/* 1. Ambient Background Orbs */
 .hero::before, .hero::after {
     content: '';
     position: absolute;
@@ -163,7 +162,6 @@ body {
     bottom: -150px; right: -150px;
 }
 
-/* 2. Split Grid Layout */
 .hero-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -511,7 +509,6 @@ body {
     .fb-2 { right: 0; bottom: -5%; }
 }
 
-/* AUTH PAGES (LOGIN & REGISTER) */
 body.auth-page {
     display: flex;
     align-items: center;
@@ -638,7 +635,6 @@ body.register-page .bg-orb-2 { background: var(--primary-yellow); bottom: -120px
     .back-link      { top: 1rem; left: 1rem; }
 }
 
-/* PAYMENT PAGE */
 body.payment-page { min-height: 100vh; padding: 2rem 5%; padding-top: 6rem; }
 .payment-header { text-align: center; margin-bottom: 2.5rem; }
 .payment-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
