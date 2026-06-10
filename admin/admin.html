@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FoliOpus Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+ <!-- ===================== LOGIN PAGE ===================== -->
+  <div id="login-page" class="login-page">
+    <div class="login-bg-orb orb-1"></div>
+    <div class="login-bg-orb orb-2"></div>
+
+    <div class="login-card">
+      <div class="login-brand">
+        <span class="brand-logo">FoliOpus</span>
+        <p class="brand-subtitle">Admin Dashboard</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="username" placeholder="Masukkan username" autocomplete="username" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" />
+            <button type="button" class="toggle-password" id="toggle-pw" aria-label="Toggle password">
+              <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="login-error" class="login-error" aria-live="polite"></div>
+
+        <button type="submit" class="btn-login" id="btn-login">
+          <span id="btn-login-text">Masuk</span>
+          <span id="btn-login-spinner" class="spinner" hidden></span>
+        </button>
+      </form>
+
+      <p class="login-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        Gunakan <strong>admin</strong> / <strong>admin123</strong> untuk demo
+      </p>
+    </div>
+  </div>
+  <!-- ===================== ADMIN APP ===================== -->
+  <div id="admin-app" class="admin-app" hidden>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">F</div>
+          <span>FoliOpus</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Dashboard -->
+        <div class="nav-section">
+          <span class="nav-section-label">Dashboard</span>
+          <ul>
+            <li>
+              <a href="#" class="nav-link active" data-page="overview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                </svg>
+                <span>Overview</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Konten -->
+        <div class="nav-section">
+          <span class="nav-section-label">Konten</span>
+          <ul>
+            <li>
+              <a href="#" class="nav-link" data-page="landing">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span>Landing Page Edit</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="projects">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>Project Manager</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="media">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span>Media Library</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Bisnis -->
+        <div class="nav-section">
+          <span class="nav-section-label">Bisnis</span>
+          <ul>
+            <li>
+              <a href="#" class="nav-link" data-page="sales">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <span>Sales & Transactions</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="products">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <span>Product Manager</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">A</div>
+          <div class="user-meta">
+            <span class="user-name">Admin</span>
+            <span class="user-role">Super Admin</span>
+            <a href="../index.html" class="back-home-btn">
+              Landing Page
+            </a>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Keluar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="main-content">
+
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="breadcrumb">
+            <span id="breadcrumb-text">Dashboard / Overview</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-date" id="topbar-date"></div>
+          <div class="topbar-notif">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span class="notif-dot"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE VIEWS -->
+      <div class="page-container">
+
+        <!-- ===== OVERVIEW ===== -->
+        <section class="page-view active" id="page-overview">
+          <div class="page-header">
+            <h1>Overview</h1>
+            <p>Selamat datang kembali, <strong>Admin</strong> 👋</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="--icon-color: #f97316; --icon-bg: rgba(249,115,22,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Total Penjualan</span>
+                <span class="stat-value" data-target="1284">0</span>
+                <span class="stat-delta positive">↑ 12.4% bulan ini</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--icon-color: #22c55e; --icon-bg: rgba(34,197,94,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Pendapatan Kotor</span>
+                <span class="stat-value" data-target="128400000" data-prefix="Rp " data-format="currency">0</span>
+                <span class="stat-delta positive">↑ 8.7% bulan ini</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--icon-color: #3b82f6; --icon-bg: rgba(59,130,246,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Trafik Web</span>
+                <span class="stat-value" data-target="45320">0</span>
+                <span class="stat-delta positive">↑ 5.2% minggu ini</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--icon-color: #a855f7; --icon-bg: rgba(168,85,247,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Pengguna Aktif</span>
+                <span class="stat-value" data-target="3871">0</span>
+                <span class="stat-delta negative">↓ 1.1% minggu ini</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-charts">
+            <div class="chart-card wide">
+              <div class="chart-header">
+                <h3>Pendapatan Bulanan</h3>
+                <div class="chart-legend">
+                  <span class="legend-dot" style="background: var(--accent)"></span> 2026
+                </div>
+              </div>
+              <canvas id="revenueChart" height="100"></canvas>
+            </div>
+            <div class="chart-card">
+              <div class="chart-header"><h3>Distribusi Template</h3></div>
+              <canvas id="templateChart" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="recent-table-card">
+            <div class="table-header">
+              <h3>Transaksi Terbaru</h3>
+              <a href="#" class="link-all" data-page="sales">Lihat semua →</a>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID Transaksi</th><th>Pembeli</th><th>Item</th><th>Total</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-tx-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== LANDING PAGE EDIT ===== -->
+        <section class="page-view" id="page-landing">
+          <div class="page-header">
+            <h1>Landing Page Edit</h1>
+            <p>Dynamic Hero Manager — ubah konten utama halaman publik</p>
+          </div>
+
+          <div class="editor-layout">
+            <!-- Form Panel -->
+            <div class="editor-form-panel">
+              <div class="form-card">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Teks Hero
+                </h3>
+                <div class="form-row">
+                  <label>Judul Utama</label>
+                  <input type="text" id="lp-title" value="Bangun kariermu dengan FoliOpus" class="form-input" />
+                </div>
+                <div class="form-row">
+                  <label>Tagline / Deskripsi</label>
+                  <textarea id="lp-tagline" class="form-input form-textarea" rows="3">Bangun personal branding lewat portofolio digital interaktif yang menampilkan identitas dan karya terbaikmu secara elegan dan mudah diakses</textarea>
+                </div>
+                <div class="form-row">
+                  <label>Teks Tombol CTA</label>
+                  <input type="text" id="lp-cta" value="Coba FoliOpus Sekarang" class="form-input" />
+                </div>
+              </div>
+
+              <div class="form-card">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4M12 16h.01"/>
+                  </svg>
+                  Warna & Visual
+                </h3>
+                <div class="form-row form-row-inline">
+                  <div>
+                    <label>Warna Aksen</label>
+                    <div class="color-input-wrap">
+                      <input type="color" id="lp-accent" value="#f97316" class="color-picker" />
+                      <input type="text" id="lp-accent-hex" value="#f97316" class="form-input color-hex" />
+                    </div>
+                  </div>
+                  <div>
+                    <label>Warna Background</label>
+                    <div class="color-input-wrap">
+                      <input type="color" id="lp-bg" value="#0d1526" class="color-picker" />
+                      <input type="text" id="lp-bg-hex" value="#0d1526" class="form-input color-hex" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label>Gaya Background Hero</label>
+                  <select id="lp-bg-style" class="form-input form-select">
+                    <option value="solid">Solid Color</option>
+                    <option value="gradient" selected>Gradient Radial</option>
+                    <option value="mesh">Gradient Mesh</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-card">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                  Fitur Unggulan
+                </h3>
+                <div id="features-list" class="features-list"></div>
+                <button class="btn-secondary btn-sm" id="add-feature-btn">+ Tambah Fitur</button>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn-secondary" id="lp-reset">Reset</button>
+                <button class="btn-primary" id="lp-save">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                  </svg>
+                  Simpan Perubahan
+                </button>
+              </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="editor-preview-panel">
+              <div class="preview-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Live Preview
+              </div>
+              <div class="preview-browser">
+                <div class="browser-bar">
+                  <div class="browser-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="browser-url">foliopus.id</div>
+                </div>
+                <div class="preview-content" id="lp-preview">
+                  <!-- Rendered by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PROJECT MANAGER ===== -->
+        <section class="page-view" id="page-projects">
+          <div class="page-header">
+            <h1>Project Manager</h1>
+            <p>Kelola proyek portofolio yang tampil di platform</p>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="project-search" placeholder="Cari proyek..." class="search-input" />
+            </div>
+            <button class="btn-primary" id="add-project-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Tambah Proyek
+            </button>
+          </div>
+
+          <div class="project-grid" id="project-grid"></div>
+        </section>
+
+        <!-- ===== MEDIA LIBRARY ===== -->
+        <section class="page-view" id="page-media">
+          <div class="page-header">
+            <h1>Media Library</h1>
+            <p>Manajemen aset gambar dan file media</p>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" placeholder="Cari media..." class="search-input" />
+            </div>
+            <div class="toolbar-right">
+              <select class="form-input form-select select-sm">
+                <option>Semua Tipe</option>
+                <option>Gambar</option>
+                <option>Banner</option>
+                <option>Thumbnail</option>
+              </select>
+              <label class="btn-primary upload-label" for="media-upload">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                Upload Media
+              </label>
+              <input type="file" id="media-upload" accept="image/*" hidden multiple />
+            </div>
+          </div>
+
+          <div class="media-stats-bar">
+            <span id="media-count">2 file</span>
+            <span>·</span>
+            <span>Kapasitas: <strong>1.8 MB</strong> / 500 MB</span>
+            <div class="storage-bar">
+              <div class="storage-fill" style="width: 4.9%"></div>
+            </div>
+          </div>
+
+          <div class="media-grid" id="media-grid"></div>
+        </section>
+
+        <!-- ===== SALES & TRANSACTIONS ===== -->
+        <section class="page-view" id="page-sales">
+          <div class="page-header">
+            <h1>Sales & Transactions</h1>
+            <p>Riwayat transaksi dan analitik pendapatan</p>
+          </div>
+
+          <div class="sales-charts">
+            <div class="chart-card wide">
+              <div class="chart-header">
+                <h3>Pendapatan Harian (30 Hari Terakhir)</h3>
+              </div>
+              <canvas id="dailyRevenueChart" height="80"></canvas>
+            </div>
+            <div class="chart-card">
+              <div class="chart-header"><h3>Status Transaksi</h3></div>
+              <canvas id="statusChart" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-header">
+              <h3>Riwayat Transaksi</h3>
+              <div class="table-actions">
+                <div class="search-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <input type="text" id="tx-search" placeholder="Cari transaksi..." class="search-input" />
+                </div>
+                <select id="tx-filter" class="form-input form-select select-sm">
+                  <option value="all">Semua Status</option>
+                  <option value="sukses">Sukses</option>
+                  <option value="pending">Pending</option>
+                  <option value="gagal">Gagal</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID Transaksi</th>
+                    <th>Tanggal</th>
+                    <th>Nama Pembeli</th>
+                    <th>Item</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination" id="tx-pagination"></div>
+          </div>
+        </section>
+
+        <!-- ===== PRODUCT MANAGER ===== -->
+        <section class="page-view" id="page-products">
+          <div class="page-header">
+            <h1>Product Manager</h1>
+            <p>Kelola inventaris produk, harga, dan deskripsi</p>
+          </div>
+
+          <div class="product-layout">
+            <!-- Product List -->
+            <div class="product-list-panel">
+              <div class="toolbar" style="margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1rem; font-weight: 600;">Daftar Produk</h3>
+                <button class="btn-primary" id="add-product-btn">+ Tambah Produk</button>
+              </div>
+              <div id="product-cards"></div>
+            </div>
+
+            <!-- Product Form -->
+            <div class="product-form-panel" id="product-form-panel">
+              <div class="form-card">
+                <h3 class="form-section-title" id="product-form-title">Detail Produk</h3>
+                <input type="hidden" id="product-id" />
+                <div class="form-row">
+                  <label>Nama Produk</label>
+                  <input type="text" id="product-name" class="form-input" placeholder="Nama produk" />
+                </div>
+                <div class="form-row">
+                  <label>Deskripsi</label>
+                  <textarea id="product-desc" class="form-input form-textarea" rows="3" placeholder="Deskripsi singkat produk"></textarea>
+                </div>
+                <div class="form-row"><div>
+                    <label>Harga (Rp)</label>
+                    <input type="number" id="product-price" class="form-input" placeholder="0" min="0" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label>Kategori</label>
+                  <select id="product-category" class="form-input form-select">
+                    <option value="starter">Starter</option>
+                    <option value="pro">Pro</option>
+                    <option value="premium">Premium</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label>Status</label>
+                  <div class="toggle-group">
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="product-active" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span id="product-active-label">Aktif / Dijual</span>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn-secondary" id="product-cancel">Batal</button>
+                  <button class="btn-primary" id="product-save">Simpan Produk</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- PROJECT MODAL -->
+  <div class="modal-overlay" id="project-modal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Tambah Proyek</h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modal-project-id" />
+        <div class="form-row">
+          <label>Nama Proyek</label>
+          <input type="text" id="modal-project-name" class="form-input" placeholder="Nama proyek" />
+        </div>
+        <div class="form-row">
+          <label>Kategori</label>
+          <select id="modal-project-category" class="form-input form-select">
+            <option>Web Design</option>
+            <option>Branding</option>
+            <option>UI/UX</option>
+            <option>Mobile App</option>
+            <option>Illustration</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Deskripsi</label>
+          <textarea id="modal-project-desc" class="form-input form-textarea" rows="3" placeholder="Deskripsi proyek"></textarea>
+        </div>
+        <div class="form-row form-row-inline">
+          <div>
+            <label>Warna Thumbnail</label>
+            <input type="color" id="modal-project-color" value="#f97316" class="color-picker" />
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="modal-project-status" class="form-input form-select">
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-cancel">Batal</button>
+        <button class="btn-primary" id="modal-save">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
