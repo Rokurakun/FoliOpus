@@ -156,29 +156,9 @@ var SITE_DATA = {
   },
 
   buy: {
-
     nav: {
-      text: 'Buy — Rp 299.000',
     },
-
     section: {
-      num:          '06 — Own It',
-      headline:     ['Your story,', 'professionally', 'told.'],
-      price:        'Rp 299.000',
-      priceNote:    'One-time payment · Lifetime ownership',
-      ctaText:      'Get This Portfolio',
-      featuresLabel: "What's included",
-      features: [
-        'Full source code (HTML + CSS + JS)',
-        'Edit konten via JS — tanpa sentuh HTML/CSS',
-        '5 section dengan animasi halus',
-        'Scroll-snap full-page navigation',
-        'Contact modal dengan link kustom',
-        'Stats counter & skill bar animated',
-        'Fully responsive — mobile & desktop',
-        'Panduan setup & kustomisasi',
-      ],
     },
-
   },
 };

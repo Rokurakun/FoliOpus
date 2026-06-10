@@ -154,7 +154,13 @@ function updateNavbar() {
             dropdown = document.createElement('div');
             dropdown.id = 'userDropdown';
             dropdown.className = 'user-dropdown';
+            
+            const adminMenu = session.role === 'admin' 
+                ? `<a href="admin/admin.html" style="display:block; padding: 0.8rem 1rem; color: #f59e0b; font-weight: 700; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Dashboard Admin</a>` 
+                : '';
+
             dropdown.innerHTML = `
+                ${adminMenu}
                 <a href="history.html" style="display:block; padding: 0.8rem 1rem; color: var(--text-light); text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Riwayat</a>
                 <button id="btnLogout" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; font-weight: 600; padding: 0.8rem 1rem; cursor: pointer;">Keluar</button>
             `;

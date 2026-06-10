@@ -224,14 +224,6 @@
                         ctaText:       'Get This Portfolio',
                         featuresLabel: "What's included",
                         features: [
-                            'Full source code (HTML + CSS + JS)',
-                            'Edit konten via JS — tanpa sentuh HTML/CSS',
-                            '5 section dengan animasi halus',
-                            'Scroll-snap full-page navigation',
-                            'Contact modal dengan link kustom',
-                            'Stats counter & skill bar animated',
-                            'Fully responsive — mobile & desktop',
-                            'Panduan setup & kustomisasi',
                         ]
                     }
                 }
@@ -718,25 +710,6 @@
                         `).join('')}
                         
                         <label class="e-label">Teks Footer Bawah</label><input class="e-input" type="text" oninput="updateDeep(['contact','footer'], this.value)" value="${currentData.contact.footer}">
-                    </div>
-
-                    <div class="e-group">
-                        <h3>Section 7: Buy / Final CTA</h3>
-                        <label class="e-label">Teks Navigasi Kanan Atas</label><input class="e-input" type="text" oninput="updateDeep(['buy','nav','text'], this.value)" value="${currentData.buy.nav.text}">
-                        <div style="display:flex; gap:10px;">
-                            <div style="flex:1;"><label class="e-label">Nomor Section</label><input class="e-input" type="text" oninput="updateDeep(['buy','section','num'], this.value)" value="${currentData.buy.section.num}"></div>
-                            <div style="flex:2;"><label class="e-label">Headline Utama (Pisah dengan koma)</label><input class="e-input" type="text" oninput="updateArrayStr(['buy','section','headline'], this.value, ',')" value="${currentData.buy.section.headline.join(',')}"></div>
-                        </div>
-                        <div style="display:flex; gap:10px;">
-                            <div style="flex:1;"><label class="e-label">Harga Tampil</label><input class="e-input" type="text" oninput="updateDeep(['buy','section','price'], this.value)" value="${currentData.buy.section.price}"></div>
-                            <div style="flex:2;"><label class="e-label">Catatan Harga</label><input class="e-input" type="text" oninput="updateDeep(['buy','section','priceNote'], this.value)" value="${currentData.buy.section.priceNote}"></div>
-                        </div>
-                        <label class="e-label">Teks Tombol CTA</label><input class="e-input" type="text" oninput="updateDeep(['buy','section','ctaText'], this.value)" value="${currentData.buy.section.ctaText}">
-                        
-                        <h4 style="margin-top:15px; color:var(--text-light);">Daftar Fitur</h4>
-                        <label class="e-label">Label Daftar Fitur</label><input class="e-input" type="text" oninput="updateDeep(['buy','section','featuresLabel'], this.value)" value="${currentData.buy.section.featuresLabel}">
-                        <label class="e-label">Isi Fitur (Pisahkan dengan baris baru / Enter)</label>
-                        <textarea class="e-textarea" style="min-height: 120px;" oninput="updateArrayStr(['buy','section','features'], this.value, '\\n')">${currentData.buy.section.features.join('\\n')}</textarea>
                     </div>
                 `;
             }

@@ -536,19 +536,14 @@ function bindCardEvents(track) {
     const delReplyBtn = e.target.closest('.btn-rp-del');
     if (delReplyBtn) {
       e.stopPropagation();
-      if (!confirm('Hapus balasan ini?')) return;
-      const replies = loadReplies();
-      delete replies[delReplyBtn.dataset.id];
-      saveReplies(replies);
-      render();
-      showToast('⚠️ Balasan dihapus.', '', 'warn');
+      openDeleteModal(delReplyBtn.dataset.id, 'reply');
       return;
     }
 
     const delOwnBtn = e.target.closest('.btn-delete-own');
     if (delOwnBtn) {
       e.stopPropagation();
-      openDeleteModal(delOwnBtn.dataset.id);
+      openDeleteModal(delOwnBtn.dataset.id, 'review');
       return;
     }
 
@@ -938,17 +933,37 @@ function initReplyModal() {
   document.getElementById('submitReply')?.addEventListener('click', submitReply);
 }
 
-let reviewToDelete = null;
+let targetToDelete = null;
+let typeToDelete = null; // Menyimpan info apakah ini 'review' atau 'reply'
 
-function openDeleteModal(reviewId) {
-  reviewToDelete = reviewId;
+function openDeleteModal(id, type = 'review') {
+  targetToDelete = id;
+  typeToDelete = type;
+  
+  // Ubah teks modal secara dinamis sesuai apa yang dihapus
+  const title = document.getElementById('deleteModalTitle');
+  const msgP = document.querySelector('#deleteModalOv .testi-modal-bd p');
+  
+  const svgIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+  
+  if (title && msgP) {
+    if (type === 'reply') {
+      title.innerHTML = svgIcon + 'Hapus Balasan';
+      msgP.textContent = 'Apakah kamu yakin ingin menghapus balasan ini? Tindakan ini tidak bisa dibatalkan.';
+    } else {
+      title.innerHTML = svgIcon + 'Hapus Ulasan';
+      msgP.textContent = 'Apakah kamu yakin ingin menghapus ulasan ini? Tindakan ini tidak bisa dibatalkan.';
+    }
+  }
+
   document.getElementById('deleteModalOv')?.classList.add('open');
   document.body.style.overflow = 'hidden';
   stopAuto();
 }
 
 function closeDeleteModal() {
-  reviewToDelete = null;
+  targetToDelete = null;
+  typeToDelete = null;
   document.getElementById('deleteModalOv')?.classList.remove('open');
   document.body.style.overflow = '';
   startAuto();
@@ -968,20 +983,30 @@ function initDeleteModal() {
   });
 
   document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
-    if (!reviewToDelete) return;
+    if (!targetToDelete) return;
     
-    const rid = reviewToDelete;
+    const rid = targetToDelete;
     
-    const userReviews = loadUserReviews().filter(r => r.id !== rid);
-    saveUserReviews(userReviews);
-    
-    const replies = loadReplies();
-    delete replies[rid];
-    saveReplies(replies);
+    if (typeToDelete === 'review') {
+      const userReviews = loadUserReviews().filter(r => r.id !== rid);
+      saveUserReviews(userReviews);
+      
+      const replies = loadReplies();
+      delete replies[rid];
+      saveReplies(replies);
+      
+      showToast('🗑️ Ulasan dihapus.', 'Ulasan berhasil dihapus.', 'warn');
+      
+    } else if (typeToDelete === 'reply') {
+      const replies = loadReplies();
+      delete replies[rid];
+      saveReplies(replies);
+      
+      showToast('🗑️ Balasan dihapus.', 'Balasan telah dihapus.', 'warn');
+    }
     
     render();
     closeDeleteModal();
-    showToast('🗑️ Ulasanmu dihapus.', 'Ulasan berhasil dihapus dari halaman ini.', 'warn');
   });
 }
 
