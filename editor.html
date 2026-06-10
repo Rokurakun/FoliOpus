@@ -101,7 +101,6 @@
         if(rawTemplateParam === 'template-3' || rawTemplateParam === 'premium') { templateName = 'template-3'; templateKey = 'premium'; priceStr = '499.000'; }
         const dataVarName = templateName === 'template-1' ? 'userConfig' : 'SITE_DATA';
 
-        // Data Semua Template
         const DEFAULT_DATA = {
             'template-1': {
                 meta: { titleTag: "FoliOpus Starter", seoDescription: "Portofolio digital profesional." },
@@ -455,7 +454,6 @@
             updateDeep(pathArray, value.split(separator).map(s => s.trim()).filter(Boolean));
         }
 
-        // FUNGSI TAMBAH
         window.addArrayItem = function(template, type) {
             if (template === 'template-1') {
                 if(type === 'projects') currentData.projects.push({ judul: "Proyek Baru", deskripsi: "Deskripsi", linkRepo: "#" });
@@ -475,7 +473,6 @@
             triggerPreviewUpdate();
         };
 
-        // FUNGSI HAPUS
         window.delArrayItem = function(template, type, idx) {
             if(!confirm("Yakin ingin menghapus item ini?")) return;
             if (template === 'template-1') {
@@ -500,7 +497,6 @@
             const container = document.getElementById('formContainer');
             let html = isPreviewMode ? `<div style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;"><strong>⚠️ MODE PREVIEW</strong><br>Beli template untuk membuka semua fitur edit mendetail (Logs, Projects array, Stats) dan mendownload kode.</div>` : '';
 
-            // TEMPLATE 1 (STARTER)
             if(templateName === 'template-1') {
                 html += `
                     <div class="e-group">
@@ -534,7 +530,6 @@
                     </div>
                 `;
             } 
-            // TEMPLATE 2 (PRO)
             else if(templateName === 'template-2') {
                 html += `
                     <div class="e-group">
@@ -745,7 +740,6 @@
                     </div>
                 `;
             }
-            // TEMPLATE 3 (PREMIUM)
             else if(templateName === 'template-3') {
                 html += `
                     <div class="e-group">
@@ -955,7 +949,6 @@
             container.innerHTML = html;
         }
 
-        // Live Preview
         let isIframeLoaded = false;
         let timeout;
 
@@ -1000,9 +993,8 @@
                 btnDownload.innerHTML = `🛒 Beli Sekarang (Rp ${priceStr})`;
                 btnDownload.style.background = "linear-gradient(135deg, #10b981, #059669)";
                 btnDownload.onclick = () => window.location.href = `payment.html?template=${templateKey}`;
-                // Jika mode preview, tombol fullscreen tetap 'display: none'
             } else {
-                // Tampilkan tombol fullscreen karena user sudah beli (bukan mode preview)
+
                 btnFullscreen.style.display = 'block';
 
                 btnDownload.addEventListener('click', async () => {
@@ -1027,7 +1019,7 @@
                 });
             }
 
-            // --- FUNGSI KLIK FULLSCREEN ---
+
             btnFullscreen.addEventListener('click', () => {
                 document.body.classList.add('is-fullscreen');
             });
@@ -1035,7 +1027,7 @@
             btnExitFullscreen.addEventListener('click', () => {
                 document.body.classList.remove('is-fullscreen');
             });
-            // ------------------------------
+
 
             renderForm();
             initIframeSatuKaliSaja();
