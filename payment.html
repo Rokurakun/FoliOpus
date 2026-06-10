@@ -280,6 +280,9 @@
             text-decoration: none;
         }
         .receipt-actions .btn-secondary svg { width: 16px; height: 16px; }
+        #rcProofSection {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="payment-page">
@@ -479,6 +482,11 @@
                                     <div class="receipt-total-row">
                                         <span class="receipt-total-label">TOTAL</span>
                                         <span class="receipt-total-value" id="rcTotal">—</span>
+                                    </div>
+
+                                    <div class="receipt-proof-section" id="rcProofSection" style="display:none !important;">
+                                        <div class="receipt-proof-label">Bukti Pembayaran</div>
+                                        <img src="" alt="Bukti Pembayaran" class="receipt-proof-img" id="rcProofImg">
                                     </div>
                                 </div>
 
